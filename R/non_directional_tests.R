@@ -7,7 +7,7 @@
 #'
 #' @param data The dataset to analyze.
 #' @param id An identifier of a specific participant.
-#' @param dv The depedent variable to apply the summary function (summary_function) to.
+#' @param dv The dependent variable to apply the summary function (summary_function) to.
 #' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.
 #' @param summary_function The summary function applied to the dependent variable (dv) under each level of the independent variable (iv) for each participant (id).
 #' @param repetitions The number of repetitions used to estimate sign consistency probability.
@@ -31,7 +31,7 @@ get_sign_consistency <- function(data, idv = 'id',dv = 'rt', iv = 'condition',re
 #'
 #' @param data The dataset to analyze
 #' @param id An identifier of a specific participant.
-#' @param dv The depedent variable to apply the summary function (summary_function) to.
+#' @param dv The dependent variable to apply the summary function (summary_function) to.
 #' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.
 #' @param summary_function The summary function applied  to the dependent variable (dv) under each level of the independent variable (iv) for each identifier (id).
 #' @param repetitions The number of repetitions used to estimate the probability of sign consistency.
@@ -41,7 +41,7 @@ get_sign_consistency <- function(data, idv = 'id',dv = 'rt', iv = 'condition',re
 #' \itemize{
 #'   \item p - The p_value of the estimated sign consistency under the distribution of sign consistency probabilities under the bootstrappednull distribution.
 #'   \item statistic - The group-level statstic describing the mean sign consistency across participants.
-#'   \item null_dist - A numerical vector of samples of sign consistency under the assumption that there is no consistent difference in the depedent variable (dv) between the levels of the independent variable (iv).
+#'   \item null_dist - A numerical vector of samples of sign consistency under the assumption that there is no consistent difference in the dependent variable (dv) between the levels of the independent variable (iv).
 #' }
 #' @seealso [PACKAGE_NAME::get_sign_consistency()] which returns the probability of a consistent sign of a difference score for a random split of the data
 #' @export
@@ -58,7 +58,7 @@ test_sign_consistency <- function(data, idv = 'id',dv = 'rt', iv = 'condition', 
 #'
 #' @param data The dataset to analyze
 #' @param id An identifier of a specific participant.
-#' @param dv The depedent variable to apply the summary function (summary_function) to.
+#' @param dv The dependent variable to apply the summary function (summary_function) to.
 #' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.
 #' @param k The number of folds to use when splitting the data of each participant to train and test datasets. The default value (NA), will result in using the maximal number of folds possible (k equals the frequency of the less frequent label).
 #' @param classifier The classifier to train. The default value (NA) will result in creating a SVM classifier with linear kernel.
