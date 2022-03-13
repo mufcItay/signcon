@@ -6,7 +6,7 @@
 #' All levels of the independent variable must be included under each identifier.
 #'
 #' @param data The dataset to analyze.
-#' @param id An identifier of a specific participant.
+#' @param idv The name of the subject identifier column.
 #' @param dv The dependent variable to apply the summary function (summary_function) to.
 #' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.
 #' @param summary_function The summary function applied to the dependent variable (dv) under each level of the independent variable (iv) for each participant (id).
@@ -18,7 +18,8 @@
 #' }
 #' @seealso [PACKAGE_NAME::test_sign_consistency()] which uses this function to test the significance of the group-level sign consistency.
 #' @export
-get_sign_consistency <- function(data, idv = 'id',dv = 'rt', iv = 'condition',repetitions=1000, summary_function=base::mean){
+get_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", repetitions = 1000, summary_function = base::mean) {
+
 }
 
 
@@ -30,7 +31,7 @@ get_sign_consistency <- function(data, idv = 'id',dv = 'rt', iv = 'condition',re
 #' All levels of the independent variable must be included under each identifier.
 #'
 #' @param data The dataset to analyze
-#' @param id An identifier of a specific participant.
+#' @param idv The name of the subject identifier column.
 #' @param dv The dependent variable to apply the summary function (summary_function) to.
 #' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.
 #' @param summary_function The summary function applied  to the dependent variable (dv) under each level of the independent variable (iv) for each identifier (id).
@@ -45,7 +46,7 @@ get_sign_consistency <- function(data, idv = 'id',dv = 'rt', iv = 'condition',re
 #' }
 #' @seealso [PACKAGE_NAME::get_sign_consistency()] which returns the probability of a consistent sign of a difference score for a random split of the data
 #' @export
-test_sign_consistency <- function(data, idv = 'id',dv = 'rt', iv = 'condition', summary_function=base::mean, repetitions=1000, perm_repetitions = 25, null_dist_samples = 10000){
+test_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", summary_function = base::mean, repetitions = 1000, perm_repetitions = 25, null_dist_samples = 10000) {
 }
 
 
@@ -57,7 +58,7 @@ test_sign_consistency <- function(data, idv = 'id',dv = 'rt', iv = 'condition', 
 #' All levels of the independent variable must be included under each identifier.
 #'
 #' @param data The dataset to analyze
-#' @param id An identifier of a specific participant.
+#' @param idv The name of the subject identifier column.
 #' @param dv The dependent variable to apply the summary function (summary_function) to.
 #' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.
 #' @param k The number of folds to use when splitting the data of each participant to train and test datasets. The default value (NA), will result in using the maximal number of folds possible (k equals the frequency of the less frequent label).
@@ -70,7 +71,7 @@ test_sign_consistency <- function(data, idv = 'id',dv = 'rt', iv = 'condition', 
 #' }
 #' @seealso [PACKAGE_NAME::test_condition_classification()] which uses this function to test for the statistical significance of sign consistency.
 #' @export
-get_condition_classification <- function(data, idv = 'id',dv = 'rt', iv = 'condition', k=NA, classifier = NA){
+get_condition_classification <- function(data, idv = "id", dv = "rt", iv = "condition", k = NA, classifier = NA) {
 }
 
 
@@ -82,7 +83,7 @@ get_condition_classification <- function(data, idv = 'id',dv = 'rt', iv = 'condi
 #' All levels of the independent variable must be included under each identifier.
 #'
 #' @param data The dataset to analyze
-#' @param id An identifier of a specific participant.
+#' @param idv The name of the subject identifier column.
 #' @param dv The dependent variable to apply the summary function (summary_function) to.
 #' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.
 #' @param k The number of folds to use when splitting the data of each participant to train and test datasets. The default value (NA), will result in using the maximal number of folds possible (k equals the frequency of the rare label).
@@ -98,5 +99,5 @@ get_condition_classification <- function(data, idv = 'id',dv = 'rt', iv = 'condi
 #' }
 #' @seealso [PACKAGE_NAME::get_condition_classification()] which returns the probability of a consistent sign of a difference score for a random split of the data
 #' @export
-test_condition_classification <- function(data, idv = 'id',dv = 'rt', iv = 'condition', k=NA, classifier = NA, perm_repetitions = 25, null_dist_samples = 10000){
+test_condition_classification <- function(data, idv = "id", dv = "rt", iv = "condition", k = NA, classifier = NA, perm_repetitions = 25, null_dist_samples = 10000) {
 }
