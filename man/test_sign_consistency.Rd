@@ -9,8 +9,8 @@ test_sign_consistency(
   idv = "id",
   dv = "rt",
   iv = "condition",
+  nSplits = 500,
   summary_function = base::mean,
-  repetitions = 1000,
   perm_repetitions = 25,
   null_dist_samples = 10000
 )
@@ -24,9 +24,9 @@ test_sign_consistency(
 
 \item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.}
 
-\item{summary_function}{The summary function applied  to the dependent variable (dv) under each level of the independent variable (iv) for each identifier (id).}
+\item{nSplits}{The number of splits to use when estimating sign consistency probability.}
 
-\item{repetitions}{The number of repetitions used to estimate the probability of sign consistency.}
+\item{summary_function}{The summary function applied  to the dependent variable (dv) under each level of the independent variable (iv) for each identifier (id).}
 
 \item{perm_repetitions}{The number of label shuffling for each participant.}
 

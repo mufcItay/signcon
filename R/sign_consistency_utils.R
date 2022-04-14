@@ -8,7 +8,7 @@
 #' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.
 #' @param params A list of parametrs used by the function to calculate sign consistency. Includes:
 #' \itemize{
-#'   \item nSplits - The number of random splits to analyze for the estimation of sign consistencty.
+#'   \item nSplits - The number of random splits to analyze for the estimation of sign consistency.
 #'   \item summary_function - The summary function applied to the dependent variable (dv) under each split of the data.
 #' }
 #'
@@ -50,4 +50,19 @@ calculate_sign_consistency <- function(data, idv = "id", dv = "y", iv = "conditi
   # calculate the mean consistency across splits
   retVal = mean(consistency)
   return (retVal)
+}
+
+#' @title Create Paramters For Sign Consistency
+#' @description The function creates a list of paramteres to be later passed to the sign consistency function.
+#'
+#' @param nSplits - The number of random splits to analyze for the estimation of sign consistency.
+#' @param summary_function The summary function applied to the dependent variable (dv) under each split of the data.
+#'
+#' @return a list of parameters that includes both arguments.
+create_sign_consistency_params <- function(nSplits, summary_function) {
+  params <- list()
+  params$nSplits <- nSplits
+  params$summary_function <- summary_function
+
+  return (params)
 }

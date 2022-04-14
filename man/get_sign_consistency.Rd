@@ -9,7 +9,7 @@ get_sign_consistency(
   idv = "id",
   dv = "rt",
   iv = "condition",
-  repetitions = 1000,
+  nSplits = 500,
   summary_function = base::mean
 )
 }
@@ -22,7 +22,7 @@ get_sign_consistency(
 
 \item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.}
 
-\item{repetitions}{The number of repetitions used to estimate sign consistency probability.}
+\item{nSplits}{The number of splits to use when estimating sign consistency probability.}
 
 \item{summary_function}{The summary function applied to the dependent variable (dv) under each level of the independent variable (iv) for each participant (id).}
 }

@@ -9,7 +9,6 @@ get_scores_per_subject(
   idv = "id",
   dv = "rt",
   iv = "condition",
-  repetitions = 1,
   preprocessFs = c(),
   preprocessArgs = c(),
   params,
@@ -24,8 +23,6 @@ get_scores_per_subject(
 \item{dv}{The dependent variable to apply the summary function (summary_function) to.}
 
 \item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.}
-
-\item{repetitions}{The number of repetitions to be used when calculating the score of each subject}
 
 \item{preprocessFs}{An ordered list of functions to apply to the dataset before starting with the analysis.}
 
