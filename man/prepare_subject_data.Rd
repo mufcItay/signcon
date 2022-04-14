@@ -2,8 +2,7 @@
 % Please edit documentation in R/utility.R
 \name{prepare_subject_data}
 \alias{prepare_subject_data}
-\title{Get Subject Data
-Returns processed data for  a specific subject.}
+\title{Get Subject Data}
 \usage{
 prepare_subject_data(
   data,
@@ -15,7 +14,7 @@ prepare_subject_data(
 )
 }
 \arguments{
-\item{data}{the data of a specific individual, arranged according to the independent variable ('iv')}
+\item{data}{The data of a specific individual, arranged according to the independent variable ('iv')}
 
 \item{idv}{The name of the subject identifier column.}
 
@@ -23,14 +22,13 @@ prepare_subject_data(
 
 \item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.}
 
-\item{preprocessFs}{vector of functions to apply to the data for preprocessing}
+\item{preprocessFs}{A vector of functions to apply to the data for preprocessing}
 
-\item{preprocessArgs}{vector of arguments for the preprocessing functions}
+\item{preprocessArgs}{A vector of arguments for the preprocessing functions}
 }
 \value{
 processed subject data, prepared to be analyzed
 }
 \description{
-Get Subject Data
 Returns processed data for  a specific subject.
 }

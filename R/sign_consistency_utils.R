@@ -1,8 +1,8 @@
-#' Calculate Sign Consistency
-#' The function applies the sign consistency analysis to the dataset of a specific individual
+#' @title Calculate Sign Consistency
+#' @description The function applies the sign consistency analysis to the dataset of a specific individual
 #' Called from 'get_true_score'
 #'
-#' @param data the dataset of a specific individual, arranged according to the independent variable ('iv')
+#' @param data The dataset of a specific individual, arranged according to the independent variable ('iv')
 #' @param idv The name of the subject identifier column.
 #' @param dv The dependent variable to apply the summary function (summary_function) to.
 #' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.
@@ -24,30 +24,30 @@ calculate_sign_consistency <- function(data, idv = "id", dv = "y", iv = "conditi
   nSplits <- params$nSplits
   statistic <- params$summary_function
   # check for errors
-  if (base::length(y) != base::length(label)) {
+  if (length(y) != length(label)) {
     stop('inconsistent lengths for vectors the dependent and independent variables')
   }
   # set the number of trials and midpoint, to compute random splits of the data
-  nTrials <- base::length(y)
-  midpoint = base::round(nTrials/2)
+  nTrials <- length(y)
+  midpoint = round(nTrials/2)
   # define an innner function to compute sign consistency in each repetition.
   # the function returns true if difference score signs are consistency across splits,
   # and false otherwise.
   inner_calculate_sign_consistency <- function(iteration) {
     # sample a random permutation of the data
-    order_permuatation = base::sample(nTrials)
+    order_permuatation = sample(nTrials)
     # define groups according to the permutation:
     # group0 = {all data points <= midpoint}, group1 {all data points > midpoint}
     group = order_permuatation > midpoint
     # compute the sign of difference scores between groups, using the specified statistic
-    group0_sign = base::sign(statistic(y[!group & label]) - statistic(y[!group & !label]))
-    group1_sign = base::sign(statistic(y[group & label]) - statistic(y[group & !label]))
+    group0_sign = sign(statistic(y[!group & label]) - statistic(y[!group & !label]))
+    group1_sign = sign(statistic(y[group & label]) - statistic(y[group & !label]))
     # return the consistency of sign across groups
     return (group0_sign==group1_sign)
   }
   # apply the function above for each split
-  consistency = base::sapply(1:nSplits, inner_calculate_sign_consistency)
+  consistency = sapply(1:nSplits, inner_calculate_sign_consistency)
   # calculate the mean consistency across splits
-  retVal = base::mean(consistency)
+  retVal = mean(consistency)
   return (retVal)
 }

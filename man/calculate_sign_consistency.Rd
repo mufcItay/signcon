@@ -2,9 +2,7 @@
 % Please edit documentation in R/sign_consistency_utils.R
 \name{calculate_sign_consistency}
 \alias{calculate_sign_consistency}
-\title{Calculate Sign Consistency
-The function applies the sign consistency analysis to the dataset of a specific individual
-Called from 'get_true_score'}
+\title{Calculate Sign Consistency}
 \usage{
 calculate_sign_consistency(
   data,
@@ -15,7 +13,7 @@ calculate_sign_consistency(
 )
 }
 \arguments{
-\item{data}{the dataset of a specific individual, arranged according to the independent variable ('iv')}
+\item{data}{The dataset of a specific individual, arranged according to the independent variable ('iv')}
 
 \item{idv}{The name of the subject identifier column.}
 
@@ -33,7 +31,6 @@ calculate_sign_consistency(
 
 }
 \description{
-Calculate Sign Consistency
 The function applies the sign consistency analysis to the dataset of a specific individual
 Called from 'get_true_score'
 }

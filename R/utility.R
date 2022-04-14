@@ -1,76 +1,92 @@
-#' Get Subject Data
-#' Returns processed data for  a specific subject.
+#' @title Get Subject Data
+#' @description Returns processed data for  a specific subject.
 #'
-#' @importFrom magrittr %>%
-#' @param data the data of a specific individual, arranged according to the independent variable ('iv')
+#' @param data The data of a specific individual, arranged according to the independent variable ('iv')
 #' @param idv The name of the subject identifier column.
 #' @param dv The dependent variable to apply the summary function (summary_function) to.
 #' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.
-#' @param preprocessFs vector of functions to apply to the data for preprocessing
-#' @param preprocessArgs vector of arguments for the preprocessing functions
+#' @param preprocessFs A vector of functions to apply to the data for preprocessing
+#' @param preprocessArgs A vector of arguments for the preprocessing functions
 #'
 #' @return processed subject data, prepared to be analyzed
 prepare_subject_data <- function(data, idv = "id", dv = "rt", iv = "condition", preprocessFs, preprocessArgs) {
+  # iterate over the preorocessing functions and apply them to the data, with the 'preprocessArgs' as arguments
   for (fInd in 1:length(preprocessFs)) {
-    data <- base::do.call(preprocessFs[[fInd]], base::list(data, preprocessArgs[[fInd]]))
+    # extract the current function and arguments
+    perprocess_f <- preprocessFs[[fInd]]
+    perprocess_args <- preprocessArgs[[fInd]]
+    # apply the preprocessing function given its arguments, and update 'data'
+    data <- do.call(perprocess_f, list(data, perprocess_args))
   }
   return(data)
 }
 
-
-#' Get Null Distribution
-#' The function returns the null distribution according to the 'statistic' and 'configuration' arguments.
+#' @title Get the Null Distribution
+#' @description The function returns the null distribution according to the 'statistic' and 'configuration' arguments.
 #'
 #' @param data the data of a specific individual, arranged according to the independent variable ('iv')
 #' @param idv The name of the subject identifier column.
 #' @param dv The dependent variable to apply the summary function (summary_function) to.
 #' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.
-#' @param params
-#' @param f
-#' @param perm_repetitions
-#' @param null_dist_samples
+#' @param params Configuration for the function to apply to the data of each individual ('f')
+#' @param f The function to apply to the data of each individual ('f')
+#' @param perm_repetitions The number of permutation reperitions for each individual
+#' @param null_dist_samples The number of samples that comprise the output null distribution
 #' @param preprocessFs vector of functions to apply to the data for preprocessing
 #' @param preprocessArgs vector of arguments for the preprocessing functions
 #'
-#' @return
+#' @return A distribution of mean score values computed according to a 'null' effect condition
 get_null_distribution <- function(data, idv = "id", dv = "rt", iv = "condition", params, f, perm_repetitions = 25, null_dist_samples = 10000, preprocessFs = c(), preprocessArgs = c()) {
+  # define a preprocessing function that shuffled the independent variable column for each individual,
+  # and then gets the scores of each subject for shuffled data
   inner_shuffle <- function(idx) {
     preprocessFs <- c(preprocessFs, function(d,col) {
-      d[col] <- base::sample(dplyr::pull(d,col))
+      # randomly shuffle the independe variable values
+      d[col] <- sample(dplyr::pull(d,col))
+      # returning the shuffled data
       return(d)
     })
     preprocessArgs <- c(preprocessArgs, iv)
-
+    # get the scores per individual for the suffled data
     get_scores_per_subject(data, idv, dv, iv, params, f, preprocessFs, preprocessArgs)
   }
-  shuffled_scores <- base::sapply(1:perm_repetitions, inner_shuffle)
+  # use the inner_shuffle function to create #'perm_repetitions' per individual
+  shuffled_scores <- sapply(1:perm_repetitions, inner_shuffle)
+  # define a function that computes a sample of the null distribution from the shuffled data of all individuals,
+  # randomly sample a specific permutation for each individual, and retunr the mean score of the group
   get_null_sample <- function(iteration) {
-    rndShuff <- base::sample(perm_repetitions,size = base::nrow(shuffled_scores), replace = TRUE)
-    sampled <- base::unlist(shuffled_scores[rndShuff * nrow(shuffled_scores) + 1:base::nrow(shuffled_scores)])
-    return(base::mean(sampled))
+    # randomly sample one permutation per individual
+    rndShuff <- sample(perm_repetitions,size = nrow(shuffled_scores), replace = TRUE)
+    # get the sampled permutation scores
+    sampled <- unlist(shuffled_scores[rndShuff * nrow(shuffled_scores) + 1:nrow(shuffled_scores)])
+    # return the mean score of all sampled permutations
+    return(mean(sampled))
   }
-  null_dist <- base::sapply(1:null_dist_samples, get_null_sample)
+  # use the 'get_null_sample' to compute the group level mean score in each sample to build the distribution
+  null_dist <- sapply(1:null_dist_samples, get_null_sample)
   return(null_dist)
 }
 
-#' Get True Scores
-#' The function computes and returns the true score of the analysis to conduct for each individual,
+#' @title Get True Scores
+#' @description The function computes and returns the true score of the analysis to conduct for each individual,
 #'as specified by the 'f' and 'params' arguments.
 #'
-#' @importFrom magrittr %>%
 #' @param data the dataset of a all individuals to analyze.
 #' @param idv The name of the subject identifier column.
 #' @param dv The dependent variable to apply the summary function (summary_function) to.
 #' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.
-#' @param params Configuration for the function to apply to the data of each individual ('f')
+#' @param repetitions The number of repetitions to be used when calculating the score of each subject
+#' @param preprocessFs An ordered list of functions to apply to the dataset before starting with the analysis.
+#' @param preprocessArgs An ordered list of function arguments, to be used when invoking the 'preprocessFs'.
+#' @param params Configuration for the function to apply to the data of each individual ('f').
 #' @param f The function to apply to the data to compute the score of interest for each individual.
-#' @param preprocessFs
-#' @param preprocessArgs
 #'
 #' @return The function returns a list of the computed scores of each individual
-get_scores_per_subject <- function(data, idv = "id", dv = "rt", iv = "condition", params, f, preprocessFs, preprocessArgs) {
+get_scores_per_subject <- function(data, idv = "id", dv = "rt", iv = "condition", repetitions = 1, preprocessFs = c(), preprocessArgs = c(), params, f) {
+  # define a preprocessing function that arranges data uniformly according to the values of the independent variable
   preprocessFs <- c(dplyr::arrange, preprocessFs)
   preprocessArgs = c(iv, preprocessArgs)
+  # return the score of each individual by running 'f' on its 'prepared' data
   return (data %>%
             dplyr::group_by(!!dplyr::sym(idv)) %>%
             dplyr::group_map(~f(prepare_subject_data(.x,idv, dv, iv, preprocessFs, preprocessArgs), idv, dv, iv, params)))

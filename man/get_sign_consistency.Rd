@@ -2,12 +2,7 @@
 % Please edit documentation in R/non_directional_tests.R
 \name{get_sign_consistency}
 \alias{get_sign_consistency}
-\title{Get Sign Consistency
-The function returns the mean probability of a consistent difference score sign for a random split of each participant's data.
-The function accepts a dataset in long format with specific columns: identifier (id), independent and dependent variables (iv and dv, respectively).
-For each participant, the function calculates the estimated probability that for a random splitting of the data, the summary function (summary_function) returns two values with the same sign when applied to the two halves.
-Then, it returns the mean sign consistency probability across participants.
-All levels of the independent variable must be included under each identifier.}
+\title{Get Sign Consistency}
 \usage{
 get_sign_consistency(
   data,
@@ -39,7 +34,6 @@ A list including the results of the function
 }
 }
 \description{
-Get Sign Consistency
 The function returns the mean probability of a consistent difference score sign for a random split of each participant's data.
 The function accepts a dataset in long format with specific columns: identifier (id), independent and dependent variables (iv and dv, respectively).
 For each participant, the function calculates the estimated probability that for a random splitting of the data, the summary function (summary_function) returns two values with the same sign when applied to the two halves.
@@ -47,5 +41,5 @@ Then, it returns the mean sign consistency probability across participants.
 All levels of the independent variable must be included under each identifier.
 }
 \seealso{
-[PACKAGE_NAME::test_sign_consistency()] which uses this function to test the significance of the group-level sign consistency.
+[weaknull::test_sign_consistency()] which uses this function to test the significance of the group-level sign consistency.
 }

@@ -1,5 +1,5 @@
-#' Get Sign Consistency
-#' The function returns the mean probability of a consistent difference score sign for a random split of each participant's data.
+#' @title Get Sign Consistency
+#' @description The function returns the mean probability of a consistent difference score sign for a random split of each participant's data.
 #' The function accepts a dataset in long format with specific columns: identifier (id), independent and dependent variables (iv and dv, respectively).
 #' For each participant, the function calculates the estimated probability that for a random splitting of the data, the summary function (summary_function) returns two values with the same sign when applied to the two halves.
 #' Then, it returns the mean sign consistency probability across participants.
@@ -16,15 +16,18 @@
 #'   \item estimate - The mean sign consistency across all participants.
 #'   \item consistency_per_id - Sign consistency estimate for each participant.
 #' }
-#' @seealso [PACKAGE_NAME::test_sign_consistency()] which uses this function to test the significance of the group-level sign consistency.
+#' @seealso [weaknull::test_sign_consistency()] which uses this function to test the significance of the group-level sign consistency.
 #' @export
 get_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", repetitions = 1000, summary_function = base::mean) {
-
+  params <- list()
+  params$nSplits <- 500
+  params$summary_function <- summary_function
+  get_scores_per_subject(data, idv, dv, iv, repetitions = repetitions, params = params, f = calculate_sign_consistency)
 }
 
 
-#' Tests for Sign Consistency
-#' The function tests for a consistent sign of a difference score for a random split of the data, using bootstrapping and permutating each participants' independent variable labels.
+#' @title Tests for Sign Consistency
+#' @description The function tests for a consistent sign of a difference score for a random split of the data, using bootstrapping and permutating each participants' independent variable labels.
 #' The function accepts a dataset in long format with specific columns: identifier (id), independent and dependent variables (iv and dv, respectively).
 #' For each participant, the function calculates the estimated probability that for a random splitting of the data, the summary function (summary_function) returns two values with the same sign when applied to the two halves.
 #' Then, the mean sign consistency across participants is tested against a bootstrapped null distribution in which sign consistency probabilities are calculated for each participant after shuffling its independent variable labels (see Stelzer, J., Chen, Y., & Turner, R. (2013)).
@@ -44,14 +47,15 @@ get_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", 
 #'   \item statistic - The group-level statstic describing the mean sign consistency across participants.
 #'   \item null_dist - A numerical vector of samples of sign consistency under the assumption that there is no consistent difference in the dependent variable (dv) between the levels of the independent variable (iv).
 #' }
-#' @seealso [PACKAGE_NAME::get_sign_consistency()] which returns the probability of a consistent sign of a difference score for a random split of the data
+#' @seealso [weaknull::get_sign_consistency()] which returns the probability of a consistent sign of a difference score for a random split of the data
 #' @export
 test_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", summary_function = base::mean, repetitions = 1000, perm_repetitions = 25, null_dist_samples = 10000) {
+  res <- get_sign_consistency(data, idv, dv, iv, repetitions, summary_function)
 }
 
 
-#' Get Classification Accuracy
-#' The function returns the mean classification accuracy of condition labels according to a dependent variable of each participant's data.
+#' @title Get Classification Accuracy
+#' @description The function returns the mean classification accuracy of condition labels according to a dependent variable of each participant's data.
 #' The function accepts a dataset in long format with specific columns: identifier (id), independent and dependent variables (iv and dv, respectively).
 #' For each participant, the function calculates the k-fold cross-validated accuracy of a classifier trained to predict the labels of levels under the independent variable (iv) based on the dependent variable (dv).
 #' Then, it returns the mean accuracy of individual participants classifiers.
@@ -69,14 +73,14 @@ test_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition",
 #'   \item accuracy_per_id - The classification accuracy across folds, for each participant.
 #'   \item prediction_results - A table including a 'k' column, indicating the fold index, a 'test' column, indicating the label to predict, and a 'prediction' column indicating the prediction accuracy for the test.
 #' }
-#' @seealso [PACKAGE_NAME::test_condition_classification()] which uses this function to test for the statistical significance of sign consistency.
+#' @seealso [weaknull::test_condition_classification()] which uses this function to test for the statistical significance of sign consistency.
 #' @export
 get_condition_classification <- function(data, idv = "id", dv = "rt", iv = "condition", k = NA, classifier = NA) {
 }
 
 
-#' Tests for Classification Accuracy
-#' The function tests for a significant mean classification accuracy of condition labels according to a dependent variable across participants (without assuming a directional effect), using bootstrapping and permutating each participants' independent variable labels.
+#' @title Tests for Classification Accuracy
+#' @description The function tests for a significant mean classification accuracy of condition labels according to a dependent variable across participants (without assuming a directional effect), using bootstrapping and permutating each participants' independent variable labels.
 #' The function accepts a dataset in long format with specific columns: identifier (id), independent and dependent variables (iv and dv, respectively).
 #' For each participant, the function calculates the k-fold cross-validated accuracy of a classifier trained to predict the labels of levels under the independent variable (iv) based on the dependent variable (dv).
 #' Then, the mean classification accuracy across participants is tested against a bootstrapped null distribution in which classification accuracy is calculated for each participant after shuffling its independent variable labels(see Stelzer, J., Chen, Y., & Turner, R. (2013)).
@@ -97,7 +101,7 @@ get_condition_classification <- function(data, idv = "id", dv = "rt", iv = "cond
 #'   \item statistic - The group-level statstic describing the mean classification accuracy across participants.
 #'   \item null_dist - A numerical vector of samples of the classifier accuracies under the bootstrappednull distribution.
 #' }
-#' @seealso [PACKAGE_NAME::get_condition_classification()] which returns the probability of a consistent sign of a difference score for a random split of the data
+#' @seealso [weaknull::get_condition_classification()] which returns the probability of a consistent sign of a difference score for a random split of the data
 #' @export
 test_condition_classification <- function(data, idv = "id", dv = "rt", iv = "condition", k = NA, classifier = NA, perm_repetitions = 25, null_dist_samples = 10000) {
 }

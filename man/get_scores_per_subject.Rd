@@ -2,19 +2,18 @@
 % Please edit documentation in R/utility.R
 \name{get_scores_per_subject}
 \alias{get_scores_per_subject}
-\title{Get True Scores
-The function computes and returns the true score of the analysis to conduct for each individual,
-as specified by the 'f' and 'params' arguments.}
+\title{Get True Scores}
 \usage{
 get_scores_per_subject(
   data,
   idv = "id",
   dv = "rt",
   iv = "condition",
+  repetitions = 1,
+  preprocessFs = c(),
+  preprocessArgs = c(),
   params,
-  f,
-  preprocessFs,
-  preprocessArgs
+  f
 )
 }
 \arguments{
@@ -26,17 +25,20 @@ get_scores_per_subject(
 
 \item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.}
 
-\item{params}{Configuration for the function to apply to the data of each individual ('f')}
+\item{repetitions}{The number of repetitions to be used when calculating the score of each subject}
+
+\item{preprocessFs}{An ordered list of functions to apply to the dataset before starting with the analysis.}
+
+\item{preprocessArgs}{An ordered list of function arguments, to be used when invoking the 'preprocessFs'.}
+
+\item{params}{Configuration for the function to apply to the data of each individual ('f').}
 
 \item{f}{The function to apply to the data to compute the score of interest for each individual.}
-
-\item{preprocessArgs}{}
 }
 \value{
 The function returns a list of the computed scores of each individual
 }
 \description{
-Get True Scores
 The function computes and returns the true score of the analysis to conduct for each individual,
 as specified by the 'f' and 'params' arguments.
 }

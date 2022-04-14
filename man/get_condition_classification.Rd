@@ -2,12 +2,7 @@
 % Please edit documentation in R/non_directional_tests.R
 \name{get_condition_classification}
 \alias{get_condition_classification}
-\title{Get Classification Accuracy
-The function returns the mean classification accuracy of condition labels according to a dependent variable of each participant's data.
-The function accepts a dataset in long format with specific columns: identifier (id), independent and dependent variables (iv and dv, respectively).
-For each participant, the function calculates the k-fold cross-validated accuracy of a classifier trained to predict the labels of levels under the independent variable (iv) based on the dependent variable (dv).
-Then, it returns the mean accuracy of individual participants classifiers.
-All levels of the independent variable must be included under each identifier.}
+\title{Get Classification Accuracy}
 \usage{
 get_condition_classification(
   data,
@@ -40,7 +35,6 @@ A list including the results of the function
 }
 }
 \description{
-Get Classification Accuracy
 The function returns the mean classification accuracy of condition labels according to a dependent variable of each participant's data.
 The function accepts a dataset in long format with specific columns: identifier (id), independent and dependent variables (iv and dv, respectively).
 For each participant, the function calculates the k-fold cross-validated accuracy of a classifier trained to predict the labels of levels under the independent variable (iv) based on the dependent variable (dv).
@@ -48,5 +42,5 @@ Then, it returns the mean accuracy of individual participants classifiers.
 All levels of the independent variable must be included under each identifier.
 }
 \seealso{
-[PACKAGE_NAME::test_condition_classification()] which uses this function to test for the statistical significance of sign consistency.
+[weaknull::test_condition_classification()] which uses this function to test for the statistical significance of sign consistency.
 }

@@ -2,8 +2,7 @@
 % Please edit documentation in R/utility.R
 \name{get_null_distribution}
 \alias{get_null_distribution}
-\title{Get Null Distribution
-The function returns the null distribution according to the 'statistic' and 'configuration' arguments.}
+\title{Get the Null Distribution}
 \usage{
 get_null_distribution(
   data,
@@ -27,14 +26,21 @@ get_null_distribution(
 
 \item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.}
 
+\item{params}{Configuration for the function to apply to the data of each individual ('f')}
+
+\item{f}{The function to apply to the data of each individual ('f')}
+
+\item{perm_repetitions}{The number of permutation reperitions for each individual}
+
+\item{null_dist_samples}{The number of samples that comprise the output null distribution}
+
 \item{preprocessFs}{vector of functions to apply to the data for preprocessing}
 
 \item{preprocessArgs}{vector of arguments for the preprocessing functions}
 }
 \value{
-
+A distribution of mean score values computed according to a 'null' effect condition
 }
 \description{
-Get Null Distribution
 The function returns the null distribution according to the 'statistic' and 'configuration' arguments.
 }
