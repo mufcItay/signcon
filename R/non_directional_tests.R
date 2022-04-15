@@ -49,14 +49,12 @@ get_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", 
 #' @export
 test_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", nSplits = 500, summary_function = base::mean, perm_repetitions = 25, null_dist_samples = 10000) {
   params <- create_sign_consistency_params(nSplits, summary_function)
-
   res <- get_sign_consistency(data, idv, dv, iv, nSplits, summary_function)
   null_dist <- get_null_distribution(data, idv, dv, iv, params = params, f = calculate_sign_consistency)
-
   nullN <- length(null_dist)
 
   obs_stat <- summary_function(unlist(res))
-  p_val <- sum(obs_stat > null_dist) / nullN
+  p_val <- sum(obs_stat <= null_dist) / nullN
 
   ret <- list(p = p_val, statistic = obs_stat, null_dist = null_dist)
   return(ret)

@@ -2,17 +2,17 @@ create_sample_data <- function(p_mean, p_sd, seed = 1) {
   set.seed(seed)
   library(tibble)
   # define the number of subjects
-  N <- 100
+  N <- 30
   # 0 = faster condition (e.g., 'congruent'), 0 = slower condition (e.g., 'incongruent'),
   conditionLabels <- c(0,1)
   # define the number of trials per condition
-  trialsPerCnd <- 200
+  trialsPerCnd <- 100
   # define the number of trials across all conditions
   trialsN <- trialsPerCnd * length(conditionLabels)
 
   # define the baseline dependent measure statistical features
   effect_baseline <- 0
-  within_subj_effect_sd <- 1
+  within_subj_effect_sd <- 2
 
   # define the effect statistical features
   population_sd = p_sd
