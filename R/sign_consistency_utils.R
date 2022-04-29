@@ -6,7 +6,7 @@
 #' @param idv The name of the subject identifier column.
 #' @param dv The dependent variable to apply the summary function (summary_function) to.
 #' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.
-#' @param params A list of parametrs used by the function to calculate sign consistency. Includes:
+#' @param params A list of parameters used by the function to calculate sign consistency. Includes:
 #' \itemize{
 #'   \item nSplits - The number of random splits to analyze for the estimation of sign consistency.
 #'   \item summary_function - The summary function applied to the dependent variable (dv) under each split of the data.
@@ -29,7 +29,7 @@ calculate_sign_consistency <- function(data, idv = "id", dv = "y", iv = "conditi
   }
   # set the number of trials and midpoint, to compute random splits of the data
   nTrials <- length(y)
-  midpoint = round(nTrials/2)
+  midpoint <- round(nTrials/2)
   # define an innner function to compute sign consistency in each repetition.
   # the function returns true if difference score signs are consistency across splits,
   # and false otherwise.
@@ -38,22 +38,22 @@ calculate_sign_consistency <- function(data, idv = "id", dv = "y", iv = "conditi
     order_permuatation = sample(nTrials)
     # define groups according to the permutation:
     # group0 = {all data points <= midpoint}, group1 {all data points > midpoint}
-    group = order_permuatation > midpoint
+    group <- order_permuatation > midpoint
     # compute the sign of difference scores between groups, using the specified statistic
-    group0_sign = sign(statistic(y[!group & label]) - statistic(y[!group & !label]))
-    group1_sign = sign(statistic(y[group & label]) - statistic(y[group & !label]))
+    group0_sign <- sign(statistic(y[!group & label]) - statistic(y[!group & !label]))
+    group1_sign <- sign(statistic(y[group & label]) - statistic(y[group & !label]))
     # return the consistency of sign across groups
-    return (group0_sign==group1_sign)
+    return (group0_sign == group1_sign)
   }
   # apply the function above for each split
-  consistency = sapply(1:nSplits, inner_calculate_sign_consistency)
+  consistency <- sapply(1:nSplits, inner_calculate_sign_consistency)
   # calculate the mean consistency across splits
-  retVal = mean(consistency)
+  retVal <- mean(consistency)
   return (retVal)
 }
 
-#' @title Create Paramters For Sign Consistency
-#' @description The function creates a list of paramteres to be later passed to the sign consistency function.
+#' @title Create Parameters For Sign Consistency
+#' @description The function creates a list of parameters to be later passed to the sign consistency function.
 #'
 #' @param nSplits - The number of random splits to analyze for the estimation of sign consistency.
 #' @param summary_function The summary function applied to the dependent variable (dv) under each split of the data.

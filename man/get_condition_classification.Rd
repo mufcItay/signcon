@@ -9,8 +9,9 @@ get_condition_classification(
   idv = "id",
   dv = "rt",
   iv = "condition",
-  k = NA,
-  classifier = NA
+  classifier = NA,
+  K = NA,
+  handleImbalance = NA
 )
 }
 \arguments{
@@ -22,9 +23,11 @@ get_condition_classification(
 
 \item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.}
 
-\item{k}{The number of folds to use when splitting the data of each participant to train and test datasets. The default value (NA), will result in using the maximal number of folds possible (k equals the frequency of the less frequent label).}
+\item{classifier}{The classifier name. The default value (NA) will result in creating a SVM classifier with a linear kernel. See 'caret' package's method for more details.}
 
-\item{classifier}{The classifier to train. The default value (NA) will result in creating a SVM classifier with linear kernel.}
+\item{handleImbalance}{The strategy to handle class imbalance. The default value (NA), will result in using weights to account for the imbalance. See 'caret' package's trainControl method for more details.}
+
+\item{trainingControl}{The training control regime for testing for classification. The default value (NA), will result in using the maximal number of folds possible (LOOCV). See 'caret' package's trainControl function for more details.}
 }
 \value{
 A list including the results of the function

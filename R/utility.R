@@ -10,7 +10,7 @@
 #'
 #' @return processed subject data, prepared to be analyzed
 prepare_subject_data <- function(data, idv = "id", dv = "rt", iv = "condition", preprocessFs, preprocessArgs) {
-  # iterate over the preorocessing functions and apply them to the data, with the 'preprocessArgs' as arguments
+  # iterate over the preprocessing functions and apply them to the data, with the 'preprocessArgs' as arguments
   for (fInd in 1:length(preprocessFs)) {
     # extract the current function and arguments
     perprocess_f <- preprocessFs[[fInd]]
@@ -58,7 +58,7 @@ get_null_distribution <- function(data, idv = "id", dv = "rt", iv = "condition",
     # randomly sample one permutation per individual
     rndShuff <- sample(perm_repetitions,size = nrow(shuffled_scores), replace = TRUE)
     # get the sampled permutation scores
-    sampled <- unlist(shuffled_scores[rndShuff * nrow(shuffled_scores) + 1:nrow(shuffled_scores)])
+    sampled <- unlist(shuffled_scores[rndShuff + (seq(0,length(rndShuff) - 1)) * perm_repetitions])
     # return the mean score of all sampled permutations
     return(mean(sampled))
   }

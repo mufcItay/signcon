@@ -29,7 +29,7 @@ get_sign_consistency(
 \value{
 A list including the results of the function
 \itemize{
-  \item estimate - The mean sign consistency across all participants.
+  \item statistic - The mean sign consistency across all participants.
   \item consistency_per_id - Sign consistency estimate for each participant.
 }
 }

@@ -13,14 +13,18 @@
 #' @param nSplits The number of splits to use when estimating sign consistency probability.
 #' @return A list including the results of the function
 #' \itemize{
-#'   \item estimate - The mean sign consistency across all participants.
+#'   \item statistic - The mean sign consistency across all participants.
 #'   \item consistency_per_id - Sign consistency estimate for each participant.
 #' }
 #' @seealso [weaknull::test_sign_consistency()] which uses this function to test the significance of the group-level sign consistency.
 #' @export
 get_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", nSplits = 500, summary_function = base::mean) {
   params <- create_sign_consistency_params(nSplits, summary_function)
-  get_scores_per_subject(data, idv, dv, iv, params = params, f = calculate_sign_consistency)
+  res <- get_scores_per_subject(data, idv, dv, iv, params = params, f = calculate_sign_consistency)
+  obs_stat <- mean(unlist(res))
+
+  ret <- list(consistency_per_id = res, statistic = obs_stat)
+  return(ret)
 }
 
 
@@ -50,13 +54,11 @@ get_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", 
 test_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", nSplits = 500, summary_function = base::mean, perm_repetitions = 25, null_dist_samples = 10000) {
   params <- create_sign_consistency_params(nSplits, summary_function)
   res <- get_sign_consistency(data, idv, dv, iv, nSplits, summary_function)
-  null_dist <- get_null_distribution(data, idv, dv, iv, params = params, f = calculate_sign_consistency)
+  null_dist <- get_null_distribution(data, idv, dv, iv, params = params, f = calculate_sign_consistency, null_dist_samples = null_dist_samples)
   nullN <- length(null_dist)
+  p_val <- sum(res$statistic <= null_dist) / nullN
 
-  obs_stat <- summary_function(unlist(res))
-  p_val <- sum(obs_stat <= null_dist) / nullN
-
-  ret <- list(p = p_val, statistic = obs_stat, null_dist = null_dist)
+  ret <- list(p = p_val, statistic = res$statistic, null_dist = null_dist)
   return(ret)
 }
 
@@ -72,8 +74,9 @@ test_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition",
 #' @param idv The name of the subject identifier column.
 #' @param dv The dependent variable to apply the summary function (summary_function) to.
 #' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.
-#' @param k The number of folds to use when splitting the data of each participant to train and test datasets. The default value (NA), will result in using the maximal number of folds possible (k equals the frequency of the less frequent label).
-#' @param classifier The classifier to train. The default value (NA) will result in creating a SVM classifier with linear kernel.
+#' @param trainingControl The training control regime for testing for classification. The default value (NA), will result in using the maximal number of folds possible (LOOCV). See 'caret' package's trainControl function for more details.
+#' @param classifier The classifier name. The default value (NA) will result in creating a SVM classifier with a linear kernel. See 'caret' package's method for more details.
+#' @param handleImbalance The strategy to handle class imbalance. The default value (NA), will result in using weights to account for the imbalance. See 'caret' package's trainControl method for more details.
 #' @return A list including the results of the function
 #' \itemize{
 #'   \item accuracy - The mean classification accuracy across participants and folds.
@@ -82,7 +85,13 @@ test_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition",
 #' }
 #' @seealso [weaknull::test_condition_classification()] which uses this function to test for the statistical significance of sign consistency.
 #' @export
-get_condition_classification <- function(data, idv = "id", dv = "rt", iv = "condition", k = NA, classifier = NA) {
+get_condition_classification <- function(data, idv = "id", dv = "rt", iv = "condition", classifier = NA, K = NA, handleImbalance = NA) {
+  params <- create_classification_params(classifier, K, handleImbalance)
+  res <- get_scores_per_subject(data, idv, dv, iv, params = params, f = classify_conditions)
+  obs_stat <- mean(unlist(res))
+
+  ret <- list(accuracy_per_id = res, statistic = obs_stat)
+  return(ret)
 }
 
 
@@ -97,9 +106,9 @@ get_condition_classification <- function(data, idv = "id", dv = "rt", iv = "cond
 #' @param idv The name of the subject identifier column.
 #' @param dv The dependent variable to apply the summary function (summary_function) to.
 #' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.
-#' @param k The number of folds to use when splitting the data of each participant to train and test datasets. The default value (NA), will result in using the maximal number of folds possible (k equals the frequency of the rare label).
-#' @param classifier The classifier to train. The default value (NA) will result in creating a SVM classifier with linear kernel.
-#' @return A list including the results of the function
+#' @param trainingControl The training control regime for testing for classification. The default value (NA), will result in using the maximal number of folds possible (LOOCV). See 'caret' package's trainControl function for more details.
+#' @param classifier The classifier name. The default value (NA) will result in creating a SVM classifier with a linear kernel. See 'caret' package's method for more details.
+#' @param handleImbalance The strategy to handle class imbalance. The default value (NA), will result in using weights to account for the imbalance. See 'caret' package's trainControl method for more details.
 #' @param perm_repetitions The number of label shuffling for each participant.
 #' @param null_dist_samples The number of samples taken from the null distribution.
 #' @return A list including the results of the function
@@ -109,6 +118,15 @@ get_condition_classification <- function(data, idv = "id", dv = "rt", iv = "cond
 #'   \item null_dist - A numerical vector of samples of the classifier accuracies under the bootstrappednull distribution.
 #' }
 #' @seealso [weaknull::get_condition_classification()] which returns the probability of a consistent sign of a difference score for a random split of the data
+#' @seealso [caret::trainControl()] for the definition of the 'trainingControl' parameter
 #' @export
-test_condition_classification <- function(data, idv = "id", dv = "rt", iv = "condition", k = NA, classifier = NA, perm_repetitions = 25, null_dist_samples = 10000) {
+test_condition_classification <- function(data, idv = "id", dv = "rt", iv = "condition", K = NA, classifier = NA, handleImbalance = NA,perm_repetitions = 25, null_dist_samples = 10000) {
+  params <- create_classification_params(classifier, K, handleImbalance)
+  res <- get_condition_classification(data, idv, dv, iv, classifier, K)
+  null_dist <- get_null_distribution(data, idv, dv, iv, params = params, f = classify_conditions, null_dist_samples = null_dist_samples)
+  nullN <- length(null_dist)
+  p_val <- sum(res$statistic <= null_dist) / nullN
+
+  ret <- list(p = p_val, statistic = res$statistic, null_dist = null_dist)
+  return(ret)
 }

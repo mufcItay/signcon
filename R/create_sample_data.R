@@ -1,18 +1,25 @@
-create_sample_data <- function(p_mean, p_sd, seed = 1) {
+
+#' Title
+#'
+#' @param p_mean the effect's population mean
+#' @param p_sd the standard deviation of the population's effect
+#' @param seed - a seed to use when generating the resulting data frame
+#' @param N - the number of simulated participants
+#' @param trialsPerCnd - the number of trials per condition
+#' @param wSEsd - the standard deviation of within participant (and condition) measures (error term)
+#'
+#' @return a data frame with three columns: id (participant id), 'condition' (condition label), and 'var' (the dependent variable)
+create_sample_data <- function(p_mean, p_sd, seed = 1, N = 30, trialsPerCnd = 100, wSEsd = 2) {
   set.seed(seed)
   library(tibble)
-  # define the number of subjects
-  N <- 30
   # 0 = faster condition (e.g., 'congruent'), 0 = slower condition (e.g., 'incongruent'),
   conditionLabels <- c(0,1)
-  # define the number of trials per condition
-  trialsPerCnd <- 100
   # define the number of trials across all conditions
   trialsN <- trialsPerCnd * length(conditionLabels)
 
   # define the baseline dependent measure statistical features
   effect_baseline <- 0
-  within_subj_effect_sd <- 2
+  within_subj_effect_sd <- wSEsd
 
   # define the effect statistical features
   population_sd = p_sd

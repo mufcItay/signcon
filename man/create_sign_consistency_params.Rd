@@ -2,7 +2,7 @@
 % Please edit documentation in R/sign_consistency_utils.R
 \name{create_sign_consistency_params}
 \alias{create_sign_consistency_params}
-\title{Create Paramters For Sign Consistency}
+\title{Create Parameters For Sign Consistency}
 \usage{
 create_sign_consistency_params(nSplits, summary_function)
 }
@@ -15,5 +15,5 @@ create_sign_consistency_params(nSplits, summary_function)
 a list of parameters that includes both arguments.
 }
 \description{
-The function creates a list of paramteres to be later passed to the sign consistency function.
+The function creates a list of parameters to be later passed to the sign consistency function.
 }
