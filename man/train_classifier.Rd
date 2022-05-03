@@ -4,7 +4,16 @@
 \alias{train_classifier}
 \title{Title}
 \usage{
-train_classifier(formula, data, labels, model, K, handleImbalance)
+train_classifier(
+  formula,
+  data,
+  idv = "id",
+  dv = "y",
+  iv = "condition",
+  model,
+  K,
+  handleImbalance
+)
 }
 \arguments{
 \item{handleImbalance}{}

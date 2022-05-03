@@ -21,7 +21,7 @@ classify_conditions <- function(data, idv = "id", dv = "y", iv = "condition", pa
   data[,iv] <- as.factor(labels)
   # train the classifier according to the training control regime defined by the 'tc' parameter
   pred_formula <- as.formula(paste(iv, dv, sep = '~'))
-  res <- train_classifier(pred_formula, data, labels, model, K, imbalance)
+  res <- train_classifier(pred_formula, data, idv, dv, iv, model, K, imbalance)
   return (res)
 }
 
@@ -54,10 +54,12 @@ create_classification_params <- function(model = NA, K = NA, handleImbalance = N
 #' @param handleImbalance
 #'
 #' @return
-train_classifier <- function(formula, data, labels, model, K, handleImbalance) {
+train_classifier <- function(formula, data, idv = "id", dv = "y", iv = "condition", model, K, handleImbalance) {
   if (handleImbalance == 'weights') {
+    labels <- as.factor(dplyr::pull(data,iv))
     ulabels <- unique(labels)
-    labels <- labels
+    x <- dplyr::pull(data,dv)
+    y <- as.factor(dplyr::pull(data,iv))
 
     if(model == 'svmLinear') {
       weightPerClass <- unlist(lapply(ulabels, function (l) (1 - length(labels[labels == l])/length(labels))))
@@ -65,7 +67,7 @@ train_classifier <- function(formula, data, labels, model, K, handleImbalance) {
       weights <- weightPerClass
       names(weights) <- as.character(ulabels)
       K = ifelse(is.na(K), nrow(data), K)
-      model <- ksvm(x = data$var, y= as.factor(data$condition), cross = K,
+      model <- ksvm(x = x, y= y, cross = K,
                 class.weights=weights, kernel = "vanilladot")
       retVal <- 1 - model@error
     } else {
@@ -77,7 +79,7 @@ train_classifier <- function(formula, data, labels, model, K, handleImbalance) {
   }
   else	{
     if(model == 'svmLinear') {
-      model <- ksvm(x = data$var, y= as.factor(data$condition), cross = K, kernel = "vanilladot")
+      model <- ksvm(x = x, y= y, cross = K, kernel = "vanilladot")
       retVal <- 1 - model@error
     } else {
       trainControl <- trainControl(K)
