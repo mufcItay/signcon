@@ -60,13 +60,13 @@ train_classifier <- function(formula, data, idv = "id", dv = "y", iv = "conditio
     ulabels <- unique(labels)
     x <- dplyr::pull(data,dv)
     y <- as.factor(dplyr::pull(data,iv))
+    K = ifelse(is.na(K), min(table(labels)), K)
 
     if(model == 'svmLinear') {
       weightPerClass <- unlist(lapply(ulabels, function (l) (1 - length(labels[labels == l])/length(labels))))
       weights <- list()
       weights <- weightPerClass
       names(weights) <- as.character(ulabels)
-      K = ifelse(is.na(K), nrow(data), K)
       model <- ksvm(x = x, y= y, cross = K,
                 class.weights=weights, kernel = "vanilladot")
       retVal <- 1 - model@error
