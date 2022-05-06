@@ -12,7 +12,7 @@
 #'   \item summary_function - The summary function applied to the dependent variable (dv) under each split of the data.
 #' }
 #'
-#' @return
+#' @return the function returns the mean consistency of signs for the given data
 calculate_sign_consistency <- function(data, idv = "id", dv = "y", iv = "condition", params) {
   # get the dependent variable column
   y <- dplyr::pull(data, dv)

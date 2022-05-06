@@ -2,7 +2,7 @@
 % Please edit documentation in R/classification_utils.R
 \name{classify_conditions}
 \alias{classify_conditions}
-\title{Calculate Sign Consistency}
+\title{Classify Conditions}
 \usage{
 classify_conditions(data, idv = "id", dv = "y", iv = "condition", params)
 }
@@ -11,19 +11,21 @@ classify_conditions(data, idv = "id", dv = "y", iv = "condition", params)
 
 \item{idv}{The name of the subject identifier column.}
 
-\item{dv}{The dependent variable to apply the summary function (summary_function) to.}
+\item{dv}{The dependent variable to classify conditions according to.}
 
-\item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.}
+\item{iv}{Labels of an independent variable - the condition to classify, indicating the different levels under which the dependent variable (dv) is expected to differ.}
 
 \item{params}{A list of parameters used by the function to calculate sign consistency. Includes:
 \itemize{
-  \item model -
+  \item model - the name of the classification model to use.
+  \item K - the number of folds to use when calculating the performance of the classifier.
+  \item handleImbalance - a string indicating whether and which class imbalance adjustment to use.
 }}
 }
 \value{
 The classification accuracy of the classifier in classifying the 'iv' parameter based on the 'dv' parameter.
 }
 \description{
-The function applies the sign consistency analysis to the dataset of a specific individual
+The function fits the data of an individual with the given classifier and than uses of a specific individual.
 Called from 'get_true_score'
 }

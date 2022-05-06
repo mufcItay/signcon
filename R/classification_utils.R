@@ -1,90 +1,119 @@
-#' @title Calculate Sign Consistency
-#' @description The function applies the sign consistency analysis to the dataset of a specific individual
+#' @title Classify Conditions
+#' @description The function fits the data of an individual with the given classifier and than uses of a specific individual.
 #' Called from 'get_true_score'
 #'
 #' @param data The dataset of a specific individual, arranged according to the independent variable ('iv')
 #' @param idv The name of the subject identifier column.
-#' @param dv The dependent variable to apply the summary function (summary_function) to.
-#' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.
+#' @param dv The dependent variable to classify conditions according to.
+#' @param iv Labels of an independent variable - the condition to classify, indicating the different levels under which the dependent variable (dv) is expected to differ.
 #' @param params A list of parameters used by the function to calculate sign consistency. Includes:
 #' \itemize{
-#'   \item model -
+#'   \item model - the name of the classification model to use.
+#'   \item K - the number of folds to use when calculating the performance of the classifier.
+#'   \item handleImbalance - a string indicating whether and which class imbalance adjustment to use.
 #' }
 #'
 #' @return The classification accuracy of the classifier in classifying the 'iv' parameter based on the 'dv' parameter.
 classify_conditions <- function(data, idv = "id", dv = "y", iv = "condition", params) {
-  # get the parameters for the calculation of sign consistency
+  # get the classifier parameters to use
   model <- params$model
   K <- params$K
   imbalance <- params$handleImbalance
+  # get the condition names to classify, and cast them as a factor variable
   labels <- as.factor(dplyr::pull(data,iv))
   data[,iv] <- as.factor(labels)
-  # train the classifier according to the training control regime defined by the 'tc' parameter
-  pred_formula <- as.formula(paste(iv, dv, sep = '~'))
+  # set the classification formula
+  pred_formula <- stats::as.formula(paste(iv, dv, sep = '~'))
+  # train the classifier according to the configuration defined by the 'params' argument
   res <- train_classifier(pred_formula, data, idv, dv, iv, model, K, imbalance)
   return (res)
 }
 
-#' @title Create Parameters For Sign Consistency
-#' @description The function creates a list of paramteres to be later passed to the sign consistency function.
+#' @title Create Parameters For Classification
+#' @description The function creates a list of parameters to be later passed to the classification
+#' @param model - the name of the classification model to use. Currently supported value: 'svmLinear' (a SVM classifier with a linear kernel from the kernlab package).
+#' @param K - the number of folds to use when calculating the performance of the classifier. The default value is set to the number of observations of the minority class.
+#' @param handleImbalance - a string indicating whether and which class imbalance adjustment to use.
+#' Currently supported value: 'weights' - handles imbalance by assigning different weights for each class that should balance the sample.
 #'
-#' @param model -
-#'
-#' @return a list of parameters that includes both arguments.
+#' @return a list of parameters that includes all arguments after applying defualt values.
 create_classification_params <- function(model = NA, K = NA, handleImbalance = NA) {
   params <- list()
-  # the default value of model and training control are (linear) SVM and Leave one out training control.
+  # the default value is a linear SVM classifier and Leave one out training control.
   if(is.na(model)) { model <- 'svmLinear' }
   params$model <- model
+  # the default value is set to NA, to be handles later in the training function and set to the number of observations of the minority class.
   if(is.na(K)) { K <- NA}
   params$K <- K
+  # the default value is set to the only currently available value of 'weights' which handles imbalance by assigning different weights for each class that should balance the sample.
   if(is.na(handleImbalance)) { handleImbalance <- 'weights' }
   params$handleImbalance <- handleImbalance
 
   return (params)
 }
 
-#' Title
+#' Train Classifier
 #'
-#' @param formula
-#' @param data
-#' @param labels
-#' @param model
-#' @param trainControl
-#' @param handleImbalance
+#' @param formula the formula that defines the classification task (e.g., iv ~ dv, in the general case).
+#' @param data The dataset of a specific individual, arranged according to the independent variable ('iv')
+#' @param idv The name of the subject identifier column.
+#' @param dv The dependent variable to classify conditions according to.
+#' @param iv Labels of an independent variable - the condition to classify, indicating the different levels under which the dependent variable (dv) is expected to differ.
+#' @param model - the name of the classification model to use.
+#' @param K - the number of folds to use when calculating the performance of the classifier. If K is set to 'NA', the function resets it to the number of observations of the minority class.
+#' @param handleImbalance - a string indicating whether and which class imbalance adjustment to use.
 #'
-#' @return
+#' @return the function returns the trained classifier accuracy rate
 train_classifier <- function(formula, data, idv = "id", dv = "y", iv = "condition", model, K, handleImbalance) {
-  if (handleImbalance == 'weights') {
-    labels <- as.factor(dplyr::pull(data,iv))
-    ulabels <- unique(labels)
-    x <- dplyr::pull(data,dv)
-    y <- as.factor(dplyr::pull(data,iv))
-    K = ifelse(is.na(K), min(table(labels)), K)
+  # gets all variables needed for classification
+  labels <- as.factor(dplyr::pull(data,iv))
+  ulabels <- unique(labels)
+  x <- dplyr::pull(data,dv)
+  y <- as.factor(dplyr::pull(data,iv))
+  # if K is set to 'NA', reset it to the minority class (maintainig a minimum of 1 sample per label in the validation set of each fold).
+  K = ifelse(is.na(K), min(table(labels)), K)
 
+  # handle the 'weights' impbalance handling technique by assigning different weights to each class,
+  # to blalance the sample of labels.
+  if (handleImbalance == 'weights') {
+    # if the model was set to a SVM classifier with a linear kernel, use kernlab's (startified) classifier.
     if(model == 'svmLinear') {
-      weightPerClass <- unlist(lapply(ulabels, function (l) (1 - length(labels[labels == l])/length(labels))))
-      weights <- list()
+      # calculate the weight of each class in the labels column,
+      # we set the weight of each observation as 1 - frequency rate of the label.
+      weightPerClass <- unlist(lapply(ulabels,  function (l)
+        (1 - length(labels[labels == l])/length(labels))))
+      # set weights as a named list (as required for kernlab's svm classifier)
       weights <- weightPerClass
       names(weights) <- as.character(ulabels)
-      model <- ksvm(x = x, y= y, cross = K,
-                class.weights=weights, kernel = "vanilladot")
+      # train the model, and calculate its accuracy as 1 - errors
+      model <- kernlab::ksvm(x = x, y= y, cross = K,
+                class.weights=weights, kernel = "vanilladot", kpar = list())
       retVal <- 1 - model@error
-    } else {
-      trainControl <- trainControl(K)
-      data$weight <- unlist(lapply(labels, function (l) (1/length(ulabels))/length(labels[labels == l])))
-      res <- train(formula, data = data, method = model, trControl = trainControl, weights = data$weight)
+    } else { # in case the user chose an alternative model, use the 'caret' package (TODO: NOT CHECKED)
+
+      # set training control - a configuration for the training regime
+      trainControl <- caret::trainControl(K)
+      # set weights to each sample
+      weight <- unlist(lapply(labels, function (l) (1/length(ulabels))/length(labels[labels == l])))
+      # train the model and return accuracy rate
+      res <- caret::train(formula, data = data, method = model, trControl = trainControl, weights = weight)
       retVal <- res$results$Accuracy
     }
   }
+  # if the use chose an alternative class imbalance handling technique
   else	{
+    # if the model was set to a SVM classifier with a linear kernel, use kernlab's (startified) classifier.
     if(model == 'svmLinear') {
-      model <- ksvm(x = x, y= y, cross = K, kernel = "vanilladot")
+      # train the model without using any handle imbalance technique (TODO: NOT SUPPORTING ALTERNATIVE CLASS IMBALANCE HANDLING TECHNIQUES)
+      model <- kernlab::ksvm(x = x, y= y, cross = K, kernel = "vanilladot", kpar = list())
       retVal <- 1 - model@error
-    } else {
-      trainControl <- trainControl(K)
+    } else { # in case the user chose an alternative model, use the 'caret' package (TODO: NOT CHECKED)
+      # set training control - a configuration for the training regime
+      trainControl <- caret::trainControl(K)
+      # set the class imbalace paramter accordign to user's preference
       tc$sampling <- handleImbalance
-      res <- train(formula, data = data, method = model, trControl = trainControl)
+      # train the model and return accuracy rate
+      res <- caret::train(formula, data = data, method = model, trControl = trainControl)
       retVal <- res$results$Accuracy
     }
   }

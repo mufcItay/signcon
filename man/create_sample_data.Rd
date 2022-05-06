@@ -2,7 +2,7 @@
 % Please edit documentation in R/create_sample_data.R
 \name{create_sample_data}
 \alias{create_sample_data}
-\title{Title}
+\title{Create Sample Data}
 \usage{
 create_sample_data(
   p_mean,
@@ -30,5 +30,5 @@ create_sample_data(
 a data frame with three columns: id (participant id), 'condition' (condition label), and 'var' (the dependent variable)
 }
 \description{
-Title
+The function generated mock data for tests and examples according to the arguments
 }

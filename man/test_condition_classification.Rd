@@ -25,22 +25,23 @@ test_condition_classification(
 
 \item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.}
 
-\item{classifier}{The classifier name. The default value (NA) will result in creating a SVM classifier with a linear kernel. See 'caret' package's method for more details.}
+\item{K}{- the number of folds to use when calculating the performance of the classifier. If K is set to 'NA', the function resets it to the number of observations of the minority class.}
 
-\item{handleImbalance}{The strategy to handle class imbalance. The default value (NA), will result in using weights to account for the imbalance. See 'caret' package's trainControl method for more details.}
+\item{classifier}{The classifier name. The default value (NA) will result in creating a SVM classifier with a linear kernel. See 'kernlab' package for more details.}
+
+\item{handleImbalance}{- a string indicating whether and which class imbalance adjustment to use.
+Currently supported value: 'weights' - handles imbalance by assigning different weights for each class that should balance the sample.}
 
 \item{perm_repetitions}{The number of label shuffling for each participant.}
 
 \item{null_dist_samples}{The number of samples taken from the null distribution.}
-
-\item{trainingControl}{The training control regime for testing for classification. The default value (NA), will result in using the maximal number of folds possible (LOOCV). See 'caret' package's trainControl function for more details.}
 }
 \value{
 A list including the results of the function
 \itemize{
-  \item p - The p_value of the mean classification accuracy across participants, under the bootstrappednull distribution.
+  \item p - The p_value of the mean classification accuracy across participants, under the bootstrapped null distribution.
   \item statistic - The group-level statstic describing the mean classification accuracy across participants.
-  \item null_dist - A numerical vector of samples of the classifier accuracies under the bootstrappednull distribution.
+  \item null_dist - A numerical vector of samples of the classifier accuracies under the bootstrapped null distribution.
 }
 }
 \description{
@@ -52,6 +53,4 @@ All levels of the independent variable must be included under each identifier.
 }
 \seealso{
 [weaknull::get_condition_classification()] which returns the probability of a consistent sign of a difference score for a random split of the data
-
-[caret::trainControl()] for the definition of the 'trainingControl' parameter
 }

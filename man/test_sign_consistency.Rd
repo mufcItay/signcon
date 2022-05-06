@@ -35,7 +35,7 @@ test_sign_consistency(
 \value{
 A list including the results of the function
 \itemize{
-  \item p - The p_value of the estimated sign consistency under the distribution of sign consistency probabilities under the bootstrappednull distribution.
+  \item p - The p_value of the estimated sign consistency under the distribution of sign consistency probabilities under the bootstrapped null distribution.
   \item statistic - The group-level statstic describing the mean sign consistency across participants.
   \item null_dist - A numerical vector of samples of sign consistency under the assumption that there is no consistent difference in the dependent variable (dv) between the levels of the independent variable (iv).
 }

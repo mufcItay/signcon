@@ -23,18 +23,18 @@ get_condition_classification(
 
 \item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.}
 
-\item{classifier}{The classifier name. The default value (NA) will result in creating a SVM classifier with a linear kernel. See 'caret' package's method for more details.}
+\item{classifier}{The classifier name. The default value (NA) will result in creating a SVM classifier with a linear kernel. See 'kernlab' package for more details.}
 
-\item{handleImbalance}{The strategy to handle class imbalance. The default value (NA), will result in using weights to account for the imbalance. See 'caret' package's trainControl method for more details.}
+\item{K}{- the number of folds to use when calculating the performance of the classifier. If K is set to 'NA', the function resets it to the number of observations of the minority class.}
 
-\item{trainingControl}{The training control regime for testing for classification. The default value (NA), will result in using the maximal number of folds possible (LOOCV). See 'caret' package's trainControl function for more details.}
+\item{handleImbalance}{- a string indicating whether and which class imbalance adjustment to use.
+Currently supported value: 'weights' - handles imbalance by assigning different weights for each class that should balance the sample.}
 }
 \value{
 A list including the results of the function
 \itemize{
-  \item accuracy - The mean classification accuracy across participants and folds.
+  \item statistic - The mean classification accuracy across participants and folds.
   \item accuracy_per_id - The classification accuracy across folds, for each participant.
-  \item prediction_results - A table including a 'k' column, indicating the fold index, a 'test' column, indicating the label to predict, and a 'prediction' column indicating the prediction accuracy for the test.
 }
 }
 \description{

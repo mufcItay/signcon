@@ -1,6 +1,7 @@
 
-#' Title
-#'
+#' Create Sample Data
+#' @description The function generated mock data for tests and examples according to the arguments
+
 #' @param p_mean the effect's population mean
 #' @param p_sd the standard deviation of the population's effect
 #' @param seed - a seed to use when generating the resulting data frame
@@ -11,7 +12,6 @@
 #' @return a data frame with three columns: id (participant id), 'condition' (condition label), and 'var' (the dependent variable)
 create_sample_data <- function(p_mean, p_sd, seed = 1, N = 30, trialsPerCnd = 100, wSEsd = 2) {
   set.seed(seed)
-  library(tibble)
   # 0 = faster condition (e.g., 'congruent'), 0 = slower condition (e.g., 'incongruent'),
   conditionLabels <- c(0,1)
   # define the number of trials across all conditions
@@ -31,11 +31,11 @@ create_sample_data <- function(p_mean, p_sd, seed = 1, N = 30, trialsPerCnd = 10
   iv <- rep(rep(conditionLabels, each = trialsPerCnd), N)
 
   # sample effects for each subject
-  subj_true_effect <- rnorm(N,population_mean,population_sd)
+  subj_true_effect <- stats::rnorm(N,population_mean,population_sd)
   # sample effects for each subject and trial
   subj_true_effect_per_trial <- rep(subj_true_effect, each = trialsN)
   # set the dependent variable columns according to baseine, the true effect, and the indepdent variable
-  dv <- rnorm(length(idv), effect_baseline, within_subj_effect_sd) + iv * subj_true_effect_per_trial
+  dv <- stats::rnorm(length(idv), effect_baseline, within_subj_effect_sd) + iv * subj_true_effect_per_trial
   # create a dataframe based on the three columns generated above
   sampled_data <- data.frame(id = idv, condition = iv, var = dv)
   return (sampled_data)

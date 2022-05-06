@@ -45,7 +45,7 @@ get_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", 
 #' @param null_dist_samples The number of samples taken from the null distribution.
 #' @return A list including the results of the function
 #' \itemize{
-#'   \item p - The p_value of the estimated sign consistency under the distribution of sign consistency probabilities under the bootstrappednull distribution.
+#'   \item p - The p_value of the estimated sign consistency under the distribution of sign consistency probabilities under the bootstrapped null distribution.
 #'   \item statistic - The group-level statstic describing the mean sign consistency across participants.
 #'   \item null_dist - A numerical vector of samples of sign consistency under the assumption that there is no consistent difference in the dependent variable (dv) between the levels of the independent variable (iv).
 #' }
@@ -74,14 +74,14 @@ test_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition",
 #' @param idv The name of the subject identifier column.
 #' @param dv The dependent variable to apply the summary function (summary_function) to.
 #' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.
-#' @param trainingControl The training control regime for testing for classification. The default value (NA), will result in using the maximal number of folds possible (LOOCV). See 'caret' package's trainControl function for more details.
-#' @param classifier The classifier name. The default value (NA) will result in creating a SVM classifier with a linear kernel. See 'caret' package's method for more details.
-#' @param handleImbalance The strategy to handle class imbalance. The default value (NA), will result in using weights to account for the imbalance. See 'caret' package's trainControl method for more details.
+#' @param classifier The classifier name. The default value (NA) will result in creating a SVM classifier with a linear kernel. See 'kernlab' package for more details.
+#' @param K - the number of folds to use when calculating the performance of the classifier. If K is set to 'NA', the function resets it to the number of observations of the minority class.
+#' @param handleImbalance - a string indicating whether and which class imbalance adjustment to use.
+#' Currently supported value: 'weights' - handles imbalance by assigning different weights for each class that should balance the sample.
 #' @return A list including the results of the function
 #' \itemize{
-#'   \item accuracy - The mean classification accuracy across participants and folds.
+#'   \item statistic - The mean classification accuracy across participants and folds.
 #'   \item accuracy_per_id - The classification accuracy across folds, for each participant.
-#'   \item prediction_results - A table including a 'k' column, indicating the fold index, a 'test' column, indicating the label to predict, and a 'prediction' column indicating the prediction accuracy for the test.
 #' }
 #' @seealso [weaknull::test_condition_classification()] which uses this function to test for the statistical significance of sign consistency.
 #' @export
@@ -90,7 +90,7 @@ get_condition_classification <- function(data, idv = "id", dv = "rt", iv = "cond
   res <- get_scores_per_subject(data, idv, dv, iv, params = params, f = classify_conditions)
   obs_stat <- mean(unlist(res))
 
-  ret <- list(accuracy_per_id = res, statistic = obs_stat)
+  ret <- list(statistic = obs_stat, accuracy_per_id = res)
   return(ret)
 }
 
@@ -106,19 +106,19 @@ get_condition_classification <- function(data, idv = "id", dv = "rt", iv = "cond
 #' @param idv The name of the subject identifier column.
 #' @param dv The dependent variable to apply the summary function (summary_function) to.
 #' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.
-#' @param trainingControl The training control regime for testing for classification. The default value (NA), will result in using the maximal number of folds possible (LOOCV). See 'caret' package's trainControl function for more details.
-#' @param classifier The classifier name. The default value (NA) will result in creating a SVM classifier with a linear kernel. See 'caret' package's method for more details.
-#' @param handleImbalance The strategy to handle class imbalance. The default value (NA), will result in using weights to account for the imbalance. See 'caret' package's trainControl method for more details.
+#' @param classifier The classifier name. The default value (NA) will result in creating a SVM classifier with a linear kernel. See 'kernlab' package for more details.
+#' @param K - the number of folds to use when calculating the performance of the classifier. If K is set to 'NA', the function resets it to the number of observations of the minority class.
+#' @param handleImbalance - a string indicating whether and which class imbalance adjustment to use.
+#' Currently supported value: 'weights' - handles imbalance by assigning different weights for each class that should balance the sample.
 #' @param perm_repetitions The number of label shuffling for each participant.
 #' @param null_dist_samples The number of samples taken from the null distribution.
 #' @return A list including the results of the function
 #' \itemize{
-#'   \item p - The p_value of the mean classification accuracy across participants, under the bootstrappednull distribution.
+#'   \item p - The p_value of the mean classification accuracy across participants, under the bootstrapped null distribution.
 #'   \item statistic - The group-level statstic describing the mean classification accuracy across participants.
-#'   \item null_dist - A numerical vector of samples of the classifier accuracies under the bootstrappednull distribution.
+#'   \item null_dist - A numerical vector of samples of the classifier accuracies under the bootstrapped null distribution.
 #' }
 #' @seealso [weaknull::get_condition_classification()] which returns the probability of a consistent sign of a difference score for a random split of the data
-#' @seealso [caret::trainControl()] for the definition of the 'trainingControl' parameter
 #' @export
 test_condition_classification <- function(data, idv = "id", dv = "rt", iv = "condition", K = NA, classifier = NA, handleImbalance = NA,perm_repetitions = 25, null_dist_samples = 10000) {
   params <- create_classification_params(classifier, K, handleImbalance)

@@ -86,7 +86,7 @@ get_scores_per_subject <- function(data, idv = "id", dv = "rt", iv = "condition"
   preprocessFs <- c(dplyr::arrange, preprocessFs)
   preprocessArgs = c(iv, preprocessArgs)
   # return the score of each individual by running 'f' on its 'prepared' data
-  return (data %>%
-            dplyr::group_by(!!dplyr::sym(idv)) %>%
+  return (data |>
+            dplyr::group_by(!!dplyr::sym(idv)) |>
             dplyr::group_map(~f(prepare_subject_data(.x,idv, dv, iv, preprocessFs, preprocessArgs), idv, dv, iv, params)))
 }

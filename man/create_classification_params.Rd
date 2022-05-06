@@ -2,16 +2,21 @@
 % Please edit documentation in R/classification_utils.R
 \name{create_classification_params}
 \alias{create_classification_params}
-\title{Create Parameters For Sign Consistency}
+\title{Create Parameters For Classification}
 \usage{
 create_classification_params(model = NA, K = NA, handleImbalance = NA)
 }
 \arguments{
-\item{model}{-}
+\item{model}{- the name of the classification model to use. Currently supported value: 'svmLinear' (a SVM classifier with a linear kernel from the kernlab package).}
+
+\item{K}{- the number of folds to use when calculating the performance of the classifier. The default value is set to the number of observations of the minority class.}
+
+\item{handleImbalance}{- a string indicating whether and which class imbalance adjustment to use.
+Currently supported value: 'weights' - handles imbalance by assigning different weights for each class that should balance the sample.}
 }
 \value{
-a list of parameters that includes both arguments.
+a list of parameters that includes all arguments after applying defualt values.
 }
 \description{
-The function creates a list of paramteres to be later passed to the sign consistency function.
+The function creates a list of parameters to be later passed to the classification
 }

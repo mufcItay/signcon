@@ -28,7 +28,7 @@ calculate_sign_consistency(
 }}
 }
 \value{
-
+the function returns the mean consistency of signs for the given data
 }
 \description{
 The function applies the sign consistency analysis to the dataset of a specific individual
