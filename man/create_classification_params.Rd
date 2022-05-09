@@ -7,7 +7,7 @@
 create_classification_params(model = NA, K = NA, handleImbalance = NA)
 }
 \arguments{
-\item{model}{- the name of the classification model to use. Currently supported value: 'svmLinear' (a SVM classifier with a linear kernel from the kernlab package).}
+\item{model}{- the name of the classification model to use. Currently supported value: 'linear' (a SVM classifier with a linear kernel from the 'e1071' package).}
 
 \item{K}{- the number of folds to use when calculating the performance of the classifier. The default value is set to the number of observations of the minority class.}
 

@@ -15,8 +15,8 @@ BugReports: https://github.com/mufcItay/weaknull/issues
 Imports: 
     dplyr,
     tidyr,
-    kernlab,
-    caret
+    caret,
+    e1071
 Suggests: 
     stats,
     testthat (>= 3.0.0),

@@ -27,7 +27,7 @@ test_condition_classification(
 
 \item{K}{- the number of folds to use when calculating the performance of the classifier. If K is set to 'NA', the function resets it to the number of observations of the minority class.}
 
-\item{classifier}{The classifier name. The default value (NA) will result in creating a SVM classifier with a linear kernel. See 'kernlab' package for more details.}
+\item{classifier}{The classifier name. The default value (NA) will result in creating a SVM classifier with a linear kernel. See 'e1071' package for more details.}
 
 \item{handleImbalance}{- a string indicating whether and which class imbalance adjustment to use.
 Currently supported value: 'weights' - handles imbalance by assigning different weights for each class that should balance the sample.}

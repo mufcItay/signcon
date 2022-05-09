@@ -31,7 +31,7 @@ classify_conditions <- function(data, idv = "id", dv = "y", iv = "condition", pa
 
 #' @title Create Parameters For Classification
 #' @description The function creates a list of parameters to be later passed to the classification
-#' @param model - the name of the classification model to use. Currently supported value: 'svmLinear' (a SVM classifier with a linear kernel from the kernlab package).
+#' @param model - the name of the classification model to use. Currently supported value: 'linear' (a SVM classifier with a linear kernel from the 'e1071' package).
 #' @param K - the number of folds to use when calculating the performance of the classifier. The default value is set to the number of observations of the minority class.
 #' @param handleImbalance - a string indicating whether and which class imbalance adjustment to use.
 #' Currently supported value: 'weights' - handles imbalance by assigning different weights for each class that should balance the sample.
@@ -40,7 +40,7 @@ classify_conditions <- function(data, idv = "id", dv = "y", iv = "condition", pa
 create_classification_params <- function(model = NA, K = NA, handleImbalance = NA) {
   params <- list()
   # the default value is a linear SVM classifier and Leave one out training control.
-  if(is.na(model)) { model <- 'svmLinear' }
+  if(is.na(model)) { model <- 'linear' }
   params$model <- model
   # the default value is set to NA, to be handles later in the training function and set to the number of observations of the minority class.
   if(is.na(K)) { K <- NA}
@@ -76,41 +76,36 @@ train_classifier <- function(formula, data, idv = "id", dv = "y", iv = "conditio
   # handle the 'weights' impbalance handling technique by assigning different weights to each class,
   # to blalance the sample of labels.
   if (handleImbalance == 'weights') {
-    # if the model was set to a SVM classifier with a linear kernel, use kernlab's (startified) classifier.
-    if(model == 'svmLinear') {
+    # if the model was set to a SVM classifier with a linear kernel, use e1071's classifier.
+    if(model == 'linear') {
       # calculate the weight of each class in the labels column,
-      # we set the weight of each observation as 1 - frequency rate of the label.
-      weightPerClass <- unlist(lapply(ulabels,  function (l)
-        (1 - length(labels[labels == l])/length(labels))))
-      # set weights as a named list (as required for kernlab's svm classifier)
-      weights <- weightPerClass
-      names(weights) <- as.character(ulabels)
-      # train the model, and calculate its accuracy as 1 - errors
-      model <- kernlab::ksvm(x = x, y= y, cross = K,
-                class.weights=weights, kernel = "vanilladot", kpar = list())
-      retVal <- 1 - model@error
+      weights <- min(table(labels)) / table(labels)
+      # train the model, and get its accuracy
+      model <- e1071::svm(x = x, y= y, cross = K, kernel = "linear", class.weights = weights)
+      retVal <- model$tot.accuracy
     } else { # in case the user chose an alternative model, use the 'caret' package (TODO: NOT CHECKED)
 
       # set training control - a configuration for the training regime
       trainControl <- caret::trainControl(K)
       # set weights to each sample
-      weight <- unlist(lapply(labels, function (l) (1/length(ulabels))/length(labels[labels == l])))
+      weights <- min(table(labels)) / table(labels)
       # train the model and return accuracy rate
-      res <- caret::train(formula, data = data, method = model, trControl = trainControl, weights = weight)
+      res <- caret::train(formula, data = data, method = model, trControl = trainControl, weights = weights)
       retVal <- res$results$Accuracy
     }
   }
   # if the use chose an alternative class imbalance handling technique
   else	{
-    # if the model was set to a SVM classifier with a linear kernel, use kernlab's (startified) classifier.
+    # if the model was set to a SVM classifier with a linear kernel, use e1071's classifier.
     if(model == 'svmLinear') {
       # train the model without using any handle imbalance technique (TODO: NOT SUPPORTING ALTERNATIVE CLASS IMBALANCE HANDLING TECHNIQUES)
-      model <- kernlab::ksvm(x = x, y= y, cross = K, kernel = "vanilladot", kpar = list())
-      retVal <- 1 - model@error
+      model <- e1071::svm(x = x, y= y, cross = K, kernel = "linear")
+      retVal <- model$tot.accuracy
+
     } else { # in case the user chose an alternative model, use the 'caret' package (TODO: NOT CHECKED)
       # set training control - a configuration for the training regime
       trainControl <- caret::trainControl(K)
-      # set the class imbalace paramter accordign to user's preference
+      # set the class imbalance parameter accordign to user's preference
       tc$sampling <- handleImbalance
       # train the model and return accuracy rate
       res <- caret::train(formula, data = data, method = model, trControl = trainControl)

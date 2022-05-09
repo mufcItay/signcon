@@ -74,7 +74,7 @@ test_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition",
 #' @param idv The name of the subject identifier column.
 #' @param dv The dependent variable to apply the summary function (summary_function) to.
 #' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.
-#' @param classifier The classifier name. The default value (NA) will result in creating a SVM classifier with a linear kernel. See 'kernlab' package for more details.
+#' @param classifier The classifier name. The default value (NA) will result in creating a SVM classifier with a linear kernel. See 'e1071' package for more details.
 #' @param K - the number of folds to use when calculating the performance of the classifier. If K is set to 'NA', the function resets it to the number of observations of the minority class.
 #' @param handleImbalance - a string indicating whether and which class imbalance adjustment to use.
 #' Currently supported value: 'weights' - handles imbalance by assigning different weights for each class that should balance the sample.
@@ -106,7 +106,7 @@ get_condition_classification <- function(data, idv = "id", dv = "rt", iv = "cond
 #' @param idv The name of the subject identifier column.
 #' @param dv The dependent variable to apply the summary function (summary_function) to.
 #' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.
-#' @param classifier The classifier name. The default value (NA) will result in creating a SVM classifier with a linear kernel. See 'kernlab' package for more details.
+#' @param classifier The classifier name. The default value (NA) will result in creating a SVM classifier with a linear kernel. See 'e1071' package for more details.
 #' @param K - the number of folds to use when calculating the performance of the classifier. If K is set to 'NA', the function resets it to the number of observations of the minority class.
 #' @param handleImbalance - a string indicating whether and which class imbalance adjustment to use.
 #' Currently supported value: 'weights' - handles imbalance by assigning different weights for each class that should balance the sample.

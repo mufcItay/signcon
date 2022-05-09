@@ -23,7 +23,7 @@ get_condition_classification(
 
 \item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.}
 
-\item{classifier}{The classifier name. The default value (NA) will result in creating a SVM classifier with a linear kernel. See 'kernlab' package for more details.}
+\item{classifier}{The classifier name. The default value (NA) will result in creating a SVM classifier with a linear kernel. See 'e1071' package for more details.}
 
 \item{K}{- the number of folds to use when calculating the performance of the classifier. If K is set to 'NA', the function resets it to the number of observations of the minority class.}
 

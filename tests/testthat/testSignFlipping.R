@@ -1,3 +1,4 @@
+# "Tests for the sign consistency functions"
 seed_test <- 1001
 nNullSamples <- 1000
 alpha <- .05
