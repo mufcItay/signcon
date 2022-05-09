@@ -70,19 +70,32 @@ train_classifier <- function(formula, data, idv = "id", dv = "y", iv = "conditio
   ulabels <- unique(labels)
   x <- dplyr::pull(data,dv)
   y <- as.factor(dplyr::pull(data,iv))
-  # if K is set to 'NA', reset it to the minority class (maintainig a minimum of 1 sample per label in the validation set of each fold).
+  data$x <- x
+  data$y <- y
+  # if K is set to 'NA', reset it to the minority class (maintaining a minimum of 1 sample per label in the validation set of each fold).
   K = ifelse(is.na(K), min(table(labels)), K)
+  folds <- caret::createFolds(y, k = K, list = TRUE, returnTrain = TRUE)
 
-  # handle the 'weights' impbalance handling technique by assigning different weights to each class,
-  # to blalance the sample of labels.
+  # handle the 'weights' imbalance handling technique by assigning different weights to each class,
+  # to balance the sample of labels.
   if (handleImbalance == 'weights') {
     # if the model was set to a SVM classifier with a linear kernel, use e1071's classifier.
     if(model == 'linear') {
       # calculate the weight of each class in the labels column,
       weights <- min(table(labels)) / table(labels)
+
       # train the model, and get its accuracy
-      model <- e1071::svm(x = x, y= y, cross = K, kernel = "linear", class.weights = weights)
-      retVal <- model$tot.accuracy
+      # model <- e1071::svm(x = x, y= y, cross = K, kernel = "linear", class.weights = weights)
+      # retVal <- model$tot.accuracy
+      res <- sapply(folds, function(f, data) {
+        train <- data[f, ]
+        test <- data[-f, ]
+        model <- e1071::svm(x = train$x, y= train$y, kernel = "linear", class.weights = weights)
+        pred <- stats::predict(model, test$x)
+        accuracy <- mean(test$y == pred)
+        return (accuracy)
+      }, data = data)
+      retVal <- mean(unlist(res))
     } else { # in case the user chose an alternative model, use the 'caret' package (TODO: NOT CHECKED)
 
       # set training control - a configuration for the training regime

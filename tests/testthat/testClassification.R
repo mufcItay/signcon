@@ -47,3 +47,31 @@ test_that("TestClassification.TestConditionClassification - Weak Null", {
 })
 
 
+test_that("TestClassification.TestConditionClassification - Imbalance - Effect", {
+  # test significant results from test  condition classification with a weak null
+  imbEffectData <- create_sample_data(1,.1, wSEsd = .5, N = nSubj, trialsPerCnd = nTrials, seed = seed_test)
+  # create class imbalance
+  imbEffectData <- imbEffectData |>
+    dplyr::group_by(id) |>
+    dplyr::slice(trialsPerCnd/2:dplyr::n())
+  res_imbEff <- test_condition_classification(imbEffectData, idv = "id", dv = 'var', iv = 'condition', null_dist_samples = 1000)
+
+  testthat::expect_type(res_imbEff$p, "double")
+  testthat::expect_length(res_imbEff$null_dist, nNullSamples)
+  testthat::expect_lt(res_imbEff$p, alpha)
+})
+
+
+test_that("TestClassification.TestConditionClassification - Imbalance - Null Effect", {
+  # test signific/ant results from test  condition classification with a weak null
+  imbNullEffectData <- create_sample_data(0,0, wSEsd = 2, N = nSubj, trialsPerCnd = nTrials, seed = seed_test)
+  # create class imbalance
+  imbNullEffectData <- imbNullEffectData |>
+    dplyr::group_by(id) |>
+    dplyr::slice(trialsPerCnd/2:dplyr::n())
+  res_imbNullEff <- test_condition_classification(imbNullEffectData, idv = "id", dv = 'var', iv = 'condition', null_dist_samples = 1000)
+
+  testthat::expect_type(res_imbNullEff$p, "double")
+  testthat::expect_length(res_imbNullEff$null_dist, nNullSamples)
+  testthat::expect_lt(alpha, res_imbNullEff$p)
+})

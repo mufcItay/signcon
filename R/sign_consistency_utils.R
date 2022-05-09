@@ -43,7 +43,10 @@ calculate_sign_consistency <- function(data, idv = "id", dv = "y", iv = "conditi
     group0_sign <- sign(statistic(y[!group & label]) - statistic(y[!group & !label]))
     group1_sign <- sign(statistic(y[group & label]) - statistic(y[group & !label]))
     # return the consistency of sign across groups
-    return (group0_sign == group1_sign)
+    is_consistent <- group0_sign == group1_sign
+    # if we could not compute one of the groups (na may result from no values under one or more group and label combination)
+    is_consistent <- ifelse(is.na(is_consistent), FALSE, is_consistent)
+    return (is_consistent)
   }
   # apply the function above for each split
   consistency <- sapply(1:nSplits, inner_calculate_sign_consistency)
