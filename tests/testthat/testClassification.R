@@ -53,7 +53,7 @@ test_that("TestClassification.TestConditionClassification - Imbalance - Effect",
   # create class imbalance
   imbEffectData <- imbEffectData |>
     dplyr::group_by(id) |>
-    dplyr::slice(trialsPerCnd/2:dplyr::n())
+    dplyr::slice(ceiling(nTrials/2):dplyr::n())
   res_imbEff <- test_condition_classification(imbEffectData, idv = "id", dv = 'var', iv = 'condition', null_dist_samples = 1000)
 
   testthat::expect_type(res_imbEff$p, "double")
@@ -63,15 +63,40 @@ test_that("TestClassification.TestConditionClassification - Imbalance - Effect",
 
 
 test_that("TestClassification.TestConditionClassification - Imbalance - Null Effect", {
-  # test signific/ant results from test  condition classification with a weak null
+  # test significant results from test  condition classification with a weak null
   imbNullEffectData <- create_sample_data(0,0, wSEsd = 2, N = nSubj, trialsPerCnd = nTrials, seed = seed_test)
   # create class imbalance
   imbNullEffectData <- imbNullEffectData |>
     dplyr::group_by(id) |>
-    dplyr::slice(trialsPerCnd/2:dplyr::n())
+    dplyr::slice(ceiling(nTrials/2):dplyr::n())
   res_imbNullEff <- test_condition_classification(imbNullEffectData, idv = "id", dv = 'var', iv = 'condition', null_dist_samples = 1000)
 
   testthat::expect_type(res_imbNullEff$p, "double")
   testthat::expect_length(res_imbNullEff$null_dist, nNullSamples)
   testthat::expect_lt(alpha, res_imbNullEff$p)
+})
+
+test_that("TestClassification.TestConditionClassification - Imbalance - Null Effect, No Adjustement", {
+  # test significant results from test  condition classification with a weak null
+  imbNullEffectData <- create_sample_data(0,0, wSEsd = 2, N = nSubj, trialsPerCnd = nTrials, seed = seed_test)
+  # create class imbalance
+  imbNullEffectNoAdjData <- imbNullEffectData |>
+    dplyr::group_by(id) |>
+    dplyr::slice(ceiling(nTrials/2):dplyr::n())
+  res_imbNullEffNoAdj <- test_condition_classification(imbNullEffectNoAdjData, idv = "id", dv = 'var', iv = 'condition',
+                                                       null_dist_samples = 1000, handleImbalance = 'NO')
+  res_imbNullEffAdj <- test_condition_classification(imbNullEffectNoAdjData, idv = "id", dv = 'var', iv = 'condition',
+                                                       null_dist_samples = 1000)
+
+  testthat::expect_type(res_imbNullEffAdj$p, "double")
+  testthat::expect_length(res_imbNullEffAdj$null_dist, nNullSamples)
+  testthat::expect_type(res_imbNullEffNoAdj$p, "double")
+  testthat::expect_length(res_imbNullEffNoAdj$null_dist, nNullSamples)
+
+  # we expect p_value results to be similar (no effect for both)
+  testthat::expect_lt(alpha, res_imbNullEffAdj$p)
+  testthat::expect_lt(alpha, res_imbNullEffNoAdj$p)
+
+  # we expect the statstic to defer (adj < no adj)
+  testthat::expect_lt(res_imbNullEffAdj$statistic, res_imbNullEffNoAdj$statistic)
 })

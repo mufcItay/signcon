@@ -15,7 +15,7 @@ create_classification_params(model = NA, K = NA, handleImbalance = NA)
 Currently supported value: 'weights' - handles imbalance by assigning different weights for each class that should balance the sample.}
 }
 \value{
-a list of parameters that includes all arguments after applying defualt values.
+a list of parameters that includes all arguments after applying default values.
 }
 \description{
 The function creates a list of parameters to be later passed to the classification

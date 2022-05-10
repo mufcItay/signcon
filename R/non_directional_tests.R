@@ -122,7 +122,7 @@ get_condition_classification <- function(data, idv = "id", dv = "rt", iv = "cond
 #' @export
 test_condition_classification <- function(data, idv = "id", dv = "rt", iv = "condition", K = NA, classifier = NA, handleImbalance = NA,perm_repetitions = 25, null_dist_samples = 10000) {
   params <- create_classification_params(classifier, K, handleImbalance)
-  res <- get_condition_classification(data, idv, dv, iv, classifier, K)
+  res <- get_condition_classification(data, idv, dv, iv, classifier, K, handleImbalance)
   null_dist <- get_null_distribution(data, idv, dv, iv, params = params, f = classify_conditions, null_dist_samples = null_dist_samples)
   nullN <- length(null_dist)
   p_val <- sum(res$statistic <= null_dist) / nullN

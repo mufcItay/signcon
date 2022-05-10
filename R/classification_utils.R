@@ -36,11 +36,11 @@ classify_conditions <- function(data, idv = "id", dv = "y", iv = "condition", pa
 #' @param handleImbalance - a string indicating whether and which class imbalance adjustment to use.
 #' Currently supported value: 'weights' - handles imbalance by assigning different weights for each class that should balance the sample.
 #'
-#' @return a list of parameters that includes all arguments after applying defualt values.
+#' @return a list of parameters that includes all arguments after applying default values.
 create_classification_params <- function(model = NA, K = NA, handleImbalance = NA) {
   params <- list()
   # the default value is a linear SVM classifier and Leave one out training control.
-  if(is.na(model)) { model <- 'linear' }
+  if(is.na(model)) { model <- 'SVMLinear' }
   params$model <- model
   # the default value is set to NA, to be handles later in the training function and set to the number of observations of the minority class.
   if(is.na(K)) { K <- NA}
@@ -80,13 +80,11 @@ train_classifier <- function(formula, data, idv = "id", dv = "y", iv = "conditio
   # to balance the sample of labels.
   if (handleImbalance == 'weights') {
     # if the model was set to a SVM classifier with a linear kernel, use e1071's classifier.
-    if(model == 'linear') {
+    if(model == 'SVMLinear') {
       # calculate the weight of each class in the labels column,
       weights <- min(table(labels)) / table(labels)
 
       # train the model, and get its accuracy
-      # model <- e1071::svm(x = x, y= y, cross = K, kernel = "linear", class.weights = weights)
-      # retVal <- model$tot.accuracy
       res <- sapply(folds, function(f, data) {
         train <- data[f, ]
         test <- data[-f, ]
@@ -110,11 +108,17 @@ train_classifier <- function(formula, data, idv = "id", dv = "y", iv = "conditio
   # if the use chose an alternative class imbalance handling technique
   else	{
     # if the model was set to a SVM classifier with a linear kernel, use e1071's classifier.
-    if(model == 'svmLinear') {
+    if(model == 'SVMLinear') {
       # train the model without using any handle imbalance technique (TODO: NOT SUPPORTING ALTERNATIVE CLASS IMBALANCE HANDLING TECHNIQUES)
-      model <- e1071::svm(x = x, y= y, cross = K, kernel = "linear")
-      retVal <- model$tot.accuracy
-
+      res <- sapply(folds, function(f, data) {
+        train <- data[f, ]
+        test <- data[-f, ]
+        model <- e1071::svm(x = x, y= y, cross = K, kernel = "linear")
+        pred <- stats::predict(model, test$x)
+        accuracy <- mean(test$y == pred)
+        return (accuracy)
+      }, data = data)
+      retVal <- mean(unlist(res))
     } else { # in case the user chose an alternative model, use the 'caret' package (TODO: NOT CHECKED)
       # set training control - a configuration for the training regime
       trainControl <- caret::trainControl(K)
