@@ -1,9 +1,9 @@
 #' @title Calculate Sign Consistency
-#' @description The function applies the sign consistency analysis to the dataset of a specific individual
+#' @description The function applies the sign consistency analysis to the dataset of a specific participant.
 #' Called from 'get_true_score'
 #'
-#' @param data The dataset of a specific individual, arranged according to the independent variable ('iv')
-#' @param idv The name of the subject identifier column.
+#' @param data The dataset of a specific participant, arranged according to the independent variable ('iv')
+#' @param idv The name of the participant identifier column.
 #' @param dv The dependent variable to apply the summary function (summary_function) to.
 #' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.
 #' @param params A list of parameters used by the function to calculate sign consistency. Includes:

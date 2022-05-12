@@ -4,19 +4,16 @@
 \alias{create_classification_params}
 \title{Create Parameters For Classification}
 \usage{
-create_classification_params(model = NA, K = NA, handleImbalance = NA)
+create_classification_params(K = NA, handleImbalance = NA)
 }
 \arguments{
-\item{model}{- the name of the classification model to use. Currently supported value: 'linear' (a SVM classifier with a linear kernel from the 'e1071' package).}
-
 \item{K}{- the number of folds to use when calculating the performance of the classifier. The default value is set to the number of observations of the minority class.}
 
-\item{handleImbalance}{- a string indicating whether and which class imbalance adjustment to use.
-Currently supported value: 'weights' - handles imbalance by assigning different weights for each class that should balance the sample.}
+\item{handleImbalance}{- A Boolean indicating whether to adjust class imbalance (using different weight for each label).}
 }
 \value{
 a list of parameters that includes all arguments after applying default values.
 }
 \description{
-The function creates a list of parameters to be later passed to the classification
+The function creates a list of parameters to be later passed to the classification function.
 }

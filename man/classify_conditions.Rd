@@ -11,21 +11,21 @@ classify_conditions(data, idv = "id", dv = "y", iv = "condition", params)
 
 \item{idv}{The name of the subject identifier column.}
 
-\item{dv}{The dependent variable to classify conditions according to.}
+\item{dv}{The name of the dependent variable column to classify conditions according to.}
 
-\item{iv}{Labels of an independent variable - the condition to classify, indicating the different levels under which the dependent variable (dv) is expected to differ.}
+\item{iv}{The name of the independent variable column - the condition to classify,
+indicating the different levels under which the dependent variable (dv) is expected to differ.}
 
-\item{params}{A list of parameters used by the function to calculate sign consistency. Includes:
+\item{params}{A list of parameters used by the function to perform the classification task. Includes:
 \itemize{
-  \item model - the name of the classification model to use.
   \item K - the number of folds to use when calculating the performance of the classifier.
-  \item handleImbalance - a string indicating whether and which class imbalance adjustment to use.
+  \item handleImbalance - A Boolean indicating whether to adjust class imbalance (using different weight for each label)
 }}
 }
 \value{
 The classification accuracy of the classifier in classifying the 'iv' parameter based on the 'dv' parameter.
 }
 \description{
-The function fits the data of an individual with the given classifier and than uses of a specific individual.
+The function fits the data of an individual with a linear SVM classifier and than uses of a specific individual.
 Called from 'get_true_score'
 }

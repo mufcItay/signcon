@@ -9,7 +9,6 @@ get_condition_classification(
   idv = "id",
   dv = "rt",
   iv = "condition",
-  classifier = NA,
   K = NA,
   handleImbalance = NA
 )
@@ -17,33 +16,32 @@ get_condition_classification(
 \arguments{
 \item{data}{The dataset to analyze}
 
-\item{idv}{The name of the subject identifier column.}
+\item{idv}{The name of the participant identifier column.}
 
 \item{dv}{The dependent variable to apply the summary function (summary_function) to.}
 
 \item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.}
 
-\item{classifier}{The classifier name. The default value (NA) will result in creating a SVM classifier with a linear kernel. See 'e1071' package for more details.}
+\item{K}{- the number of folds to use when calculating the performance of the classifier. If K is set to 'NA' (it's default value), the function will set it to the number of observations of the minority class.}
 
-\item{K}{- the number of folds to use when calculating the performance of the classifier. If K is set to 'NA', the function resets it to the number of observations of the minority class.}
-
-\item{handleImbalance}{- a string indicating whether and which class imbalance adjustment to use.
-Currently supported value: 'weights' - handles imbalance by assigning different weights for each class that should balance the sample.}
+\item{handleImbalance}{- A Boolean indicating whether to adjust class imbalance (using different weight for each label)}
 }
 \value{
 A list including the results of the function
 \itemize{
-  \item statistic - The mean classification accuracy across participants and folds.
+  \item statistic - The average classification accuracy across participants and folds.
   \item accuracy_per_id - The classification accuracy across folds, for each participant.
 }
 }
 \description{
-The function returns the mean classification accuracy of condition labels according to a dependent variable of each participant's data.
+The function returns the average classification accuracy of condition labels according to a dependent variable of each participant's data.
 The function accepts a dataset in long format with specific columns: identifier (id), independent and dependent variables (iv and dv, respectively).
-For each participant, the function calculates the k-fold cross-validated accuracy of a classifier trained to predict the labels of levels under the independent variable (iv) based on the dependent variable (dv).
-Then, it returns the mean accuracy of individual participants classifiers.
+For each participant, the function calculates the k-fold cross-validated accuracy of a SVM classifier with a linear kernel, trained to predict the labels of levels under the independent variable (iv) based on the dependent variable (dv).
+Then, it returns the average accuracy of individual participants' classifiers.
 All levels of the independent variable must be included under each identifier.
 }
 \seealso{
-[weaknull::test_condition_classification()] which uses this function to test for the statistical significance of sign consistency.
+[weaknull::test_condition_classification()] which uses this function to test for the significance of condition classification accuracy.
+
+[e1071::svm()] the SVM classifier used in this function
 }

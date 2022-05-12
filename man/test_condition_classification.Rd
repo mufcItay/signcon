@@ -10,7 +10,6 @@ test_condition_classification(
   dv = "rt",
   iv = "condition",
   K = NA,
-  classifier = NA,
   handleImbalance = NA,
   perm_repetitions = 25,
   null_dist_samples = 10000
@@ -19,7 +18,7 @@ test_condition_classification(
 \arguments{
 \item{data}{The dataset to analyze}
 
-\item{idv}{The name of the subject identifier column.}
+\item{idv}{The name of the participant identifier column.}
 
 \item{dv}{The dependent variable to apply the summary function (summary_function) to.}
 
@@ -27,10 +26,7 @@ test_condition_classification(
 
 \item{K}{- the number of folds to use when calculating the performance of the classifier. If K is set to 'NA', the function resets it to the number of observations of the minority class.}
 
-\item{classifier}{The classifier name. The default value (NA) will result in creating a SVM classifier with a linear kernel. See 'e1071' package for more details.}
-
-\item{handleImbalance}{- a string indicating whether and which class imbalance adjustment to use.
-Currently supported value: 'weights' - handles imbalance by assigning different weights for each class that should balance the sample.}
+\item{handleImbalance}{- A Boolean indicating whether to adjust class imbalance (using different weight for each label)}
 
 \item{perm_repetitions}{The number of label shuffling for each participant.}
 
@@ -39,18 +35,20 @@ Currently supported value: 'weights' - handles imbalance by assigning different 
 \value{
 A list including the results of the function
 \itemize{
-  \item p - The p_value of the mean classification accuracy across participants, under the bootstrapped null distribution.
-  \item statistic - The group-level statstic describing the mean classification accuracy across participants.
+  \item p - The p_value of the average classification accuracy across participants, under the bootstrapped null distribution.
+  \item statistic - The group-level statistic describing the average classification accuracy across participants.
   \item null_dist - A numerical vector of samples of the classifier accuracies under the bootstrapped null distribution.
 }
 }
 \description{
-The function tests for a significant mean classification accuracy of condition labels according to a dependent variable across participants (without assuming a directional effect), using bootstrapping and permutating each participants' independent variable labels.
+The function tests for a significant average classification accuracy of condition labels according to a dependent variable across participants (without assuming a directional effect), using bootstrapping and permutating each participants' independent variable labels.
 The function accepts a dataset in long format with specific columns: identifier (id), independent and dependent variables (iv and dv, respectively).
-For each participant, the function calculates the k-fold cross-validated accuracy of a classifier trained to predict the labels of levels under the independent variable (iv) based on the dependent variable (dv).
-Then, the mean classification accuracy across participants is tested against a bootstrapped null distribution in which classification accuracy is calculated for each participant after shuffling its independent variable labels(see Stelzer, J., Chen, Y., & Turner, R. (2013)).
+For each participant, the function calculates the k-fold cross-validated accuracy of a SVM classifier with a linear kernel trained to predict the labels of levels under the independent variable (iv) based on the dependent variable (dv).
+Then, the average classification accuracy across participants is tested against a bootstrapped null distribution in which classification accuracy is calculated for each participant after shuffling its independent variable labels(see Stelzer, J., Chen, Y., & Turner, R. (2013)).
 All levels of the independent variable must be included under each identifier.
 }
 \seealso{
-[weaknull::get_condition_classification()] which returns the probability of a consistent sign of a difference score for a random split of the data
+[weaknull::get_condition_classification()] returns the condition classification accuracy of each participant in the dataset.
+
+[e1071::svm()] the SVM classifier used in this function
 }

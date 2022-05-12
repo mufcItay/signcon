@@ -18,7 +18,7 @@ test_sign_consistency(
 \arguments{
 \item{data}{The dataset to analyze}
 
-\item{idv}{The name of the subject identifier column.}
+\item{idv}{The name of the participant identifier column.}
 
 \item{dv}{The dependent variable to apply the summary function (summary_function) to.}
 
@@ -26,7 +26,7 @@ test_sign_consistency(
 
 \item{nSplits}{The number of splits to use when estimating sign consistency probability.}
 
-\item{summary_function}{The summary function applied  to the dependent variable (dv) under each level of the independent variable (iv) for each identifier (id).}
+\item{summary_function}{The summary function to apply to the dependent variable (dv) under each level of the independent variable (iv) for each identifier (id).}
 
 \item{perm_repetitions}{The number of label shuffling for each participant.}
 
@@ -35,18 +35,18 @@ test_sign_consistency(
 \value{
 A list including the results of the function
 \itemize{
-  \item p - The p_value of the estimated sign consistency under the distribution of sign consistency probabilities under the bootstrapped null distribution.
-  \item statistic - The group-level statstic describing the mean sign consistency across participants.
-  \item null_dist - A numerical vector of samples of sign consistency under the assumption that there is no consistent difference in the dependent variable (dv) between the levels of the independent variable (iv).
+  \item p - The p_value of the estimated sign consistency compared with the distribution of sign consistency probabilities under the bootstrapped null distribution.
+  \item statistic - The group-level statistic describing the average sign consistency across participants.
+  \item null_dist - A numerical vector of samples of sign consistency under the null hypothesis (no consistent difference in the dependent variable (dv) between the levels of the independent variable (iv)).
 }
 }
 \description{
-The function tests for a consistent sign of a difference score for a random split of the data, using bootstrapping and permutating each participants' independent variable labels.
+The function tests for a consistent sign of a difference score for a random split of the data, using bootstrapping and permuting each participants' independent variable labels.
 The function accepts a dataset in long format with specific columns: identifier (id), independent and dependent variables (iv and dv, respectively).
 For each participant, the function calculates the estimated probability that for a random splitting of the data, the summary function (summary_function) returns two values with the same sign when applied to the two halves.
-Then, the mean sign consistency across participants is tested against a bootstrapped null distribution in which sign consistency probabilities are calculated for each participant after shuffling its independent variable labels (see Stelzer, J., Chen, Y., & Turner, R. (2013)).
+Then, the average sign consistency across participants is tested against a bootstrapped null distribution in which sign consistency probabilities are calculated for each participant after shuffling its independent variable labels (see Stelzer, J., Chen, Y., & Turner, R. (2013)).
 All levels of the independent variable must be included under each identifier.
 }
 \seealso{
-[weaknull::get_sign_consistency()] which returns the probability of a consistent sign of a difference score for a random split of the data
+[weaknull::get_sign_consistency()] returns the probability of a consistent sign of a difference score for a random split of the data
 }

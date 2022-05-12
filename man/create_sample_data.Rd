@@ -22,9 +22,9 @@ create_sample_data(
 
 \item{N}{- the number of simulated participants}
 
-\item{trialsPerCnd}{- the number of trials per condition}
+\item{trialsPerCnd}{- the number of simulated trials per condition}
 
-\item{wSEsd}{- the standard deviation of within participant (and condition) measures (error term)}
+\item{wSEsd}{- the standard deviation of the dependent measure (within subject error term)}
 }
 \value{
 a data frame with three columns: id (participant id), 'condition' (condition label), and 'var' (the dependent variable)

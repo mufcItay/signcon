@@ -16,7 +16,7 @@ get_sign_consistency(
 \arguments{
 \item{data}{The dataset to analyze.}
 
-\item{idv}{The name of the subject identifier column.}
+\item{idv}{The name of the participant identifier column.}
 
 \item{dv}{The dependent variable to apply the summary function (summary_function) to.}
 
@@ -24,20 +24,20 @@ get_sign_consistency(
 
 \item{nSplits}{The number of splits to use when estimating sign consistency probability.}
 
-\item{summary_function}{The summary function applied to the dependent variable (dv) under each level of the independent variable (iv) for each participant (id).}
+\item{summary_function}{The summary function to apply to the dependent variable (dv) under each level of the independent variable (iv) for each participant (id).}
 }
 \value{
 A list including the results of the function
 \itemize{
-  \item statistic - The mean sign consistency across all participants.
+  \item statistic - The average sign consistency across all participants.
   \item consistency_per_id - Sign consistency estimate for each participant.
 }
 }
 \description{
-The function returns the mean probability of a consistent difference score sign for a random split of each participant's data.
+The function returns the average probability of a consistent difference score sign (comparing two conditions) for a random split of each participant's data.
 The function accepts a dataset in long format with specific columns: identifier (id), independent and dependent variables (iv and dv, respectively).
 For each participant, the function calculates the estimated probability that for a random splitting of the data, the summary function (summary_function) returns two values with the same sign when applied to the two halves.
-Then, it returns the mean sign consistency probability across participants.
+Then, the average sign consistency probability across participants is calculated and returned.
 All levels of the independent variable must be included under each identifier.
 }
 \seealso{

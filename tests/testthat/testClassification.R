@@ -84,7 +84,7 @@ test_that("TestClassification.TestConditionClassification - Imbalance - Null Eff
     dplyr::group_by(id) |>
     dplyr::slice(ceiling(nTrials/2):dplyr::n())
   res_imbNullEffNoAdj <- test_condition_classification(imbNullEffectNoAdjData, idv = "id", dv = 'var', iv = 'condition',
-                                                       null_dist_samples = 1000, handleImbalance = 'NO')
+                                                       null_dist_samples = 1000, handleImbalance = FALSE)
   res_imbNullEffAdj <- test_condition_classification(imbNullEffectNoAdjData, idv = "id", dv = 'var', iv = 'condition',
                                                        null_dist_samples = 1000)
 

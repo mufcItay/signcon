@@ -13,9 +13,9 @@ calculate_sign_consistency(
 )
 }
 \arguments{
-\item{data}{The dataset of a specific individual, arranged according to the independent variable ('iv')}
+\item{data}{The dataset of a specific participant, arranged according to the independent variable ('iv')}
 
-\item{idv}{The name of the subject identifier column.}
+\item{idv}{The name of the participant identifier column.}
 
 \item{dv}{The dependent variable to apply the summary function (summary_function) to.}
 
@@ -31,6 +31,6 @@ calculate_sign_consistency(
 the function returns the mean consistency of signs for the given data
 }
 \description{
-The function applies the sign consistency analysis to the dataset of a specific individual
+The function applies the sign consistency analysis to the dataset of a specific participant.
 Called from 'get_true_score'
 }
