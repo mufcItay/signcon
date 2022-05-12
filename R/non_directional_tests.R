@@ -21,9 +21,9 @@
 get_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", nSplits = 500, summary_function = base::mean) {
   params <- create_sign_consistency_params(nSplits, summary_function)
   res <- get_scores_per_participant(data, idv, dv, iv, params = params, f = calculate_sign_consistency)
-  obs_stat <- base::mean(unlist(res))
+  obs_stat <- base::mean(unlist(res$score))
 
-  ret <- list(consistency_per_id = res, statistic = obs_stat)
+  ret <- list(statistic = obs_stat, consistency_per_id = res)
   return(ret)
 }
 
@@ -87,7 +87,7 @@ test_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition",
 get_condition_classification <- function(data, idv = "id", dv = "rt", iv = "condition", K = NA, handleImbalance = NA) {
   params <- create_classification_params(K, handleImbalance)
   res <- get_scores_per_participant(data, idv, dv, iv, params = params, f = classify_conditions)
-  obs_stat <- mean(unlist(res))
+  obs_stat <- mean(unlist(res$score))
 
   ret <- list(statistic = obs_stat, accuracy_per_id = res)
   return(ret)

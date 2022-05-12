@@ -48,7 +48,8 @@ get_null_distribution <- function(data, idv = "id", dv = "rt", iv = "condition",
     })
     preprocessArgs <- c(preprocessArgs, iv)
     # get the scores per participant for the shuffled data
-    get_scores_per_participant(data, idv, dv, iv, preprocessFs, preprocessArgs, params, f)
+    res <- get_scores_per_participant(data, idv, dv, iv, preprocessFs, preprocessArgs, params, f)
+    res$score
   }
   # use the inner_shuffle function to create #'perm_repetitions' per participant
   shuffled_scores <- sapply(1:perm_repetitions, inner_shuffle)
@@ -80,7 +81,7 @@ get_null_distribution <- function(data, idv = "id", dv = "rt", iv = "condition",
 #' @param params Configuration for the function to apply to the data of each participant ('f').
 #' @param f The function to apply to the data to compute the score of interest for each participant.
 #'
-#' @return The function returns a list of the computed scores of each participant
+#' @return The function returns a data frame, mapping the 'idv' column with a 'score' columns of the scores of each participant.
 get_scores_per_participant <- function(data, idv = "id", dv = "rt", iv = "condition", preprocessFs = c(), preprocessArgs = c(), params, f) {
   # define a preprocessing function that arranges data uniformly according to the values of the independent variable
   preprocessFs <- c(dplyr::arrange, preprocessFs)
@@ -88,5 +89,5 @@ get_scores_per_participant <- function(data, idv = "id", dv = "rt", iv = "condit
   # return the score of each participant by running 'f' on its 'prepared' data
   return (data |>
             dplyr::group_by(!!dplyr::sym(idv)) |>
-            dplyr::group_map(~f(prepare_participant_data(.x,idv, dv, iv, preprocessFs, preprocessArgs), idv, dv, iv, params)))
+            dplyr::group_modify(~data.frame(score = f(prepare_participant_data(.x,idv, dv, iv, preprocessFs, preprocessArgs), idv, dv, iv, params))))
 }

@@ -11,7 +11,7 @@ test_that("TestSignFlipping.GetSignConsistency - Positive Effect", {
   res_pe <- get_sign_consistency(posEffectData, idv = "id", dv = 'var', iv = 'condition')
 
   testthat::expect_type(res_pe$statistic, "double")
-  testthat::expect_length(res_pe$consistency_per_id, nSubj)
+  testthat::expect_length(res_pe$consistency_per_id$score, nSubj)
   testthat::expect_lt( .5, res_pe$statistic)
 })
 

@@ -12,7 +12,7 @@ test_that("TestClassification.GetConditionClassification - Positive Effect", {
   res_pe <- get_condition_classification(posEffectData, idv = "id", dv = 'var', iv = 'condition')
 
   testthat::expect_type(res_pe$statistic, "double")
-  testthat::expect_length(res_pe$accuracy_per_id, nSubj)
+  testthat::expect_length(res_pe$accuracy_per_id$score, nSubj)
   testthat::expect_lt( .5, res_pe$statistic)
 })
 

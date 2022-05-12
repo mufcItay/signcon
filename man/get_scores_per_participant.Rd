@@ -33,7 +33,7 @@ get_scores_per_participant(
 \item{f}{The function to apply to the data to compute the score of interest for each participant.}
 }
 \value{
-The function returns a list of the computed scores of each participant
+The function returns a data frame, mapping the 'idv' column with a 'score' columns of the scores of each participant.
 }
 \description{
 The function computes and returns the true score of the analysis to conduct for each participant,
