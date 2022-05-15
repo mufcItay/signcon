@@ -18,7 +18,7 @@ classify_conditions <- function(data, idv = "id", dv = "y", iv = "condition", pa
   K <- params$K
   imbalance <- params$handleImbalance
   # train the classifier according to the configuration defined by the 'params' argument,
-  # an get its cross validated accuracy
+  # and get its cross validated accuracy
   res <- get_classifier_accuracy(data, idv, dv, iv, K, imbalance)
   return (res)
 }

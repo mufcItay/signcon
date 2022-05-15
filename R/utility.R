@@ -1,5 +1,5 @@
-#' @title Prepate Participant Data
-#' @description Returns preprocessed data for  a specific participant.
+#' @title Prepare Participant Data
+#' @description Returns preprocessed data for a specific participant.
 #'
 #' @param data The data of a specific participant, arranged according to the independent variable ('iv')
 #' @param idv The name of the participant identifier column.

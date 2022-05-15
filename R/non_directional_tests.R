@@ -32,7 +32,7 @@ get_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", 
 #' @description The function tests for a consistent sign of a difference score for a random split of the data, using bootstrapping and permuting each participants' independent variable labels.
 #' The function accepts a dataset in long format with specific columns: identifier (id), independent and dependent variables (iv and dv, respectively).
 #' For each participant, the function calculates the estimated probability that for a random splitting of the data, the summary function (summary_function) returns two values with the same sign when applied to the two halves.
-#' Then, the average sign consistency across participants is tested against a bootstrapped null distribution in which sign consistency probabilities are calculated for each participant after shuffling its independent variable labels (see Stelzer, J., Chen, Y., & Turner, R. (2013)).
+#' Then, the average sign consistency across participants is tested against a bootstrapped null distribution in which sign consistency probabilities are calculated for each participant after shuffling its independent variable labels (see Stelzer, J., Chen, Y., & Turner, R., 2013).
 #' All levels of the independent variable must be included under each identifier.
 #'
 #' @param data The dataset to analyze
@@ -98,7 +98,7 @@ get_condition_classification <- function(data, idv = "id", dv = "rt", iv = "cond
 #' @description The function tests for a significant average classification accuracy of condition labels according to a dependent variable across participants (without assuming a directional effect), using bootstrapping and permutating each participants' independent variable labels.
 #' The function accepts a dataset in long format with specific columns: identifier (id), independent and dependent variables (iv and dv, respectively).
 #' For each participant, the function calculates the k-fold cross-validated accuracy of a SVM classifier with a linear kernel trained to predict the labels of levels under the independent variable (iv) based on the dependent variable (dv).
-#' Then, the average classification accuracy across participants is tested against a bootstrapped null distribution in which classification accuracy is calculated for each participant after shuffling its independent variable labels(see Stelzer, J., Chen, Y., & Turner, R. (2013)).
+#' Then, the average classification accuracy across participants is tested against a bootstrapped null distribution in which classification accuracy is calculated for each participant after shuffling its independent variable labels (see Stelzer, J., Chen, Y., & Turner, R., 2013).
 #' All levels of the independent variable must be included under each identifier.
 #'
 #' @param data The dataset to analyze
