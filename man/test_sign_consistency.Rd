@@ -10,7 +10,7 @@ test_sign_consistency(
   dv = "rt",
   iv = "condition",
   nSplits = 500,
-  summary_function = base::mean,
+  summary_function = NULL,
   perm_repetitions = 25,
   null_dist_samples = 10000
 )
@@ -44,7 +44,7 @@ A list including the results of the function
 The function tests for a consistent sign of a difference score for a random split of the data, using bootstrapping and permuting each participants' independent variable labels.
 The function accepts a dataset in long format with specific columns: identifier (id), independent and dependent variables (iv and dv, respectively).
 For each participant, the function calculates the estimated probability that for a random splitting of the data, the summary function (summary_function) returns two values with the same sign when applied to the two halves.
-Then, the average sign consistency across participants is tested against a bootstrapped null distribution in which sign consistency probabilities are calculated for each participant after shuffling its independent variable labels (see Stelzer, J., Chen, Y., & Turner, R. (2013)).
+Then, the average sign consistency across participants is tested against a bootstrapped null distribution in which sign consistency probabilities are calculated for each participant after shuffling its independent variable labels (see Stelzer, J., Chen, Y., & Turner, R., 2013).
 All levels of the independent variable must be included under each identifier.
 }
 \seealso{

@@ -11,7 +11,7 @@ classify_conditions(data, idv = "id", dv = "y", iv = "condition", params)
 
 \item{idv}{The name of the subject identifier column.}
 
-\item{dv}{The name of the dependent variable column to classify conditions according to.}
+\item{dv}{The name of the dependent variable column to classify conditions according to. For multiple dependent variables use a string list with the names of each dependent variable.}
 
 \item{iv}{The name of the independent variable column - the condition to classify,
 indicating the different levels under which the dependent variable (dv) is expected to differ.}

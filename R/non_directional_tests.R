@@ -18,7 +18,8 @@
 #' }
 #' @seealso [weaknull::test_sign_consistency()] which uses this function to test the significance of the group-level sign consistency.
 #' @export
-get_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", nSplits = 500, summary_function = base::mean) {
+get_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", nSplits = 500, summary_function = NULL) {
+  summary_function <- ifelse(is.null(summary_function), function (df) base::mean(as.matrix(df[,dv])), summary_function)
   params <- create_sign_consistency_params(nSplits, summary_function)
   res <- get_scores_per_participant(data, idv, dv, iv, params = params, f = calculate_sign_consistency)
   obs_stat <- base::mean(unlist(res$score))
@@ -51,9 +52,10 @@ get_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", 
 #' }
 #' @seealso [weaknull::get_sign_consistency()] returns the probability of a consistent sign of a difference score for a random split of the data
 #' @export
-test_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", nSplits = 500, summary_function = base::mean, perm_repetitions = 25, null_dist_samples = 10000) {
-  params <- create_sign_consistency_params(nSplits, summary_function)
+test_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", nSplits = 500, summary_function = NULL, perm_repetitions = 25, null_dist_samples = 10000) {
   res <- get_sign_consistency(data, idv, dv, iv, nSplits, summary_function)
+  summary_function <- ifelse(is.null(summary_function), function (df) base::mean(as.matrix(df[,dv])), summary_function)
+  params <- create_sign_consistency_params(nSplits, summary_function)
   null_dist <- get_null_distribution(data, idv, dv, iv, params = params, f = calculate_sign_consistency, null_dist_samples = null_dist_samples)
   nullN <- length(null_dist)
   p_val <- sum(res$statistic <= null_dist) / nullN
@@ -72,7 +74,7 @@ test_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition",
 #'
 #' @param data The dataset to analyze
 #' @param idv The name of the participant identifier column.
-#' @param dv The dependent variable to apply the summary function (summary_function) to.
+#' @param dv The dependent variable to apply the summary function (summary_function) to.  For multiple dependent variables use a string list with the names of each dependent variable,
 #' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.
 #' @param K - the number of folds to use when calculating the performance of the classifier. If K is set to 'NA' (it's default value), the function will set it to the number of observations of the minority class.
 #' @param handleImbalance - A Boolean indicating whether to adjust class imbalance (using different weight for each label)
@@ -103,7 +105,7 @@ get_condition_classification <- function(data, idv = "id", dv = "rt", iv = "cond
 #'
 #' @param data The dataset to analyze
 #' @param idv The name of the participant identifier column.
-#' @param dv The dependent variable to apply the summary function (summary_function) to.
+#' @param dv The dependent variable to apply the summary function (summary_function) to. For multiple dependent variables use a string list with the names of each dependent variable,
 #' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.
 #' @param K - the number of folds to use when calculating the performance of the classifier. If K is set to 'NA', the function resets it to the number of observations of the minority class.
 #' @param handleImbalance - A Boolean indicating whether to adjust class imbalance (using different weight for each label)

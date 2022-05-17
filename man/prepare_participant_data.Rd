@@ -2,7 +2,7 @@
 % Please edit documentation in R/utility.R
 \name{prepare_participant_data}
 \alias{prepare_participant_data}
-\title{Prepate Participant Data}
+\title{Prepare Participant Data}
 \usage{
 prepare_participant_data(
   data,
@@ -30,5 +30,5 @@ prepare_participant_data(
 processed participant data, ready to be analyzed
 }
 \description{
-Returns preprocessed data for  a specific participant.
+Returns preprocessed data for a specific participant.
 }

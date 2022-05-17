@@ -4,7 +4,7 @@
 #'
 #' @param data The dataset of a specific individual, arranged according to the independent variable ('iv')
 #' @param idv The name of the subject identifier column.
-#' @param dv The name of the dependent variable column to classify conditions according to.
+#' @param dv The name of the dependent variable column to classify conditions according to. For multiple dependent variables use a string list with the names of each dependent variable.
 #' @param iv The name of the independent variable column - the condition to classify,
 #' indicating the different levels under which the dependent variable (dv) is expected to differ.
 #' @param params A list of parameters used by the function to perform the classification task. Includes:
@@ -49,7 +49,7 @@ create_classification_params <- function(K = NA, handleImbalance = NA) {
 
 #' @param data The dataset of a specific individual, arranged according to the independent variable ('iv')
 #' @param idv The name of the subject identifier column.
-#' @param dv The name of the dependent variable column to classify conditions according to.
+#' @param dv The name of the dependent variable column to classify conditions according to. For multiple dependent variables use a string list with the names of each dependent variable.
 #' @param iv The name of the independent variable column - the condition to classify,
 #' indicating the different levels under which the dependent variable (dv) is expected to differ.
 #' @param K - the number of folds to use when calculating the performance of the classifier.
@@ -59,21 +59,22 @@ create_classification_params <- function(K = NA, handleImbalance = NA) {
 #' @return the function returns the trained classifier accuracy rate
 get_classifier_accuracy <- function(data, idv = "id", dv = "y", iv = "condition", K, handleImbalance) {
   # adds all variables needed for classification (copy variables to 'x' and 'y' columns for simplicity)
-  data <- data |> dplyr::mutate(x = dplyr::pull(data,dv), y = as.factor(dplyr::pull(data,iv)))
+  data[,iv] = as.factor(dplyr::pull(data,iv))
+  labels <- dplyr::pull(data,iv)
   # if K is set to 'NA', reset it to the minority class,
   # this should keep a minimum of 1 sample per label in the validation set of each fold.
-  K = ifelse(is.na(K), min(table(data$y)), K)
+  K = ifelse(is.na(K), min(table(labels)), K)
   # create folds for cross validation procedure
-  folds <- caret::createFolds(data$y, k = K, list = TRUE, returnTrain = TRUE)
+  folds <- caret::createFolds(labels, k = K, list = TRUE, returnTrain = TRUE)
 
   # handle the 'weights' imbalance handling technique by assigning different weights to each class,
   # to balance the sample of labels.
   if (handleImbalance) {
     # calculate the weight of each class in the labels column
-    weights <- min(table(data$y)) / table(data$y)
+    weights <- min(table(labels)) / table(labels)
   }  else	{
     # default weights => each label is assigned a weight of 1
-    weights <- table(data$y) / table(data$y)
+    weights <- table(labels) / table(labels)
   }
   # train the model, and get its accuracy
   res <- sapply(folds, function(f, data, weights) {
@@ -81,11 +82,11 @@ get_classifier_accuracy <- function(data, idv = "id", dv = "y", iv = "condition"
     train <- data[f, ]
     test <- data[-f, ]
     # create the model and train it
-    model <- e1071::svm(x = train$x, y= train$y, kernel = "linear", class.weights = weights)
+    model <- e1071::svm(x = train[,dv], y= dplyr::pull(train, iv), kernel = "linear", class.weights = weights)
     # predict condition labels using the trained model
-    pred <- stats::predict(model, test$x)
+    pred <- stats::predict(model, test[,dv])
     # calculate accuracy
-    accuracy <- mean(test$y == pred)
+    accuracy <- mean(dplyr::pull(test,iv) == pred)
     return (accuracy)
   }, data = data, weights = weights)
 

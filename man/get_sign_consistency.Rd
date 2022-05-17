@@ -10,7 +10,7 @@ get_sign_consistency(
   dv = "rt",
   iv = "condition",
   nSplits = 500,
-  summary_function = base::mean
+  summary_function = NULL
 )
 }
 \arguments{

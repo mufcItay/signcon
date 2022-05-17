@@ -20,7 +20,7 @@ test_condition_classification(
 
 \item{idv}{The name of the participant identifier column.}
 
-\item{dv}{The dependent variable to apply the summary function (summary_function) to.}
+\item{dv}{The dependent variable to apply the summary function (summary_function) to. For multiple dependent variables use a string list with the names of each dependent variable,}
 
 \item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.}
 
@@ -44,7 +44,7 @@ A list including the results of the function
 The function tests for a significant average classification accuracy of condition labels according to a dependent variable across participants (without assuming a directional effect), using bootstrapping and permutating each participants' independent variable labels.
 The function accepts a dataset in long format with specific columns: identifier (id), independent and dependent variables (iv and dv, respectively).
 For each participant, the function calculates the k-fold cross-validated accuracy of a SVM classifier with a linear kernel trained to predict the labels of levels under the independent variable (iv) based on the dependent variable (dv).
-Then, the average classification accuracy across participants is tested against a bootstrapped null distribution in which classification accuracy is calculated for each participant after shuffling its independent variable labels(see Stelzer, J., Chen, Y., & Turner, R. (2013)).
+Then, the average classification accuracy across participants is tested against a bootstrapped null distribution in which classification accuracy is calculated for each participant after shuffling its independent variable labels (see Stelzer, J., Chen, Y., & Turner, R., 2013).
 All levels of the independent variable must be included under each identifier.
 }
 \seealso{
