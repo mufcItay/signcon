@@ -17,9 +17,8 @@ test_that("TestClassification.GetConditionClassification - Multivariate, Strong 
 
   testthat::expect_type(res_sn$statistic, "double")
   testthat::expect_length(res_sn$accuracy_per_id$score, nSubj)
-  testthat::expect_lt(alpha, res_sn$p)
-  qChance <= quantile(chance,res_sn$null_dist)
-  testthat::expect_lt(alpha, qChance)
+  diff.t <- t.test(res_sn$accuracy_per_id$score - chance / 100)
+  testthat::expect_lt(alpha, diff.t$p.value)
 })
 
 test_that("TestClassification.GetConditionClassification - Multivariate, Positive Effect, 2nd null", {

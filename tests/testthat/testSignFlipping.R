@@ -30,13 +30,11 @@ test_that("TestSignFlipping.TestSignConsistency - Multivariate, Strong Null", {
   anotherSnEffectData <- create_sample_data(0,0, wSEsd = 2, N = nSubj, trialsPerCnd = nTrials, seed = seed_test + 2)
   snEffectData$var2 <- otherSnEffectData$var
   snEffectData$var3 <- anotherSnEffectData$var
-  res_sn <- test_sign_consistency(snEffectData, idv = "id", dv = c('var','var2', 'var3'), iv = 'condition', summary_function = summ_func_mv)
+  res_sn <- test_sign_consistency(snEffectData, idv = "id", dv = c('var','var2', 'var3'), iv = 'condition', summary_function = summ_func_mv, null_dist_samples =  nNullSamples)
 
   testthat::expect_type(res_sn$statistic, "double")
-  testthat::expect_length(res_sn$consistency_per_id$score, nSubj)
+  testthat::expect_length(res_sn$null_dist, nNullSamples)
   testthat::expect_lt(alpha, res_sn$p)
-  qChance <= quantile(chance,res_sn$null_dist)
-  testthat::expect_lt(alpha, qChance)
 })
 
 test_that("TestSignFlipping.GetSignConsistency - Multivariate, Positive Effect, 2nd null", {
