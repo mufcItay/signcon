@@ -3,8 +3,8 @@
 #'
 #' @param data The data of a specific participant, arranged according to the independent variable ('iv')
 #' @param idv The name of the participant identifier column.
-#' @param dv The dependent variable to apply the summary function (summary_function) to.
-#' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.
+#' @param dv The names of the dependent variable(s) to apply the summary function (summary_function) to. For multiple dependent variables use a string list with the names of each dependent variable (e.g., c('dv1','dv2')),
+#' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable(s), 'dv', is expected to differ.
 #' @param preprocessFs A vector of functions to apply to the data for preprocessing
 #' @param preprocessArgs A vector of arguments for the preprocessing functions
 #'
@@ -26,7 +26,7 @@ prepare_participant_data <- function(data, idv = "id", dv = "rt", iv = "conditio
 #'
 #' @param data the data of a specific participant, arranged according to the independent variable ('iv')
 #' @param idv The name of the participant identifier column.
-#' @param dv The dependent variable to apply the summary function (summary_function) to.  For multiple dependent variables use a string list with the names of each dependent variable.
+#' @param dv The names of the dependent variable(s) to apply the summary function (summary_function) to. For multiple dependent variables use a string list with the names of each dependent variable (e.g., c('dv1','dv2')),
 #' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.
 #' @param params Configuration for the function to apply to the data of each participant ('f')
 #' @param f The function to apply to the data of each participant, returning the value of interest for the analysis.
@@ -74,8 +74,8 @@ get_null_distribution <- function(data, idv = "id", dv = "rt", iv = "condition",
 #'
 #' @param data the dataset of a all participants to analyze.
 #' @param idv The name of the participant identifier column.
-#' @param dv The dependent variable to apply the summary function (summary_function) to. For multiple dependent variables use a string list with the names of each dependent variable.
-#' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.
+#' @param dv The names of the dependent variable(s) to apply the summary function (summary_function) to.
+#' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable(s), 'dv', is expected to differ. For multiple dependent variables use a string list with the names of each dependent variable (e.g., c('dv1','dv2')),
 #' @param preprocessFs An ordered list of functions to apply to the dataset before starting with the analysis.
 #' @param preprocessArgs An ordered list of function arguments, to be used when invoking the 'preprocessFs' (in order, meaning preprocessFs[i](preprocessArgs[i]) will be invoked for each i).
 #' @param params Configuration for the function to apply to the data of each participant ('f').

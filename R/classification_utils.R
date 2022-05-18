@@ -4,9 +4,9 @@
 #'
 #' @param data The dataset of a specific individual, arranged according to the independent variable ('iv')
 #' @param idv The name of the subject identifier column.
-#' @param dv The name of the dependent variable column to classify conditions according to. For multiple dependent variables use a string list with the names of each dependent variable.
+#' @param dv The names of the dependent variables columns to classify conditions according to. For multiple dependent variables use a string list with the names of each dependent variable (e.g., c('dv1','dv2')).
 #' @param iv The name of the independent variable column - the condition to classify,
-#' indicating the different levels under which the dependent variable (dv) is expected to differ.
+#' indicating the different levels under which the dependent variables (dv) are expected to differ.
 #' @param params A list of parameters used by the function to perform the classification task. Includes:
 #' \itemize{
 #'   \item K - the number of folds to use when calculating the performance of the classifier.
@@ -44,14 +44,14 @@ create_classification_params <- function(K = NA, handleImbalance = NA) {
 }
 
 #' Get Classifier Accuracy
-#' @description The function calculates the cross-validated classification accuracy for the condition labels, by the dependent variable. for a specific participant's data
+#' @description The function calculates the cross-validated classification accuracy for the condition labels, by the dependent variable(s). for a specific participant's data
 #' Called from 'classify_conditions'
 
 #' @param data The dataset of a specific individual, arranged according to the independent variable ('iv')
 #' @param idv The name of the subject identifier column.
-#' @param dv The name of the dependent variable column to classify conditions according to. For multiple dependent variables use a string list with the names of each dependent variable.
+#' @param dv The names of the dependent variables columns to classify conditions according to. For multiple dependent variables use a string list with the names of each dependent variable (e.g., c('dv1','dv2')).
 #' @param iv The name of the independent variable column - the condition to classify,
-#' indicating the different levels under which the dependent variable (dv) is expected to differ.
+#' indicating the different levels under which the dependent variables (dv) are expected to differ.
 #' @param K - the number of folds to use when calculating the performance of the classifier.
 #' If K is set to 'NA', the function set it to the number of observations of the minority class.
 #' @param handleImbalance - A Boolean indicating whether to adjust class imbalance (using different weight for each label)

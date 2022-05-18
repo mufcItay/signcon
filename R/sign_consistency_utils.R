@@ -4,12 +4,12 @@
 #'
 #' @param data The dataset of a specific participant, arranged according to the independent variable ('iv')
 #' @param idv The name of the participant identifier column.
-#' @param dv The dependent variable to apply the summary function (summary_function) to.
+#' @param dv The dependent variable to apply the summary function (summary_function) to.  For multiple dependent variables use a string list with the names of each dependent variable (e.g., c('dv1','dv2')),
 #' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.
 #' @param params A list of parameters used by the function to calculate sign consistency. Includes:
 #' \itemize{
 #'   \item nSplits - The number of random splits to analyze for the estimation of sign consistency.
-#'   \item summary_function - The summary function applied to the dependent variable (dv) under each split of the data.
+#'   \item summary_function - The summary function applied to the dependent variable(s), 'dv', under each split of the data.
 #' }
 #'
 #' @return the function returns the mean consistency of signs for the given data
@@ -59,7 +59,7 @@ calculate_sign_consistency <- function(data, idv = "id", dv = "y", iv = "conditi
 #' @description The function creates a list of parameters to be later passed to the sign consistency function.
 #'
 #' @param nSplits - The number of random splits to analyze for the estimation of sign consistency.
-#' @param summary_function The summary function applied to the dependent variable (dv) under each split of the data.
+#' @param summary_function The summary function applied to the dependent variable(s), 'dv' under each split of the data.
 #'
 #' @return a list of parameters that includes both arguments.
 create_sign_consistency_params <- function(nSplits, summary_function) {

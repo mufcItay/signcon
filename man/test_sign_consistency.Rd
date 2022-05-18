@@ -20,13 +20,14 @@ test_sign_consistency(
 
 \item{idv}{The name of the participant identifier column.}
 
-\item{dv}{The dependent variable to apply the summary function (summary_function) to.}
+\item{dv}{The dependent variable to apply the summary function (summary_function) to.  For multiple dependent variables use a string list with the names of each dependent variable (e.g., c('dv1','dv2')),}
 
-\item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.}
+\item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ .}
 
 \item{nSplits}{The number of splits to use when estimating sign consistency probability.}
 
-\item{summary_function}{The summary function to apply to the dependent variable (dv) under each level of the independent variable (iv) for each identifier (id).}
+\item{summary_function}{The summary function to apply to the dependent variables (dv) under each level of the independent variable (iv) for each identifier (id).
+This function should map a data frame to a number: {data.frame} -> numeric (e.g. function(df) {mean(as.matrix(df[,dv]))}, which is the default summary function).}
 
 \item{perm_repetitions}{The number of label shuffling for each participant.}
 
