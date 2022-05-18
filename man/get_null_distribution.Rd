@@ -34,7 +34,7 @@ get_null_distribution(
 
 \item{null_dist_samples}{The number of samples that comprise the output null distribution}
 
-\item{preprocessFs}{vector of functions to apply to the data for preprocessing}
+\item{preprocessFs}{vector of functions to apply to the data for preprocessing. The default value of the argument (empty list), will result in shuffling the labels of the independent variable, iv.}
 
 \item{preprocessArgs}{vector of arguments for the preprocessing functions}
 }
