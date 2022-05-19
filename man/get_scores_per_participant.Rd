@@ -20,9 +20,9 @@ get_scores_per_participant(
 
 \item{idv}{The name of the participant identifier column.}
 
-\item{dv}{The dependent variable to apply the summary function (summary_function) to.}
+\item{dv}{The names of the dependent variable(s) to apply the summary function (summary_function) to.}
 
-\item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.}
+\item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variable(s), 'dv', is expected to differ. For multiple dependent variables use a string list with the names of each dependent variable (e.g., c('dv1','dv2')),}
 
 \item{preprocessFs}{An ordered list of functions to apply to the dataset before starting with the analysis.}
 

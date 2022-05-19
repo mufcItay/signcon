@@ -18,10 +18,10 @@ get_classifier_accuracy(
 
 \item{idv}{The name of the subject identifier column.}
 
-\item{dv}{The name of the dependent variable column to classify conditions according to.}
+\item{dv}{The names of the dependent variables columns to classify conditions according to. For multiple dependent variables use a string list with the names of each dependent variable (e.g., c('dv1','dv2')).}
 
 \item{iv}{The name of the independent variable column - the condition to classify,
-indicating the different levels under which the dependent variable (dv) is expected to differ.}
+indicating the different levels under which the dependent variables (dv) are expected to differ.}
 
 \item{K}{- the number of folds to use when calculating the performance of the classifier.
 If K is set to 'NA', the function set it to the number of observations of the minority class.}
@@ -32,6 +32,6 @@ If K is set to 'NA', the function set it to the number of observations of the mi
 the function returns the trained classifier accuracy rate
 }
 \description{
-The function calculates the cross-validated classification accuracy for the condition labels, by the dependent variable. for a specific participant's data
+The function calculates the cross-validated classification accuracy for the condition labels, by the dependent variable(s). for a specific participant's data
 Called from 'classify_conditions'
 }

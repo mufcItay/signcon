@@ -10,7 +10,7 @@ test_sign_consistency(
   dv = "rt",
   iv = "condition",
   nSplits = 500,
-  summary_function = base::mean,
+  summary_function = NULL,
   perm_repetitions = 25,
   null_dist_samples = 10000
 )
@@ -20,13 +20,14 @@ test_sign_consistency(
 
 \item{idv}{The name of the participant identifier column.}
 
-\item{dv}{The dependent variable to apply the summary function (summary_function) to.}
+\item{dv}{The dependent variable to apply the summary function (summary_function) to.  For multiple dependent variables use a string list with the names of each dependent variable (e.g., c('dv1','dv2')),}
 
-\item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.}
+\item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ .}
 
 \item{nSplits}{The number of splits to use when estimating sign consistency probability.}
 
-\item{summary_function}{The summary function to apply to the dependent variable (dv) under each level of the independent variable (iv) for each identifier (id).}
+\item{summary_function}{The summary function to apply to the dependent variables (dv) under each level of the independent variable (iv) for each identifier (id).
+This function should map a data frame to a number: {data.frame} -> numeric (e.g. function(df) {mean(as.matrix(df[,dv]))}, which is the default summary function).}
 
 \item{perm_repetitions}{The number of label shuffling for each participant.}
 
@@ -44,7 +45,7 @@ A list including the results of the function
 The function tests for a consistent sign of a difference score for a random split of the data, using bootstrapping and permuting each participants' independent variable labels.
 The function accepts a dataset in long format with specific columns: identifier (id), independent and dependent variables (iv and dv, respectively).
 For each participant, the function calculates the estimated probability that for a random splitting of the data, the summary function (summary_function) returns two values with the same sign when applied to the two halves.
-Then, the average sign consistency across participants is tested against a bootstrapped null distribution in which sign consistency probabilities are calculated for each participant after shuffling its independent variable labels (see Stelzer, J., Chen, Y., & Turner, R. (2013)).
+Then, the average sign consistency across participants is tested against a bootstrapped null distribution in which sign consistency probabilities are calculated for each participant after shuffling its independent variable labels (see Stelzer, J., Chen, Y., & Turner, R., 2013).
 All levels of the independent variable must be included under each identifier.
 }
 \seealso{

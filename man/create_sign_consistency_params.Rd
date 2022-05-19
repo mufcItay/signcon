@@ -9,7 +9,7 @@ create_sign_consistency_params(nSplits, summary_function)
 \arguments{
 \item{nSplits}{- The number of random splits to analyze for the estimation of sign consistency.}
 
-\item{summary_function}{The summary function applied to the dependent variable (dv) under each split of the data.}
+\item{summary_function}{The summary function applied to the dependent variable(s), 'dv' under each split of the data.}
 }
 \value{
 a list of parameters that includes both arguments.

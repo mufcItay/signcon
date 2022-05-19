@@ -18,9 +18,9 @@ get_condition_classification(
 
 \item{idv}{The name of the participant identifier column.}
 
-\item{dv}{The dependent variable to apply the summary function (summary_function) to.}
+\item{dv}{The names of the dependent variables columns to classify conditions according to. For multiple dependent variables use a string list with the names of each dependent variable (e.g., c('dv1','dv2')).}
 
-\item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.}
+\item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variables (dv) are expected to differ.}
 
 \item{K}{- the number of folds to use when calculating the performance of the classifier. If K is set to 'NA' (it's default value), the function will set it to the number of observations of the minority class.}
 

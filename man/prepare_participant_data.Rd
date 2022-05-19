@@ -2,7 +2,7 @@
 % Please edit documentation in R/utility.R
 \name{prepare_participant_data}
 \alias{prepare_participant_data}
-\title{Prepate Participant Data}
+\title{Prepare Participant Data}
 \usage{
 prepare_participant_data(
   data,
@@ -18,9 +18,9 @@ prepare_participant_data(
 
 \item{idv}{The name of the participant identifier column.}
 
-\item{dv}{The dependent variable to apply the summary function (summary_function) to.}
+\item{dv}{The names of the dependent variable(s) to apply the summary function (summary_function) to. For multiple dependent variables use a string list with the names of each dependent variable (e.g., c('dv1','dv2')),}
 
-\item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.}
+\item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variable(s), 'dv', is expected to differ.}
 
 \item{preprocessFs}{A vector of functions to apply to the data for preprocessing}
 
@@ -30,5 +30,5 @@ prepare_participant_data(
 processed participant data, ready to be analyzed
 }
 \description{
-Returns preprocessed data for  a specific participant.
+Returns preprocessed data for a specific participant.
 }

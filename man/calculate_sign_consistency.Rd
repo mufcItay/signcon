@@ -17,14 +17,14 @@ calculate_sign_consistency(
 
 \item{idv}{The name of the participant identifier column.}
 
-\item{dv}{The dependent variable to apply the summary function (summary_function) to.}
+\item{dv}{The dependent variable to apply the summary function (summary_function) to.  For multiple dependent variables use a string list with the names of each dependent variable (e.g., c('dv1','dv2')),}
 
 \item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.}
 
 \item{params}{A list of parameters used by the function to calculate sign consistency. Includes:
 \itemize{
   \item nSplits - The number of random splits to analyze for the estimation of sign consistency.
-  \item summary_function - The summary function applied to the dependent variable (dv) under each split of the data.
+  \item summary_function - The summary function applied to the dependent variable(s), 'dv', under each split of the data.
 }}
 }
 \value{
