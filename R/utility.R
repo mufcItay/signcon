@@ -16,7 +16,7 @@ prepare_participant_data <- function(data, idv = "id", dv = "rt", iv = "conditio
     perprocess_f <- preprocessFs[[fInd]]
     perprocess_args <- preprocessArgs[[fInd]]
     # apply the preprocessing function given its arguments, and update 'data'
-    data <- do.call(perprocess_f, list(data, perprocess_args))
+    data <- do.call(perprocess_f, list(data = data, args = perprocess_args))
   }
   return(data)
 }
@@ -70,8 +70,12 @@ get_null_distribution <- function(data, idv = "id", dv = "rt", iv = "condition",
 #' @return The function returns a data frame, mapping the 'idv' column with a 'score' columns of the scores of each participant.
 get_scores_per_participant <- function(data, idv = "id", dv = "rt", iv = "condition", preprocessFs = c(), preprocessArgs = c(), params, f) {
   # define a preprocessing function that arranges data uniformly according to the values of the independent variable
-  preprocessFs <- c(dplyr::arrange, preprocessFs)
-  preprocessArgs = c(iv, preprocessArgs)
+  preprocessFs <- append(preprocessFs, function(data,args) {
+    # randomly shuffle the labels under 'args' column
+    data <- data |> dplyr::arrange(!!dplyr::sym(args))
+    return(data)
+  })
+  preprocessArgs = append(preprocessArgs, list(iv))
   # return the score of each participant by running 'f' on its 'prepared' data
   return (data |>
             dplyr::group_by(!!dplyr::sym(idv)) |>
@@ -96,13 +100,13 @@ get_scores_per_participant <- function(data, idv = "id", dv = "rt", iv = "condit
 #' @return the function returns the score calculated by applying the function 'f' to the data after suffling the labels of the indepdent variable 'iv'.
 get_shuffled_score <- function(idx, data, idv, dv, iv, preprocessFs, preprocessArgs, params, f) {
   # define a preprocessing function that shuffles the independent variable column for each participant
-  preprocessFs <- c(preprocessFs, function(data,col) {
-    # randomly shuffle the labels under 'col' column
-    data[col] <- sample(dplyr::pull(data,col))
+  preprocessFs <- append(preprocessFs, function(data,args) {
+    # randomly shuffle the labels under 'args' column
+    data[args] <- sample(dplyr::pull(data,args))
     return(data)
   })
-  # sepcify that we shuffle the indepdent variable column ('iv')
-  preprocessArgs <- c(preprocessArgs, iv)
+  # specify that we shuffle the independent variable column ('iv')
+  preprocessArgs <- append(preprocessArgs, iv)
 
   # get the scores per participant for the shuffled data
   res <- get_scores_per_participant(data, idv, dv, iv, preprocessFs, preprocessArgs, params, f)
