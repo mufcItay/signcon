@@ -32,27 +32,13 @@ prepare_participant_data <- function(data, idv = "id", dv = "rt", iv = "conditio
 #' @param f The function to apply to the data of each participant, returning the value of interest for the analysis.
 #' @param perm_repetitions The number of permutation repetitions for each participant
 #' @param null_dist_samples The number of samples that comprise the output null distribution
-#' @param preprocessFs vector of functions to apply to the data for preprocessing
+#' @param preprocessFs vector of functions to apply to the data for preprocessing. The default value of the argument (empty list), will result in shuffling the labels of the independent variable, iv.
 #' @param preprocessArgs vector of arguments for the preprocessing functions
 #'
 #' @return A distribution of mean score values computed according to a 'null' effect condition
 get_null_distribution <- function(data, idv = "id", dv = "rt", iv = "condition", params, f, perm_repetitions = 25, null_dist_samples = 10000, preprocessFs = c(), preprocessArgs = c()) {
-  # define a preprocessing function that shuffles the independent variable column for each participant,
-  # and then gets the scores of each participant for the shuffled data
-  inner_shuffle <- function(idx) {
-    preprocessFs <- c(preprocessFs, function(d,col) {
-      # randomly shuffle the independent variable values
-      d[col] <- sample(dplyr::pull(d,col))
-      # returning the shuffled data
-      return(d)
-    })
-    preprocessArgs <- c(preprocessArgs, iv)
-    # get the scores per participant for the shuffled data
-    res <- get_scores_per_participant(data, idv, dv, iv, preprocessFs, preprocessArgs, params, f)
-    res$score
-  }
-  # use the inner_shuffle function to create #'perm_repetitions' per participant
-  shuffled_scores <- sapply(1:perm_repetitions, inner_shuffle)
+  shuffled_scores <- sapply(1:perm_repetitions, params$nullDistFunc, data = data, idv = idv, dv = dv, iv = iv,
+                            preprocessFs = preprocessFs, preprocessArgs = preprocessArgs, params = params, f = f)
   # define a function that computes a sample of the null distribution from the shuffled data of all participants,
   # randomly sample a specific permutation for each participant, and return the mean score of the group
   get_null_sample <- function(iteration) {
@@ -76,7 +62,7 @@ get_null_distribution <- function(data, idv = "id", dv = "rt", iv = "condition",
 #' @param idv The name of the participant identifier column.
 #' @param dv The names of the dependent variable(s) to apply the summary function (summary_function) to.
 #' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable(s), 'dv', is expected to differ. For multiple dependent variables use a string list with the names of each dependent variable (e.g., c('dv1','dv2')),
-#' @param preprocessFs An ordered list of functions to apply to the dataset before starting with the analysis.
+#' @param preprocessFs An ordered list of functions to apply to the dataset before starting with the analysis. The default value of the argument (empty list) will result in arrabging the dataset according to the independent variable, iv.
 #' @param preprocessArgs An ordered list of function arguments, to be used when invoking the 'preprocessFs' (in order, meaning preprocessFs[i](preprocessArgs[i]) will be invoked for each i).
 #' @param params Configuration for the function to apply to the data of each participant ('f').
 #' @param f The function to apply to the data to compute the score of interest for each participant.
@@ -90,4 +76,37 @@ get_scores_per_participant <- function(data, idv = "id", dv = "rt", iv = "condit
   return (data |>
             dplyr::group_by(!!dplyr::sym(idv)) |>
             dplyr::group_modify(~data.frame(score = f(prepare_participant_data(.x,idv, dv, iv, preprocessFs, preprocessArgs), idv, dv, iv, params))))
+}
+
+
+#' @title Get Shuffled Score
+#' @description The function shuffles the labels the independent variable (according to the value of 'iv'),
+#' and returns result of the function f on the shuffled dataset.
+#'
+#' @param idx the index of the iteration we are currently running (this function is being called iteratively)
+#' @param data the data of a specific participant, arranged according to the independent variable ('iv')
+#' @param idv The name of the participant identifier column.
+#' @param dv the names of the dependent variable(s) to apply the summary function (summary_function) to. For multiple dependent variables use a string list with the names of each dependent variable (e.g., c('dv1','dv2')),
+#' @param iv labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.
+#' @param preprocessFs a vector of functions to apply to the data for preprocessing
+#' @param preprocessArgs a vector of arguments for the preprocessing functions
+#' @param params configuration for the function to apply to the data of each participant ('f')
+#' @param f the function to apply to the data of each participant, returning the value of interest for the analysis.
+#'
+#' @return the function returns the score calculated by applying the function 'f' to the data after suffling the labels of the indepdent variable 'iv'.
+get_shuffled_score <- function(idx, data, idv, dv, iv, preprocessFs, preprocessArgs, params, f) {
+  # define a preprocessing function that shuffles the independent variable column for each participant
+  preprocessFs <- c(preprocessFs, function(data,col) {
+    # randomly shuffle the labels under 'col' column
+    data[col] <- sample(dplyr::pull(data,col))
+    return(data)
+  })
+  # sepcify that we shuffle the indepdent variable column ('iv')
+  preprocessArgs <- c(preprocessArgs, iv)
+
+  # get the scores per participant for the shuffled data
+  res <- get_scores_per_participant(data, idv, dv, iv, preprocessFs, preprocessArgs, params, f)
+
+  # return the score calculated for the shuffled data
+  return(res$score)
 }

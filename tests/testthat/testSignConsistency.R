@@ -6,7 +6,7 @@ nSubj = 20
 nTrials = 30
 chance <- 50 # percent accuracy (assuming two levels of the indepdent variable)
 
-test_that("TestSignFlipping.GetSignConsistency - Positive Effect", {
+test_that("TestSignConsistency.GetSignConsistency - Positive Effect", {
   # test get sign consistency with a true positive effect
   posEffectData <- create_sample_data(1,.1, wSEsd = 2, N = nSubj, trialsPerCnd = nTrials, seed = seed_test)
   res_pe <- get_sign_consistency(posEffectData, idv = "id", dv = 'var', iv = 'condition')
@@ -16,7 +16,7 @@ test_that("TestSignFlipping.GetSignConsistency - Positive Effect", {
   testthat::expect_lt( .5, res_pe$statistic)
 })
 
-test_that("TestSignFlipping.TestSignConsistency - Weak Null", {
+test_that("TestSignConsistency.TestSignConsistency - Weak Null", {
   # test for significant results when we expect a weak null
   weakNullData <- create_sample_data(0,2, wSEsd = 2, N = nSubj, trialsPerCnd = nTrials, seed = seed_test)
   res_wn <- test_sign_consistency(weakNullData, idv = "id", dv = 'var', iv = 'condition', null_dist_samples = nNullSamples)
@@ -26,7 +26,7 @@ test_that("TestSignFlipping.TestSignConsistency - Weak Null", {
   testthat::expect_lt( res_wn$p,alpha)
 })
 
-test_that("TestSignFlipping.TestSignConsistency - Strong Null", {
+test_that("TestSignConsistency.TestSignConsistency - Strong Null", {
   # test for false positives high noise
   strongNullData <- create_sample_data(0,0, wSEsd = 2, N = nSubj, trialsPerCnd = nTrials, seed = seed_test)
   res_sn <- test_sign_consistency(strongNullData, idv = "id", dv = 'var', iv = 'condition', null_dist_samples = nNullSamples)
@@ -36,7 +36,7 @@ test_that("TestSignFlipping.TestSignConsistency - Strong Null", {
   testthat::expect_lt(alpha, res_sn$p)
 })
 
-test_that("TestSignFlipping.TestSignConsistency - Positive Effect - Small IDs", {
+test_that("TestSignConsistency.TestSignConsistency - Positive Effect - Small IDs", {
   # test for positive effect with small individual differences
   posEffectData_smallIds <- create_sample_data(1,.1, wSEsd = 2, N = nSubj, trialsPerCnd = nTrials, seed = seed_test)
   res_pe_smallIds <- test_sign_consistency(posEffectData_smallIds, idv = "id", dv = 'var', iv = 'condition', null_dist_samples = nNullSamples)
@@ -46,7 +46,7 @@ test_that("TestSignFlipping.TestSignConsistency - Positive Effect - Small IDs", 
   testthat::expect_lt(res_pe_smallIds$p, alpha)
 })
 
-test_that("TestSignFlipping.TestSignConsistency - Positive Effect - Small IDs", {
+test_that("TestSignConsistency.TestSignConsistency - Positive Effect - Small IDs", {
   # test for positive effect with high individual differences
   posEffectData_highIds <- create_sample_data(1,1.5, wSEsd = 2, N = nSubj, trialsPerCnd = nTrials, seed = seed_test)
   res_pe_highIds <- test_sign_consistency(posEffectData_highIds, idv = "id", dv = 'var', iv = 'condition', null_dist_samples = nNullSamples)
@@ -61,7 +61,7 @@ test_that("TestSignFlipping.TestSignConsistency - Positive Effect - Small IDs", 
 ################ MULTIVARIATE TESTS ################
 ####################################################
 
-test_that("TestSignFlipping.GetSignConsistency - Multivariate, Strong Null", {
+test_that("TestSignConsistency.GetSignConsistency - Multivariate, Strong Null", {
   # test get sign consistency with a strong null effect, and 3 dependent variables
   summ_func_mv <- function(df) {stats::median(c(df$var, df$var2, df$var3))}
   snEffectData <- create_sample_data(0,0, wSEsd = 2, N = nSubj, trialsPerCnd = nTrials, seed = seed_test)
@@ -77,7 +77,7 @@ test_that("TestSignFlipping.GetSignConsistency - Multivariate, Strong Null", {
   testthat::expect_lt(alpha, diff.t$p.value)
 })
 
-test_that("TestSignFlipping.TestSignConsistency - Multivariate, Strong Null", {
+test_that("TestSignConsistency.TestSignConsistency - Multivariate, Strong Null", {
   # test 'test sign consistency' with a strong null effect
   summ_func_mv <- function(df) {stats::median(c(df$var, df$var2, df$var3))}
   snEffectData <- create_sample_data(0,0, wSEsd = 2, N = nSubj, trialsPerCnd = nTrials, seed = seed_test)
@@ -92,7 +92,7 @@ test_that("TestSignFlipping.TestSignConsistency - Multivariate, Strong Null", {
   testthat::expect_lt(alpha, res_sn$p)
 })
 
-test_that("TestSignFlipping.TestSignConsistency - Multivariate, Positive Effect", {
+test_that("TestSignConsistency.TestSignConsistency - Multivariate, Positive Effect", {
   # test 'test sign consistency' with a positive effect, and 3 informative variables
   posEffectData <- create_sample_data(1,.1, wSEsd = 2.5, N = nSubj, trialsPerCnd = nTrials, seed = seed_test)
   otherPosEffectData <- create_sample_data(1,.1, wSEsd = 2.5, N = nSubj, trialsPerCnd = nTrials, seed = seed_test + 1)
@@ -108,7 +108,7 @@ test_that("TestSignFlipping.TestSignConsistency - Multivariate, Positive Effect"
   testthat::expect_lt(res_pe_one_var$statistic, res_pe$statistic)
 })
 
-test_that("TestSignFlipping.GetSignConsistency - Multivariate, Positive Effect, 2nd null", {
+test_that("TestSignConsistency.GetSignConsistency - Multivariate, Positive Effect, 2nd null", {
   # test get sign consistency with a positive effect for one dependent variable, and a 2nd uninformative dependent variable.
   posEffectData <- create_sample_data(1,.1, wSEsd = 2.5, N = nSubj, trialsPerCnd = nTrials, seed = seed_test)
   posEffectData$var2 <- rep(c(1,2), nrow(posEffectData)/2)
@@ -124,7 +124,7 @@ test_that("TestSignFlipping.GetSignConsistency - Multivariate, Positive Effect, 
 })
 
 
-test_that("TestSignFlipping.GetSignConsistency - Multivariate, Positive Effect", {
+test_that("TestSignConsistency.GetSignConsistency - Multivariate, Positive Effect", {
   summ_func_mv <- function(df) {stats::median(c(df$var, df$var2, df$var3))}
   # test get sign consistency with a true positive effect
   posEffectData <- create_sample_data(1,.1, wSEsd = 2.5, N = nSubj, trialsPerCnd = nTrials, seed = seed_test)
@@ -145,7 +145,7 @@ test_that("TestSignFlipping.GetSignConsistency - Multivariate, Positive Effect",
 })
 
 
-test_that("TestSignFlipping.GetSignConsistency - Multivariate, Positive Effect, Sum", {
+test_that("TestSignConsistency.GetSignConsistency - Multivariate, Positive Effect, Sum", {
   summ_func_mv <- function(df) {base::sum(c(df$var, df$var2, df$var3))}
   # test get sign consistency with a anther summary function (not mean, but sum)
   posEffectData <- create_sample_data(1,.1, wSEsd = 2.5, N = nSubj , trialsPerCnd = nTrials, seed = seed_test)
@@ -165,7 +165,7 @@ test_that("TestSignFlipping.GetSignConsistency - Multivariate, Positive Effect, 
   testthat::expect_lt(diff.t$p.value, alpha)
 })
 
-test_that("TestSignFlipping.GetSignConsistency - Multivariate, Positive Effect, random summary function", {
+test_that("TestSignConsistency.GetSignConsistency - Multivariate, Positive Effect, random summary function", {
   summ_func_mv <- function(df) {rnorm(1)}
   # test get sign consistency with a a random summary function, expecting null results
   posEffectData <- create_sample_data(1,.1, wSEsd = 1, N = nSubj , trialsPerCnd = nTrials, seed = seed_test)

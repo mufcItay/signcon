@@ -24,7 +24,7 @@ get_scores_per_participant(
 
 \item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variable(s), 'dv', is expected to differ. For multiple dependent variables use a string list with the names of each dependent variable (e.g., c('dv1','dv2')),}
 
-\item{preprocessFs}{An ordered list of functions to apply to the dataset before starting with the analysis.}
+\item{preprocessFs}{An ordered list of functions to apply to the dataset before starting with the analysis. The default value of the argument (empty list) will result in arrabging the dataset according to the independent variable, iv.}
 
 \item{preprocessArgs}{An ordered list of function arguments, to be used when invoking the 'preprocessFs' (in order, meaning preprocessFs[i](preprocessArgs[i]) will be invoked for each i).}
 

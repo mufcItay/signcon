@@ -39,6 +39,7 @@ create_classification_params <- function(K = NA, handleImbalance = NA) {
   # aiming at balancing the sample
   if(is.na(handleImbalance)) { handleImbalance <- TRUE }
   params$handleImbalance <- handleImbalance
+  params$nullDistFunc <- get_shuffled_score
 
   return (params)
 }
@@ -59,7 +60,7 @@ create_classification_params <- function(K = NA, handleImbalance = NA) {
 #' @return the function returns the trained classifier accuracy rate
 get_classifier_accuracy <- function(data, idv = "id", dv = "y", iv = "condition", K, handleImbalance) {
   # adds all variables needed for classification (copy variables to 'x' and 'y' columns for simplicity)
-  data[,iv] = as.factor(dplyr::pull(data,iv))
+  data[,iv] = factor(dplyr::pull(data,iv),)
   labels <- dplyr::pull(data,iv)
   # if K is set to 'NA', reset it to the minority class,
   # this should keep a minimum of 1 sample per label in the validation set of each fold.
