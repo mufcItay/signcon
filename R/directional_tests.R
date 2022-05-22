@@ -57,7 +57,7 @@ get_directional_effect <- function(data, idv = "id", dv = "rt", iv = "condition"
 test_directional_effect <- function(data, idv = "id", dv = "rt", iv = "condition", summary_function = NULL, perm_repetitions = 25, null_dist_samples = 10000) {
   res <- get_directional_effect(data, idv, dv, iv, summary_function)
   summary_function <- ifelse(is.null(summary_function), function (df) base::mean(as.matrix(df[,dv])), summary_function)
-  params <- create_directional_effect_params(summary_function, is_null_dist = TRUE)
+  params <- create_directional_effect_params(summary_function)
   null_dist <- get_null_distribution(data, idv, dv, iv, params = params, f = calculate_directional_effect, null_dist_samples = null_dist_samples)
   nullN <- length(null_dist)
   p_val <- sum(res$statistic <= null_dist) / nullN

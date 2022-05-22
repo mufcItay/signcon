@@ -21,12 +21,6 @@ calculate_directional_effect <- function(data, idv = "id", dv = "y", iv = "condi
   statistic <- params$summary_function
   # calculate the effect
   dir_effect <- statistic(data[label == first_label, dv]) - statistic(data[label != first_label, dv])
-  # the avoid shuffling parameter signals that we are generating the null distribution for a directional effect.
-  # this means we should randonly sample the sign of the effect
-  if(params$avoid_shuffling) {
-    sign = sample(c(1,-1), 1)
-    dir_effect <- sign * dir_effect
-  }
   retVal <- dir_effect
   return (retVal)
 }
@@ -35,15 +29,41 @@ calculate_directional_effect <- function(data, idv = "id", dv = "y", iv = "condi
 #' @description The function creates a list of parameters to be later passed to the directional effect analysis function.
 #'
 #' @param summary_function The summary function applied to the dependent variable(s), 'dv' under each split of the data.
-#' @param is_null_dist Indicating whether params should include an avoid shuffling entry.
 #' This parameter is used when testing for a significant directional effect.
 #' In this test we do not shuffle labels of the independent variable, we simply randomly assign a sign for the effect.
 #'
 #' @return a list of parameters that includes both arguments.
-create_directional_effect_params <- function(summary_function, is_null_dist = FALSE) {
+create_directional_effect_params <- function(summary_function) {
   params <- list()
   params$summary_function <- summary_function
-  params$avoid_shuffling <- is_null_dist
+  params$nullDistFunc <- get_sign_flipped_score
 
   return (params)
 }
+
+#' @title Get Sign Flipped Score
+#' @description The function calculated the directional effect according to the indepdedent variable ('iv') and the function 'f',
+#' samples a sign randomly and assigns the sign to the directional effect
+#'
+#' @param idx the index of the iteration we are currently running (this function is being called iteratively)
+#' @param data the data of a specific participant, arranged according to the independent variable ('iv')
+#' @param idv The name of the participant identifier column.
+#' @param dv the names of the dependent variable(s) to apply the summary function (summary_function) to. For multiple dependent variables use a string list with the names of each dependent variable (e.g., c('dv1','dv2')),
+#' @param iv labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.
+#' @param preprocessFs a vector of functions to apply to the data for preprocessing
+#' @param preprocessArgs a vector of arguments for the preprocessing functions
+#' @param params configuration for the function to apply to the data of each participant ('f')
+#' @param f the function to apply to the data of each participant, returning the value of interest for the analysis.
+#'
+#' @return the function returns the score calculated by applying the function 'f' to the data after suffling the labels of the indepdent variable 'iv'.
+get_sign_flipped_score <- function(idx, data, idv, dv, iv, preprocessFs, preprocessArgs, params, f) {
+  # get the score of the participant
+  res <- get_scores_per_participant(data, idv, dv, iv, preprocessFs, preprocessArgs, params, f)
+  # randomly sample the sign of the effect
+  sampled_sign = sample(c(1,-1), 1)
+  rand_sign_effect <- sampled_sign * res$score
+
+  # return the potentially sign flipped score
+  return(rand_sign_effect)
+}
+

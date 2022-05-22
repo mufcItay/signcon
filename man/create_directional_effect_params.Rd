@@ -4,12 +4,10 @@
 \alias{create_directional_effect_params}
 \title{Create Parameters for Directional Effect}
 \usage{
-create_directional_effect_params(summary_function, is_null_dist = FALSE)
+create_directional_effect_params(summary_function)
 }
 \arguments{
-\item{summary_function}{The summary function applied to the dependent variable(s), 'dv' under each split of the data.}
-
-\item{is_null_dist}{Indicating whether params should include an avoid shuffling entry.
+\item{summary_function}{The summary function applied to the dependent variable(s), 'dv' under each split of the data.
 This parameter is used when testing for a significant directional effect.
 In this test we do not shuffle labels of the independent variable, we simply randomly assign a sign for the effect.}
 }

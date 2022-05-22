@@ -66,6 +66,7 @@ create_sign_consistency_params <- function(nSplits, summary_function) {
   params <- list()
   params$nSplits <- nSplits
   params$summary_function <- summary_function
+  params$nullDistFunc <- get_shuffled_score
 
   return (params)
 }
