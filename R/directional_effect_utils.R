@@ -19,10 +19,11 @@ calculate_directional_effect <- function(data, idv = "id", dv = "y", iv = "condi
   label <- dplyr::pull(data,iv)
   # get the last condition label ( we assume that the dataset was sorted according to the independent variable)
   last_label <- dplyr::last(label)
+  y = as.matrix(data[,dv])
   # we  calculate the direction of the effect as summary_function(last label)-summary_function(first label)
   statistic <- params$summary_function
   # calculate the effect
-  dir_effect <- statistic(data[label == last_label, dv]) - statistic(data[label != last_label, dv])
+  dir_effect <- statistic(y[label == last_label,]) - statistic(y[label != last_label,])
   retVal <- dir_effect
   return (retVal)
 }

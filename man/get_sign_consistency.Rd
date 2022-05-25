@@ -10,7 +10,7 @@ get_sign_consistency(
   dv = "rt",
   iv = "condition",
   nSplits = 500,
-  summary_function = NULL
+  summary_function = base::mean
 )
 }
 \arguments{
@@ -25,7 +25,7 @@ get_sign_consistency(
 \item{nSplits}{The number of splits to use when estimating sign consistency probability.}
 
 \item{summary_function}{The summary function to apply to the dependent variables ('dv') under each level of the independent variable ('iv') for each participant ('idv').
-This function should map a data frame to a number: {data.frame} -> numeric (e.g. function(df) {mean(as.matrix(df[,dv]))}, which is the default summary function).}
+This function should map a matrix maintaining the original dataframe columns to a number: {matrix} -> numeric (e.g. function(mat) {mean(mat)}, which is the default summary function).}
 }
 \value{
 A list including the results of the function

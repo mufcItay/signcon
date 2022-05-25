@@ -10,7 +10,7 @@
 #' @param dv The dependent variable to apply the summary function (summary_function) to.  For multiple dependent variables use a string list with the names of each dependent variable (e.g., c('dv1','dv2')),
 #' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable ('dv') is expected to differ.
 #' @param summary_function The summary function to apply to the dependent variables ('dv') under each level of the independent variable ('iv') for each participant ('idv').
-#' This function should map a data frame to a number: {data.frame} -> numeric (e.g. function(df) {mean(as.matrix(df[,dv]))}, which is the default summary function).
+#' This function should map a matrix maintaining the original dataframe columns to a number: {matrix} -> numeric (e.g. function(mat) {mean(mat)}, which is the default summary function).
 #' @param nSplits The number of splits to use when estimating sign consistency probability.
 #' @return A list including the results of the function
 #' \itemize{
@@ -19,8 +19,7 @@
 #' }
 #' @seealso [weaknull::test_sign_consistency()] which uses this function to test the significance of the group-level sign consistency.
 #' @export
-get_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", nSplits = 500, summary_function = NULL) {
-  summary_function <- ifelse(is.null(summary_function), function (df) base::mean(as.matrix(df[,dv])), summary_function)
+get_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", nSplits = 500, summary_function = base::mean) {
   params <- create_sign_consistency_params(nSplits, summary_function)
   res <- get_scores_per_participant(data, idv, dv, iv, params = params, f = calculate_sign_consistency)
   obs_stat <- base::mean(unlist(res$score))
@@ -41,8 +40,8 @@ get_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", 
 #' @param idv The name of the participant identifier column.
 #' @param dv The dependent variable to apply the summary function (summary_function) to.  For multiple dependent variables use a string list with the names of each dependent variable (e.g., c('dv1','dv2')),
 #' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable ('dv') is expected to differ .
-#' @param summary_function The summary function to apply to the dependent variables ('dv') under each level of the independent variable ('iv') for each identifier ('idv').
-#' This function should map a data frame to a number: {data.frame} -> numeric (e.g. function(df) {mean(as.matrix(df[,dv]))}, which is the default summary function).
+#' @param summary_function The summary function to apply to the dependent variables ('dv') under each level of the independent variable ('iv') for each participant ('idv').
+#' This function should map a matrix maintaining the original dataframe columns to a number: {matrix} -> numeric (e.g. function(mat) {mean(mat)}, which is the default summary function).
 #' @param nSplits The number of splits to use when estimating sign consistency probability.
 #' @param perm_repetitions The number of label shuffling for each participant.
 #' @param null_dist_samples The number of samples taken from the null distribution.
@@ -54,9 +53,8 @@ get_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", 
 #' }
 #' @seealso [weaknull::get_sign_consistency()] returns the probability of a consistent sign of a difference score for a random split of the data
 #' @export
-test_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", nSplits = 500, summary_function = NULL, perm_repetitions = 25, null_dist_samples = 10000) {
+test_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", nSplits = 500, summary_function = base::mean, perm_repetitions = 25, null_dist_samples = 10000) {
   res <- get_sign_consistency(data, idv, dv, iv, nSplits, summary_function)
-  summary_function <- ifelse(is.null(summary_function), function (df) base::mean(as.matrix(df[,dv])), summary_function)
   params <- create_sign_consistency_params(nSplits, summary_function)
   null_dist <- get_null_distribution(data, idv, dv, iv, params = params, f = calculate_sign_consistency, null_dist_samples = null_dist_samples)
   nullN <- length(null_dist)
