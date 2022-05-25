@@ -63,13 +63,13 @@ test_that("TestSignConsistency.TestSignConsistency - Positive Effect - Small IDs
 
 test_that("TestSignConsistency.GetSignConsistency - Multivariate, Strong Null", {
   # test get sign consistency with a strong null effect, and 3 dependent variables
-  summ_func_mv <- function(df) {stats::median(c(df$var, df$var2, df$var3))}
+  median_func_mv <- function(mat) {stats::median(c(mat[,'var'], mat[,'var2'], mat[,'var3']))}
   snEffectData <- create_sample_data(0,0, wSEsd = 2, N = nSubj, trials_per_cnd = nTrials, seed = seed_test)
   otherSnEffectData <- create_sample_data(0,0, wSEsd = 2, N = nSubj, trials_per_cnd = nTrials, seed = seed_test + 1)
   anotherSnEffectData <- create_sample_data(0,0, wSEsd = 2, N = nSubj, trials_per_cnd = nTrials, seed = seed_test + 2)
   snEffectData$var2 <- otherSnEffectData$var
   snEffectData$var3 <- anotherSnEffectData$var
-  res_sn <- get_sign_consistency(snEffectData, idv = "id", dv = c('var','var2', 'var3'), iv = 'condition', summary_function = summ_func_mv)
+  res_sn <- get_sign_consistency(snEffectData, idv = "id", dv = c('var','var2', 'var3'), iv = 'condition', summary_function = median_func_mv)
 
   testthat::expect_type(res_sn$statistic, "double")
   testthat::expect_length(res_sn$consistency_per_id$score, nSubj)
@@ -79,13 +79,13 @@ test_that("TestSignConsistency.GetSignConsistency - Multivariate, Strong Null", 
 
 test_that("TestSignConsistency.TestSignConsistency - Multivariate, Strong Null", {
   # test 'test sign consistency' with a strong null effect
-  summ_func_mv <- function(df) {stats::median(c(df$var, df$var2, df$var3))}
+  median_func_mv <- function(mat) {stats::median(c(mat[,'var'], mat[,'var2'], mat[,'var3']))}
   snEffectData <- create_sample_data(0,0, wSEsd = 2, N = nSubj, trials_per_cnd = nTrials, seed = seed_test)
   otherSnEffectData <- create_sample_data(0,0, wSEsd = 2, N = nSubj, trials_per_cnd = nTrials, seed = seed_test + 1)
   anotherSnEffectData <- create_sample_data(0,0, wSEsd = 2, N = nSubj, trials_per_cnd = nTrials, seed = seed_test + 2)
   snEffectData$var2 <- otherSnEffectData$var
   snEffectData$var3 <- anotherSnEffectData$var
-  res_sn <- test_sign_consistency(snEffectData, idv = "id", dv = c('var','var2', 'var3'), iv = 'condition', summary_function = summ_func_mv, null_dist_samples =  nNullSamples)
+  res_sn <- test_sign_consistency(snEffectData, idv = "id", dv = c('var','var2', 'var3'), iv = 'condition', summary_function = median_func_mv, null_dist_samples =  nNullSamples)
 
   testthat::expect_type(res_sn$statistic, "double")
   testthat::expect_length(res_sn$null_dist, nNullSamples)
@@ -125,7 +125,7 @@ test_that("TestSignConsistency.GetSignConsistency - Multivariate, Positive Effec
 
 
 test_that("TestSignConsistency.GetSignConsistency - Multivariate, Positive Effect", {
-  summ_func_mv <- function(df) {stats::median(c(df$var, df$var2, df$var3))}
+  median_func_mv <- function(mat) {stats::median(c(mat[,'var'], mat[,'var2'], mat[,'var3']))}
   # test get sign consistency with a true positive effect
   posEffectData <- create_sample_data(1,.1, wSEsd = 2.5, N = nSubj, trials_per_cnd = nTrials, seed = seed_test)
   otherPosEffectData <- create_sample_data(1,.1, wSEsd = 2.5, N = nSubj, trials_per_cnd = nTrials, seed = seed_test + 1)
@@ -133,7 +133,7 @@ test_that("TestSignConsistency.GetSignConsistency - Multivariate, Positive Effec
   posEffectData$var2 <- otherPosEffectData$var
   posEffectData$var3 <- anotherPosEffectData$var
   res_pe_one_var <- get_sign_consistency(posEffectData, idv = "id", dv = 'var', iv = 'condition')
-  res_pe <- get_sign_consistency(posEffectData, idv = "id", dv = c('var','var2', 'var3'), iv = 'condition', summary_function =  summ_func_mv)
+  res_pe <- get_sign_consistency(posEffectData, idv = "id", dv = c('var','var2', 'var3'), iv = 'condition', summary_function =  median_func_mv)
 
   testthat::expect_type(res_pe$statistic, "double")
   testthat::expect_length(res_pe$consistency_per_id$score, nSubj)
@@ -146,7 +146,7 @@ test_that("TestSignConsistency.GetSignConsistency - Multivariate, Positive Effec
 
 
 test_that("TestSignConsistency.GetSignConsistency - Multivariate, Positive Effect, Sum", {
-  summ_func_mv <- function(df) {base::sum(c(df$var, df$var2, df$var3))}
+  summ_func_mv <- function(mat) {base::sum(c(mat[,'var'], mat[,'var2'], mat[,'var3']))}
   # test get sign consistency with a anther summary function (not mean, but sum)
   posEffectData <- create_sample_data(1,.1, wSEsd = 2.5, N = nSubj , trials_per_cnd = nTrials, seed = seed_test)
   otherPosEffectData <- create_sample_data(1,.1, wSEsd = 2.5, N = nSubj, trials_per_cnd = nTrials, seed = seed_test + 1)
@@ -166,7 +166,7 @@ test_that("TestSignConsistency.GetSignConsistency - Multivariate, Positive Effec
 })
 
 test_that("TestSignConsistency.GetSignConsistency - Multivariate, Positive Effect, random summary function", {
-  summ_func_mv <- function(df) {rnorm(1)}
+  rnd_func_mv <- function(mat) {rnorm(1)}
   # test get sign consistency with a a random summary function, expecting null results
   posEffectData <- create_sample_data(1,.1, wSEsd = 1, N = nSubj , trials_per_cnd = nTrials, seed = seed_test)
   otherPosEffectData <- create_sample_data(1,.1, wSEsd = 1, N = nSubj, trials_per_cnd = nTrials, seed = seed_test + 1)
@@ -174,7 +174,7 @@ test_that("TestSignConsistency.GetSignConsistency - Multivariate, Positive Effec
   posEffectData$var2 <- otherPosEffectData$var
   posEffectData$var3 <- anotherPosEffectData$var
   res_pe_one_var <- get_sign_consistency(posEffectData, idv = "id", dv = 'var', iv = 'condition')
-  res_pe <- get_sign_consistency(posEffectData, idv = "id", dv = c('var','var2', 'var3'), iv = 'condition', summary_function =  summ_func_mv)
+  res_pe <- get_sign_consistency(posEffectData, idv = "id", dv = c('var','var2', 'var3'), iv = 'condition', summary_function =  rnd_func_mv)
 
   testthat::expect_type(res_pe$statistic, "double")
   testthat::expect_length(res_pe$consistency_per_id$score, nSubj)
