@@ -4,21 +4,9 @@
 \alias{get_shuffled_score}
 \title{Get Shuffled Score}
 \usage{
-get_shuffled_score(
-  idx,
-  data,
-  idv,
-  dv,
-  iv,
-  preprocessFs,
-  preprocessArgs,
-  params,
-  f
-)
+get_shuffled_score(data, idv, dv, iv, preprocessFs, preprocessArgs, params, f)
 }
 \arguments{
-\item{idx}{the index of the iteration we are currently running (this function is being called iteratively)}
-
 \item{data}{the data of a specific participant, arranged according to the independent variable ('iv')}
 
 \item{idv}{The name of the participant identifier column.}
@@ -27,16 +15,20 @@ get_shuffled_score(
 
 \item{iv}{labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.}
 
-\item{preprocessFs}{a vector of functions to apply to the data for preprocessing}
+\item{preprocessFs}{An ordered list of functions to apply to the dataset before starting with the analysis.
+The default value of the argument (empty list), will result in shuffling the labels of the independent variable, iv.
+The function accepts a 'data' argument (a data frame including the data of an individual),
+and an 'args' argument which includes all additional arguments needed to run the preprcessing function.}
 
-\item{preprocessArgs}{a vector of arguments for the preprocessing functions}
+\item{preprocessArgs}{An ordered list of function arguments, to be used when invoking the 'preprocessFs' (in order, meaning preprocessFs[i](preprocessArgs[i]) will be invoked for each i).
+For example, if the preprocessing function accepts arguments 'a','b' as inputs, preprocessArgs should be set to list(a,b)}
 
 \item{params}{configuration for the function to apply to the data of each participant ('f')}
 
 \item{f}{the function to apply to the data of each participant, returning the value of interest for the analysis.}
 }
 \value{
-the function returns the score calculated by applying the function 'f' to the data after suffling the labels of the indepdent variable 'iv'.
+the function returns the score calculated by applying the function 'f' to the data after shuffling the labels of the indepdent variable 'iv'.
 }
 \description{
 The function shuffles the labels the independent variable (according to the value of 'iv'),

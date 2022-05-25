@@ -19,9 +19,9 @@ get_directional_effect(
 
 \item{dv}{The dependent variable to apply the summary function (summary_function) to.  For multiple dependent variables use a string list with the names of each dependent variable (e.g., c('dv1','dv2')),}
 
-\item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.}
+\item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variable ('dv') is expected to differ.}
 
-\item{summary_function}{The summary function to apply to the dependent variables (dv) under each level of the independent variable (iv) for each participant (id).
+\item{summary_function}{The summary function to apply to the dependent variables ('dv') under each level of the independent variable ('iv') for each participant ('idv').
 This function should map a data frame to a number: {data.frame} -> numeric (e.g. function(df) {mean(as.matrix(df[,dv]))}, which is the default summary function).}
 }
 \value{
@@ -33,7 +33,7 @@ A list including the results of the function
 }
 \description{
 The function returns the directional effect (comparing two conditions, under the independent variable, iv) according to the summary function (summary_function).
-The function accepts a dataset in long format with specific columns: identifier (id), independent and dependent variables (iv and dv, respectively).
+The function accepts a dataset in long format with specific columns: identifier ('idv'), independent and dependent variables (iv and dv, respectively).
 For each participant, the function calculates the difference score between two conditions.
 The difference score is calculated by subtracting the result of applying the summary function (summary_function) to the 2nd level if the independent variable, iv, from the 1st level.
 All levels of the independent variable must be included under each identifier.

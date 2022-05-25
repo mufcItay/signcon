@@ -6,16 +6,16 @@
 #' @param p_sd the standard deviation of the population's effect
 #' @param seed - a seed to use when generating the resulting data frame
 #' @param N - the number of simulated participants
-#' @param trialsPerCnd - the number of simulated trials per condition
+#' @param trials_per_cnd - the number of simulated trials per condition
 #' @param wSEsd - the standard deviation of the dependent measure (within subject error term)
 #'
 #' @return a data frame with three columns: id (participant id), 'condition' (condition label), and 'var' (the dependent variable)
-create_sample_data <- function(p_mean, p_sd, seed = 1, N = 30, trialsPerCnd = 100, wSEsd = 2) {
+create_sample_data <- function(p_mean, p_sd, seed = 1, N = 30, trials_per_cnd = 100, wSEsd = 2) {
   set.seed(seed)
   # 0 = faster/smaller condition (e.g., 'congruent'), 1 = slower/larger condition (e.g., 'incongruent'),
   conditionLabels <- c(0,1)
   # define the number of trials across all conditions
-  trialsN <- trialsPerCnd * length(conditionLabels)
+  trialsN <- trials_per_cnd * length(conditionLabels)
 
   # define the baseline dependent measure statistical features
   effect_baseline <- 0
@@ -28,7 +28,7 @@ create_sample_data <- function(p_mean, p_sd, seed = 1, N = 30, trialsPerCnd = 10
   # create an id column for the samples data
   idv <- rep(1:N, each = trialsN)
   # create a independent variable column
-  iv <- rep(rep(conditionLabels, each = trialsPerCnd), N)
+  iv <- rep(rep(conditionLabels, each = trials_per_cnd), N)
 
   # sample effects for each subject
   subj_true_effect <- stats::rnorm(N,population_mean,population_sd)

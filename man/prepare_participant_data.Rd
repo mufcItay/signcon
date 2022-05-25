@@ -22,9 +22,12 @@ prepare_participant_data(
 
 \item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variable(s), 'dv', is expected to differ.}
 
-\item{preprocessFs}{A vector of functions to apply to the data for preprocessing}
+\item{preprocessFs}{An ordered list of functions to apply to the dataset before starting with the analysis.
+The function accepts a 'data' argument (a data frame including the data of an individual),
+and an 'args' argument which includes all additional arguments needed to run the preprcessing function.}
 
-\item{preprocessArgs}{A vector of arguments for the preprocessing functions}
+\item{preprocessArgs}{An ordered list of function arguments, to be used when invoking the 'preprocessFs' (in order, meaning preprocessFs[i](preprocessArgs[i]) will be invoked for each i).
+For example, if the preprocessing function accepts arguments 'a','b' as inputs, preprocessArgs should be set to list(a,b)}
 }
 \value{
 processed participant data, ready to be analyzed

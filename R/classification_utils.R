@@ -6,42 +6,22 @@
 #' @param idv The name of the subject identifier column.
 #' @param dv The names of the dependent variables columns to classify conditions according to. For multiple dependent variables use a string list with the names of each dependent variable (e.g., c('dv1','dv2')).
 #' @param iv The name of the independent variable column - the condition to classify,
-#' indicating the different levels under which the dependent variables (dv) are expected to differ.
+#' indicating the different levels under which the dependent variables ('dv') are expected to differ.
 #' @param params A list of parameters used by the function to perform the classification task. Includes:
 #' \itemize{
 #'   \item K - the number of folds to use when calculating the performance of the classifier.
-#'   \item handleImbalance - A Boolean indicating whether to adjust class imbalance (using different weight for each label)
+#'   \item handle_imbalance - A Boolean indicating whether to adjust class imbalance (using different weight for each label)
+#'   \item null_dist_f - A function that calculates classification accuracy score for the individual under the null hypothesis
 #' }
 #' @return The classification accuracy of the classifier in classifying the 'iv' parameter based on the 'dv' parameter.
 classify_conditions <- function(data, idv = "id", dv = "y", iv = "condition", params) {
   # get the classifier parameters to use
   K <- params$K
-  imbalance <- params$handleImbalance
+  imbalance <- params$handle_imbalance
   # train the classifier according to the configuration defined by the 'params' argument,
   # and get its cross validated accuracy
   res <- get_classifier_accuracy(data, idv, dv, iv, K, imbalance)
   return (res)
-}
-
-#' @title Create Parameters For Classification
-#' @description The function creates a list of parameters to be later passed to the classification function.
-#'
-#' @param K - the number of folds to use when calculating the performance of the classifier. The default value is set to the number of observations of the minority class.
-#' @param handleImbalance - A Boolean indicating whether to adjust class imbalance (using different weight for each label).
-#'
-#' @return a list of parameters that includes all arguments after applying default values.
-create_classification_params <- function(K = NA, handleImbalance = NA) {
-  params <- list()
-  # the default value is set to NA, to be set to the number of observations of the minority class.
-  if(is.na(K)) { K <- NA}
-  params$K <- K
-  # the default value is 'TRUE', which results in assigning different weights to each class,
-  # aiming at balancing the sample
-  if(is.na(handleImbalance)) { handleImbalance <- TRUE }
-  params$handleImbalance <- handleImbalance
-  params$nullDistFunc <- get_shuffled_score
-
-  return (params)
 }
 
 #' Get Classifier Accuracy
@@ -52,13 +32,13 @@ create_classification_params <- function(K = NA, handleImbalance = NA) {
 #' @param idv The name of the subject identifier column.
 #' @param dv The names of the dependent variables columns to classify conditions according to. For multiple dependent variables use a string list with the names of each dependent variable (e.g., c('dv1','dv2')).
 #' @param iv The name of the independent variable column - the condition to classify,
-#' indicating the different levels under which the dependent variables (dv) are expected to differ.
+#' indicating the different levels under which the dependent variables ('dv') are expected to differ.
 #' @param K - the number of folds to use when calculating the performance of the classifier.
 #' If K is set to 'NA', the function set it to the number of observations of the minority class.
-#' @param handleImbalance - A Boolean indicating whether to adjust class imbalance (using different weight for each label)
+#' @param handle_imbalance - A Boolean indicating whether to adjust class imbalance (using different weight for each label)
 #'
 #' @return the function returns the trained classifier accuracy rate
-get_classifier_accuracy <- function(data, idv = "id", dv = "y", iv = "condition", K, handleImbalance) {
+get_classifier_accuracy <- function(data, idv = "id", dv = "y", iv = "condition", K, handle_imbalance) {
   # adds all variables needed for classification (copy variables to 'x' and 'y' columns for simplicity)
   data[,iv] = factor(dplyr::pull(data,iv),)
   labels <- dplyr::pull(data,iv)
@@ -70,7 +50,7 @@ get_classifier_accuracy <- function(data, idv = "id", dv = "y", iv = "condition"
 
   # handle the 'weights' imbalance handling technique by assigning different weights to each class,
   # to balance the sample of labels.
-  if (handleImbalance) {
+  if (handle_imbalance) {
     # calculate the weight of each class in the labels column
     weights <- min(table(labels)) / table(labels)
   }  else	{
@@ -94,4 +74,25 @@ get_classifier_accuracy <- function(data, idv = "id", dv = "y", iv = "condition"
   # calculate the average accuracy across folds
   retVal <- mean(unlist(res))
   return(retVal)
+}
+
+#' @title Create Parameters For Classification
+#' @description The function creates a list of parameters to be later passed to the classification function.
+#'
+#' @param K - the number of folds to use when calculating the performance of the classifier. The default value is set to the number of observations of the minority class.
+#' @param handle_imbalance - A Boolean indicating whether to adjust class imbalance (using different weight for each label).
+#'
+#' @return a list of parameters that includes all arguments after applying default values.
+create_classification_params <- function(K = NA, handle_imbalance = NA) {
+  params <- list()
+  # the default value is set to NA, to be set to the number of observations of the minority class.
+  if(is.na(K)) { K <- NA}
+  params$K <- K
+  # the default value is 'TRUE', which results in assigning different weights to each class,
+  # aiming at balancing the sample
+  if(is.na(handle_imbalance)) { handle_imbalance <- TRUE }
+  params$handle_imbalance <- handle_imbalance
+  params$null_dist_f <- get_shuffled_score
+
+  return (params)
 }

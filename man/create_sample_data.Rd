@@ -9,7 +9,7 @@ create_sample_data(
   p_sd,
   seed = 1,
   N = 30,
-  trialsPerCnd = 100,
+  trials_per_cnd = 100,
   wSEsd = 2
 )
 }
@@ -22,7 +22,7 @@ create_sample_data(
 
 \item{N}{- the number of simulated participants}
 
-\item{trialsPerCnd}{- the number of simulated trials per condition}
+\item{trials_per_cnd}{- the number of simulated trials per condition}
 
 \item{wSEsd}{- the standard deviation of the dependent measure (within subject error term)}
 }

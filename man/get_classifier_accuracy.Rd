@@ -10,7 +10,7 @@ get_classifier_accuracy(
   dv = "y",
   iv = "condition",
   K,
-  handleImbalance
+  handle_imbalance
 )
 }
 \arguments{
@@ -21,12 +21,12 @@ get_classifier_accuracy(
 \item{dv}{The names of the dependent variables columns to classify conditions according to. For multiple dependent variables use a string list with the names of each dependent variable (e.g., c('dv1','dv2')).}
 
 \item{iv}{The name of the independent variable column - the condition to classify,
-indicating the different levels under which the dependent variables (dv) are expected to differ.}
+indicating the different levels under which the dependent variables ('dv') are expected to differ.}
 
 \item{K}{- the number of folds to use when calculating the performance of the classifier.
 If K is set to 'NA', the function set it to the number of observations of the minority class.}
 
-\item{handleImbalance}{- A Boolean indicating whether to adjust class imbalance (using different weight for each label)}
+\item{handle_imbalance}{- A Boolean indicating whether to adjust class imbalance (using different weight for each label)}
 }
 \value{
 the function returns the trained classifier accuracy rate
