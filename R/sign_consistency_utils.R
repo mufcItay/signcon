@@ -10,6 +10,7 @@
 #' \itemize{
 #'   \item nSplits - The number of random splits to analyze for the estimation of sign consistency.
 #'   \item summary_function - The summary function applied to the dependent variable(s), 'dv', under each split of the data.
+#'   \item null_dist_f - A function that calculates sign consistency score for the individual under the null hypothesis
 #' }
 #'
 #' @return the function returns the mean consistency of signs for the given data
@@ -66,7 +67,7 @@ create_sign_consistency_params <- function(nSplits, summary_function) {
   params <- list()
   params$nSplits <- nSplits
   params$summary_function <- summary_function
-  params$nullDistFunc <- get_shuffled_score
+  params$null_dist_f <- get_shuffled_score
 
   return (params)
 }

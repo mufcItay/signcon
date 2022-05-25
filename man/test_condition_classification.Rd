@@ -22,7 +22,7 @@ test_condition_classification(
 
 \item{dv}{The names of the dependent variables columns to classify conditions according to. For multiple dependent variables use a string list with the names of each dependent variable (e.g., c('dv1','dv2')).}
 
-\item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variables (dv) are expected to differ.}
+\item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variables ('dv') are expected to differ.}
 
 \item{K}{- the number of folds to use when calculating the performance of the classifier. If K is set to 'NA', the function resets it to the number of observations of the minority class.}
 
@@ -42,8 +42,8 @@ A list including the results of the function
 }
 \description{
 The function tests for a significant average classification accuracy of condition labels according to a dependent variable (or depedent variables, see the documentation of the 'dv' argument) across participants (without assuming a directional effect), using bootstrapping and permuting each participants' independent variable labels.
-The function accepts a dataset in long format with specific columns: identifier (id), independent and dependent variables (iv and dv, respectively).
-For each participant, the function calculates the k-fold cross-validated accuracy of a SVM classifier with a linear kernel trained to predict the labels of levels under the independent variable (iv) based on the dependent variable (dv).
+The function accepts a dataset in long format with specific columns: identifier ('idv'), independent and dependent variables (iv and dv, respectively).
+For each participant, the function calculates the k-fold cross-validated accuracy of a SVM classifier with a linear kernel trained to predict the labels of levels under the independent variable ('iv') based on the dependent variable ('dv').
 Then, the average classification accuracy across participants is tested against a bootstrapped null distribution in which classification accuracy is calculated for each participant after shuffling its independent variable labels (see Stelzer, J., Chen, Y., & Turner, R., 2013).
 All levels of the independent variable must be included under each identifier.
 }

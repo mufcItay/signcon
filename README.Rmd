@@ -34,17 +34,24 @@ To demonstrate the use of weaknull, we use confidence rating data from an experi
 
 ```{r example}
 library(weaknull)
-library(tidyverse)
+library(magrittr)
 
 # compare the mean confidence for the two responses, 
 # using a standard within-subject t-test:
 t_test_result <- visual_metacognition %>%
-  group_by(Subj_idx,Response) %>%
-  summarise(Confidence=mean(Confidence)) %>%
-  spread(Response, Confidence,sep='.') %>%
-  mutate(diff=Response.1-Response.0) %>%
-  pull(diff) %>%
-  t.test()
+    dplyr::group_by(Subj_idx,Response) %>%
+    dplyr::summarise(Confidence=mean(Confidence), .groups = 'drop_last') %>%
+    tidyr::spread(Response, Confidence,sep='.') %>%
+    dplyr::mutate(diff=Response.1-Response.0) %>%
+    dplyr::pull(diff) %>%
+    t.test()
+
+# compare the mean confidence for the two responses, 
+# using a non-parametric directional effect test: 
+directional_effect_result <- visual_metacognition %>% 
+  weaknull::test_directional_effect(idv="Subj_idx", 
+                                          dv='Confidence', 
+                                          iv='Response')
 
 # compare the mean confidence for the two responses, 
 # using a non-directional sign-consistency test:
@@ -58,8 +65,9 @@ classification_result <- visual_metacognition %>%
   weaknull::test_condition_classification(idv="Subj_idx", 
                                           dv='Confidence', 
                                           iv='Response')
+
 ```
 
-We find that at the group level, the mean difference in confidence between the two responses is 0.02 on a 1-6 scale, and not significantly different from zero ($t(45)=-0.32, p=0.75$). In contrast, sign-consistency equals 0.72, significantly above chance ($p<0.001$), indicating that individual subjects were consistently more confident in one response over the other. Similarly, a linear classifier predicted response from confidence with 54% accuracy, significantly above chance ($p<0.001$).
+We find that at the group level, the mean difference in confidence between the two responses is 0.02 on a 1-6 scale, and not significantly different from zero ($t(45)=-0.32, p=0.75$). This is also the case when we test for a directional effect with a non-parameteric test ($p=0.63$). In contrast, sign-consistency equals 0.72, significantly above chance ($p<0.001$), indicating that individual subjects were consistently more confident in one response over the other. Similarly, a linear classifier predicted response from confidence with 54% accuracy, significantly above chance ($p<0.001$).
 
 

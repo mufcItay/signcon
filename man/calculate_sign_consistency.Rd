@@ -25,6 +25,7 @@ calculate_sign_consistency(
 \itemize{
   \item nSplits - The number of random splits to analyze for the estimation of sign consistency.
   \item summary_function - The summary function applied to the dependent variable(s), 'dv', under each split of the data.
+  \item null_dist_f - A function that calculates sign consistency score for the individual under the null hypothesis
 }}
 }
 \value{

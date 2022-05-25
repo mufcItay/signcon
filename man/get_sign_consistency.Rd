@@ -20,11 +20,11 @@ get_sign_consistency(
 
 \item{dv}{The dependent variable to apply the summary function (summary_function) to.  For multiple dependent variables use a string list with the names of each dependent variable (e.g., c('dv1','dv2')),}
 
-\item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.}
+\item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variable ('dv') is expected to differ.}
 
 \item{nSplits}{The number of splits to use when estimating sign consistency probability.}
 
-\item{summary_function}{The summary function to apply to the dependent variables (dv) under each level of the independent variable (iv) for each participant (id).
+\item{summary_function}{The summary function to apply to the dependent variables ('dv') under each level of the independent variable ('iv') for each participant ('idv').
 This function should map a data frame to a number: {data.frame} -> numeric (e.g. function(df) {mean(as.matrix(df[,dv]))}, which is the default summary function).}
 }
 \value{
@@ -36,7 +36,7 @@ A list including the results of the function
 }
 \description{
 The function returns the average probability of a consistent difference score sign (comparing two conditions) for a random split of each participant's data.
-The function accepts a dataset in long format with specific columns: identifier (id), independent and dependent variables (iv and dv, respectively).
+The function accepts a dataset in long format with specific columns: identifier ('idv'), independent and dependent variables (iv and dv, respectively).
 For each participant, the function calculates the estimated probability that for a random splitting of the data, the summary function (summary_function) returns two values with the same sign when applied to the two halves.
 Then, the average sign consistency probability across participants is calculated and returned.
 All levels of the independent variable must be included under each identifier.

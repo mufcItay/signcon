@@ -20,7 +20,7 @@ get_condition_classification(
 
 \item{dv}{The names of the dependent variables columns to classify conditions according to. For multiple dependent variables use a string list with the names of each dependent variable (e.g., c('dv1','dv2')).}
 
-\item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variables (dv) are expected to differ.}
+\item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variables ('dv') are expected to differ.}
 
 \item{K}{- the number of folds to use when calculating the performance of the classifier. If K is set to 'NA' (it's default value), the function will set it to the number of observations of the minority class.}
 
@@ -35,8 +35,8 @@ A list including the results of the function
 }
 \description{
 The function returns the average classification accuracy of condition labels according to a dependent variable of each participant's data.
-The function accepts a dataset in long format with specific columns: identifier (id), independent and dependent variables (iv and dv, respectively).
-For each participant, the function calculates the k-fold cross-validated accuracy of a SVM classifier with a linear kernel, trained to predict the labels of levels under the independent variable (iv) based on the dependent variable (dv).
+The function accepts a dataset in long format with specific columns: identifier ('idv'), independent and dependent variables (iv and dv, respectively).
+For each participant, the function calculates the k-fold cross-validated accuracy of a SVM classifier with a linear kernel, trained to predict the labels of levels under the independent variable ('iv') based on the dependent variable ('dv').
 Then, it returns the average accuracy of individual participants' classifiers.
 All levels of the independent variable must be included under each identifier.
 }

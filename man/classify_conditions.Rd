@@ -14,12 +14,13 @@ classify_conditions(data, idv = "id", dv = "y", iv = "condition", params)
 \item{dv}{The names of the dependent variables columns to classify conditions according to. For multiple dependent variables use a string list with the names of each dependent variable (e.g., c('dv1','dv2')).}
 
 \item{iv}{The name of the independent variable column - the condition to classify,
-indicating the different levels under which the dependent variables (dv) are expected to differ.}
+indicating the different levels under which the dependent variables ('dv') are expected to differ.}
 
 \item{params}{A list of parameters used by the function to perform the classification task. Includes:
 \itemize{
   \item K - the number of folds to use when calculating the performance of the classifier.
-  \item handleImbalance - A Boolean indicating whether to adjust class imbalance (using different weight for each label)
+  \item handle_imbalance - A Boolean indicating whether to adjust class imbalance (using different weight for each label)
+  \item null_dist_f - A function that calculates classification accuracy score for the individual under the null hypothesis
 }}
 }
 \value{

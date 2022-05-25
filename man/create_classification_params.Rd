@@ -4,12 +4,12 @@
 \alias{create_classification_params}
 \title{Create Parameters For Classification}
 \usage{
-create_classification_params(K = NA, handleImbalance = NA)
+create_classification_params(K = NA, handle_imbalance = NA)
 }
 \arguments{
 \item{K}{- the number of folds to use when calculating the performance of the classifier. The default value is set to the number of observations of the minority class.}
 
-\item{handleImbalance}{- A Boolean indicating whether to adjust class imbalance (using different weight for each label).}
+\item{handle_imbalance}{- A Boolean indicating whether to adjust class imbalance (using different weight for each label).}
 }
 \value{
 a list of parameters that includes all arguments after applying default values.

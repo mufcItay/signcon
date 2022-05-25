@@ -19,11 +19,12 @@ calculate_directional_effect(
 
 \item{dv}{The dependent variable to apply the summary function (summary_function) to.  For multiple dependent variables use a string list with the names of each dependent variable (e.g., c('dv1','dv2')),}
 
-\item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.}
+\item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variable ('dv') is expected to differ.}
 
 \item{params}{A list of parameters used by the function to calculate the effect. Includes:
 \itemize{
   \item summary_function - The summary function applied to the dependent variable(s), 'dv', under each split of the data.
+  \item null_dist_f - A function that calculates the effect score for the individual under the null hypothesis
 }}
 }
 \value{
@@ -31,5 +32,6 @@ the function returns the mean consistency of signs for the given data
 }
 \description{
 The function calculates the directional effect analysis to the dataset of a specific participant.
+The function assumed that the dataset ('data') was sorted according to the independent variable prior to the invocation of this function.
 Called from 'get_true_score'
 }
