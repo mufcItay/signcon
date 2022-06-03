@@ -35,18 +35,23 @@ calculate_sign_consistency <- function(data, idv = "id", dv = "y", iv = "conditi
   # the function returns true if difference score signs are consistency across splits,
   # and false otherwise.
   inner_calculate_sign_consistency <- function(iteration) {
-    # sample a random permutation of the data
-    order_permuatation = sample(nTrials)
-    # define groups according to the permutation:
-    # group0 = {all data points <= midpoint}, group1 {all data points > midpoint}
-    group <- order_permuatation > midpoint
-    # compute the sign of difference scores between groups, using the specified statistic
-    group0_sign <- sign(statistic(y[!group & label, dv]) - statistic(y[!group & !label, dv]))
-    group1_sign <- sign(statistic(y[group & label, dv]) - statistic(y[group & !label, dv]))
-    # return the consistency of sign across groups
-    is_consistent <- group0_sign == group1_sign
-    # if we could not compute one of the groups (na may result from no values under one or more group and label combination)
-    is_consistent <- ifelse(is.na(is_consistent), FALSE, is_consistent)
+    # we run this function until we get a valdi result
+    is_valid_result = FALSE
+    while(!is_valid_result) {
+      # sample a random permutation of the data
+      order_permuatation = sample(nTrials)
+      # define groups according to the permutation:
+      # group0 = {all data points <= midpoint}, group1 {all data points > midpoint}
+      group <- order_permuatation > midpoint
+      # compute the sign of difference scores between groups, using the specified statistic
+      group0_sign <- sign(statistic(y[!group & label, dv]) - statistic(y[!group & !label, dv]))
+      group1_sign <- sign(statistic(y[group & label, dv]) - statistic(y[group & !label, dv]))
+      # return the consistency of sign across groups
+      is_consistent <- group0_sign == group1_sign
+      # if we could not compute one of the groups the result is invalid
+      # NAs may result from no values under one or more group and label combination (and NA == NA also returns NA)
+      is_valid_result <- ! is.na(is_consistent)
+    }
     return (is_consistent)
   }
   # apply the function above for each split
