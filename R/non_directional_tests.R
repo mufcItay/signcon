@@ -56,7 +56,7 @@ get_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", 
 test_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", nSplits = 500, summary_function = base::mean, perm_repetitions = 25, null_dist_samples = 10000) {
   res <- get_sign_consistency(data, idv, dv, iv, nSplits, summary_function)
   params <- create_sign_consistency_params(nSplits, summary_function)
-  null_dist <- get_null_distribution(data, idv, dv, iv, params = params, f = calculate_sign_consistency, null_dist_samples = null_dist_samples)
+  null_dist <- get_null_distribution(data, idv, dv, iv, params = params, f = calculate_sign_consistency, null_dist_samples = null_dist_samples, perm_repetitions = perm_repetitions)
   nullN <- length(null_dist)
   p_val <- sum(res$statistic <= null_dist) / nullN
 
@@ -123,7 +123,7 @@ get_condition_classification <- function(data, idv = "id", dv = "rt", iv = "cond
 test_condition_classification <- function(data, idv = "id", dv = "rt", iv = "condition", K = NA, handleImbalance = NA,perm_repetitions = 25, null_dist_samples = 10000) {
   params <- create_classification_params(K, handleImbalance)
   res <- get_condition_classification(data, idv, dv, iv, K, handleImbalance)
-  null_dist <- get_null_distribution(data, idv, dv, iv, params = params, f = classify_conditions, null_dist_samples = null_dist_samples)
+  null_dist <- get_null_distribution(data, idv, dv, iv, params = params, f = classify_conditions, null_dist_samples = null_dist_samples, perm_repetitions = perm_repetitions)
   nullN <- length(null_dist)
   p_val <- sum(res$statistic <= null_dist) / nullN
 
