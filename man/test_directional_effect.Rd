@@ -10,7 +10,6 @@ test_directional_effect(
   dv = "rt",
   iv = "condition",
   summary_function = base::mean,
-  perm_repetitions = 25,
   null_dist_samples = 10000
 )
 }
@@ -25,8 +24,6 @@ test_directional_effect(
 
 \item{summary_function}{The summary function to apply to the dependent variables ('dv') under each level of the independent variable ('iv') for each participant ('idv').
 This function should map a matrix maintaining the original dataframe columns to a number: {matrix} -> numeric (e.g. function(mat) {mean(mat)}, which is the default summary function).}
-
-\item{perm_repetitions}{The number of label shuffling for each participant.}
 
 \item{null_dist_samples}{The number of samples taken from the null distribution.}
 }

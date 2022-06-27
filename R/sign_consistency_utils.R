@@ -37,7 +37,8 @@ calculate_sign_consistency <- function(data, idv = "id", dv = "y", iv = "conditi
   inner_calculate_sign_consistency <- function(iteration) {
     # we run this function until we get a valdi result
     is_valid_result = FALSE
-    while(!is_valid_result) {
+    cnt <- 0
+    while(cnt < 1000 && !is_valid_result) {
       # sample a random permutation of the data
       order_permuatation = sample(nTrials)
       # define groups according to the permutation:
@@ -51,13 +52,14 @@ calculate_sign_consistency <- function(data, idv = "id", dv = "y", iv = "conditi
       # if we could not compute one of the groups the result is invalid
       # NAs may result from no values under one or more group and label combination (and NA == NA also returns NA)
       is_valid_result <- ! is.na(is_consistent)
+      cnt <- cnt + 1
     }
-    return (is_consistent)
+    return (ifelse(is_valid_result, is_consistent, NA))
   }
   # apply the function above for each split
   consistency <- sapply(1:nSplits, inner_calculate_sign_consistency)
   # calculate the mean consistency across splits
-  retVal <- mean(consistency)
+  retVal <- mean(consistency, na.rm=TRUE)
   return (retVal)
 }
 
@@ -72,7 +74,6 @@ create_sign_consistency_params <- function(nSplits, summary_function) {
   params <- list()
   params$nSplits <- nSplits
   params$summary_function <- summary_function
-  params$null_dist_f <- get_shuffled_score
 
   return (params)
 }

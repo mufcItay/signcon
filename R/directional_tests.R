@@ -43,7 +43,6 @@ get_directional_effect <- function(data, idv = "id", dv = "rt", iv = "condition"
 #' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable ('dv') is expected to differ.
 #' @param summary_function The summary function to apply to the dependent variables ('dv') under each level of the independent variable ('iv') for each participant ('idv').
 #' This function should map a matrix maintaining the original dataframe columns to a number: {matrix} -> numeric (e.g. function(mat) {mean(mat)}, which is the default summary function).
-#' @param perm_repetitions The number of label shuffling for each participant.
 #' @param null_dist_samples The number of samples taken from the null distribution.
 #' @return A list including the results of the function
 #' \itemize{
@@ -53,10 +52,10 @@ get_directional_effect <- function(data, idv = "id", dv = "rt", iv = "condition"
 #' }
 #' @seealso [weaknull::get_directional effect()] returns the directional effect of each participant.
 #' @export
-test_directional_effect <- function(data, idv = "id", dv = "rt", iv = "condition", summary_function = base::mean, perm_repetitions = 25, null_dist_samples = 10000) {
+test_directional_effect <- function(data, idv = "id", dv = "rt", iv = "condition", summary_function = base::mean, null_dist_samples = 10000) {
   res <- get_directional_effect(data, idv, dv, iv, summary_function)
   params <- create_directional_effect_params(summary_function)
-  null_dist <- get_null_distribution(data, idv, dv, iv, params = params, f = calculate_directional_effect, null_dist_samples = null_dist_samples, perm_repetitions = perm_repetitions)
+  null_dist <- get_null_distribution_sign_flip(data, idv, dv, iv, params = params, f = calculate_directional_effect, null_dist_samples = null_dist_samples)
   nullN <- length(null_dist)
   p_val <- sum(res$statistic <= null_dist) / nullN
 
