@@ -92,7 +92,6 @@ create_classification_params <- function(K = NA, handle_imbalance = NA) {
   # aiming at balancing the sample
   if(is.na(handle_imbalance)) { handle_imbalance <- TRUE }
   params$handle_imbalance <- handle_imbalance
-  params$null_dist_f <- get_shuffled_score
 
   return (params)
 }

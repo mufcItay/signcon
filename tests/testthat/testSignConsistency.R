@@ -185,3 +185,13 @@ test_that("TestSignConsistency.GetSignConsistency - Multivariate, Positive Effec
   testthat::expect_lt(diff.t$p.value, alpha)
   testthat::expect_lt(diff.t$statistic, 0)
 })
+
+
+test_that("TestSignConsistency.GetSignConsistency - Max Resampling", {
+  smallData <- create_sample_data(1,.1, wSEsd = 2, N = 2, trials_per_cnd = 2, seed = seed_test)
+  NAFunc <- function(mat) {ifelse(runif(1) > .5, NA, runif(1))}
+  testthat::expect_warning(get_sign_consistency(smallData, idv = "id", dv = 'var', iv = 'condition', summary_function = NAFunc, max_resampling = 1), 'Reached max re*')
+
+  missingData <- smallData[-c(1,2),]
+  testthat::expect_warning(get_sign_consistency(missingData, idv = "id", dv = 'var', iv = 'condition', summary_function = NAFunc, max_resampling = 1))
+})

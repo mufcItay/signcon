@@ -24,7 +24,7 @@ prepare_participant_data <- function(data, idv = "id", dv = "rt", iv = "conditio
   return(data)
 }
 
-#' @title Get Null Distribution
+#' @title Get Null Distribution Perm
 #' @description The function returns the null distribution according to the 'params' argument, and permutation analysis configuration.
 #'
 #' @param data the data of a specific participant, arranged according to the independent variable ('iv')
@@ -43,14 +43,14 @@ prepare_participant_data <- function(data, idv = "id", dv = "rt", iv = "conditio
 #' For example, if the preprocessing function accepts arguments 'a','b' as inputs, preprocessArgs should be set to list(a,b)
 #'
 #' @return A distribution of mean score values computed according to a 'null' effect condition
-get_null_distribution <- function(data, idv = "id", dv = "rt", iv = "condition", params, f, perm_repetitions = 25, null_dist_samples = 10000, preprocessFs = c(), preprocessArgs = c()) {
+get_null_distribution_perm <- function(data, idv = "id", dv = "rt", iv = "condition", params, f, perm_repetitions = 25, null_dist_samples = 10000, preprocessFs = c(), preprocessArgs = c()) {
   print('Generating null distribution')
   pb <- utils::txtProgressBar(0,perm_repetitions,0)
   # get scores from the null distribution for each permutation sampled within each subject.
   # we calcualte the scores based on the 'null_dist_f' argument in 'params'.
   null_scores <- sapply(1:perm_repetitions, function(idx, data, idv, dv, iv, preprocessFs, preprocessArgs, params, f, pb) {
     utils::setTxtProgressBar(pb, idx)
-    params$null_dist_f(data = data, idv = idv, dv = dv, iv = iv,
+    get_shuffled_score(data = data, idv = idv, dv = dv, iv = iv,
                        preprocessFs = preprocessFs, preprocessArgs = preprocessArgs, params = params, f = f)
     }, data = data, idv = idv, dv = dv, iv = iv,
     preprocessFs = preprocessFs, preprocessArgs = preprocessArgs, params = params, f = f, pb = pb)
