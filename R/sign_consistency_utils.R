@@ -23,6 +23,7 @@ calculate_sign_consistency <- function(data, idv = "id", dv = "y", iv = "conditi
   label <- label == dplyr::first(label)
   # get the parameters for the calculation of sign consistency
   nSplits <- params$nSplits
+  max_resampling <- params$max_resampling
   statistic <- params$summary_function
   # check for errors
   if (nrow(y) != length(label)) {
@@ -37,8 +38,8 @@ calculate_sign_consistency <- function(data, idv = "id", dv = "y", iv = "conditi
   inner_calculate_sign_consistency <- function(iteration) {
     # we run this function until we get a valdi result
     is_valid_result = FALSE
-    cnt <- 0
-    while(cnt < 1000 && !is_valid_result) {
+    invalid_counter <- 0
+    while(invalid_counter < max_resampling && !is_valid_result) {
       # sample a random permutation of the data
       order_permuatation = sample(nTrials)
       # define groups according to the permutation:
@@ -52,7 +53,10 @@ calculate_sign_consistency <- function(data, idv = "id", dv = "y", iv = "conditi
       # if we could not compute one of the groups the result is invalid
       # NAs may result from no values under one or more group and label combination (and NA == NA also returns NA)
       is_valid_result <- ! is.na(is_consistent)
-      cnt <- cnt + 1
+      invalid_counter <- invalid_counter + 1
+    }
+    if (invalid_counter == max_resampling) {
+      warning(paste0("Reached max resampling (=",max_resampling,"). Check if your data includes enough trials under all levels of the independent variable for each subject"))
     }
     return (ifelse(is_valid_result, is_consistent, NA))
   }
@@ -67,12 +71,14 @@ calculate_sign_consistency <- function(data, idv = "id", dv = "y", iv = "conditi
 #' @description The function creates a list of parameters to be later passed to the sign consistency function.
 #'
 #' @param nSplits - The number of random splits to analyze for the estimation of sign consistency.
+#' @param max_resampling The maximal number consequent invalid summary function return values (see the documentation of the 'summary_function' argument) to use before ignoring the results of a split iteration.
 #' @param summary_function The summary function applied to the dependent variable(s), 'dv' under each split of the data.
 #'
 #' @return a list of parameters that includes both arguments.
-create_sign_consistency_params <- function(nSplits, summary_function) {
+create_sign_consistency_params <- function(nSplits, max_resampling, summary_function) {
   params <- list()
   params$nSplits <- nSplits
+  params$max_resampling <- max_resampling
   params$summary_function <- summary_function
 
   return (params)

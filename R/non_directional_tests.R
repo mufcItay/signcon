@@ -11,6 +11,8 @@
 #' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable ('dv') is expected to differ.
 #' @param summary_function The summary function to apply to the dependent variables ('dv') under each level of the independent variable ('iv') for each participant ('idv').
 #' This function should map a matrix maintaining the original dataframe columns to a number: {matrix} -> numeric (e.g. function(mat) {mean(mat)}, which is the default summary function).
+#' The function should return NA if the summary statistic cannot be computed for the input given. In such case another split of the data will be sampled and used.
+#' @param max_resampling The maximal number consequent invalid summary function return values (see the documentation of the 'summary_function' argument) to use before ignoring the results of a split iteration.
 #' @param nSplits The number of splits to use when estimating sign consistency probability.
 #' @return A list including the results of the function
 #' \itemize{
@@ -19,8 +21,8 @@
 #' }
 #' @seealso [weaknull::test_sign_consistency()] which uses this function to test the significance of the group-level sign consistency.
 #' @export
-get_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", nSplits = 500, summary_function = base::mean) {
-  params <- create_sign_consistency_params(nSplits, summary_function)
+get_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", summary_function = base::mean, nSplits = 500, max_resampling = 1000) {
+  params <- create_sign_consistency_params(nSplits, max_resampling, summary_function)
   res <- get_scores_per_participant(data, idv, dv, iv, params = params, f = calculate_sign_consistency)
   obs_stat <- base::mean(unlist(res$score))
 
@@ -42,6 +44,8 @@ get_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", 
 #' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable ('dv') is expected to differ .
 #' @param summary_function The summary function to apply to the dependent variables ('dv') under each level of the independent variable ('iv') for each participant ('idv').
 #' This function should map a matrix maintaining the original dataframe columns to a number: {matrix} -> numeric (e.g. function(mat) {mean(mat)}, which is the default summary function).
+#' The function should return NA if the summary statistic cannot be computed for the input given. In such case another split of the data will be sampled and used.
+#' @param max_resampling The maximal number consequent invalid summary function return values (see the documentation of the 'summary_function' argument) to use before ignoring the results of a split iteration.
 #' @param nSplits The number of splits to use when estimating sign consistency probability.
 #' @param perm_repetitions The number of label shuffling for each participant.
 #' @param null_dist_samples The number of samples taken from the null distribution.
@@ -53,9 +57,9 @@ get_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", 
 #' }
 #' @seealso [weaknull::get_sign_consistency()] returns the probability of a consistent sign of a difference score for a random split of the data
 #' @export
-test_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", nSplits = 500, summary_function = base::mean, perm_repetitions = 25, null_dist_samples = 10000) {
-  res <- get_sign_consistency(data, idv, dv, iv, nSplits, summary_function)
-  params <- create_sign_consistency_params(nSplits, summary_function)
+test_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", summary_function = base::mean, nSplits = 500, max_resampling = 1000, perm_repetitions = 25, null_dist_samples = 10000) {
+  res <- get_sign_consistency(data, idv, dv, iv, summary_function, nSplits, max_resampling)
+  params <- create_sign_consistency_params(nSplits, max_resampling, summary_function)
   null_dist <- get_null_distribution_perm(data, idv, dv, iv, params = params, f = calculate_sign_consistency, null_dist_samples = null_dist_samples, perm_repetitions = perm_repetitions)
   nullN <- length(null_dist)
   p_val <- sum(res$statistic <= null_dist) / nullN

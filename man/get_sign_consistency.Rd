@@ -9,8 +9,9 @@ get_sign_consistency(
   idv = "id",
   dv = "rt",
   iv = "condition",
+  summary_function = base::mean,
   nSplits = 500,
-  summary_function = base::mean
+  max_resampling = 1000
 )
 }
 \arguments{
@@ -22,10 +23,13 @@ get_sign_consistency(
 
 \item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variable ('dv') is expected to differ.}
 
+\item{summary_function}{The summary function to apply to the dependent variables ('dv') under each level of the independent variable ('iv') for each participant ('idv').
+This function should map a matrix maintaining the original dataframe columns to a number: {matrix} -> numeric (e.g. function(mat) {mean(mat)}, which is the default summary function).
+The function should return NA if the summary statistic cannot be computed for the input given. In such case another split of the data will be sampled and used.}
+
 \item{nSplits}{The number of splits to use when estimating sign consistency probability.}
 
-\item{summary_function}{The summary function to apply to the dependent variables ('dv') under each level of the independent variable ('iv') for each participant ('idv').
-This function should map a matrix maintaining the original dataframe columns to a number: {matrix} -> numeric (e.g. function(mat) {mean(mat)}, which is the default summary function).}
+\item{max_resampling}{The maximal number consequent invalid summary function return values (see the documentation of the 'summary_function' argument) to use before ignoring the results of a split iteration.}
 }
 \value{
 A list including the results of the function
