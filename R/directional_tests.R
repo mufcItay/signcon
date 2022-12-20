@@ -19,6 +19,7 @@
 #' @seealso [weaknull::test_directional_effect()] which uses this function to test the significance of the group-level effect.
 #' @export
 get_directional_effect <- function(data, idv = "id", dv = "rt", iv = "condition", summary_function = base::mean) {
+  validate_data(data, idv, dv,iv)
   params <- create_directional_effect_params(summary_function)
   res <- get_scores_per_participant(data, idv, dv, iv, params = params, f = calculate_directional_effect)
   obs_stat <- base::mean(unlist(res$score))

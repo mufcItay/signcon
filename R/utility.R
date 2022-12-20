@@ -134,3 +134,29 @@ get_shuffled_score <- function(data, idv, dv, iv, preprocessFs, preprocessArgs, 
   # return the score calculated for the shuffled data
   return(res$score)
 }
+
+#' Validate Data
+#' @description The function checks if the dataset is valid by performing different checks on it.
+#'
+#' @param data the data of a specific participant, arranged according to the independent variable ('iv')
+#' @param idv The name of the participant identifier column.
+#' @param dv the names of the dependent variable(s) to apply the summary function (summary_function) to. For multiple dependent variables use a string list with the names of each dependent variable (e.g., c('dv1','dv2')),
+#' @param iv labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.
+validate_data <- function(data, idv, dv, iv) {
+  # checks if any cell in the dataset contains an invalid value (NA / NaN).
+  if(any(sapply(as.matrix(data), function(x) (is.na(x) | is.nan(x))))) {
+    stop("Execution terminated.\nThe data contains an invalid value (NA / NaN)")
+  }
+  # checks if all column names exist
+  cols <- c(idv,dv,iv)
+  if(length(cols) > length(colnames(data))) {
+    stop(paste0('Missing columns, there are only: ', length(colnames(data)),
+                ' columns in the dataset'))
+  }
+  missing_cols_str <- sapply(cols, function(c) ifelse(!(c %in% names(data)), c, ''))
+  missing_cols <- missing_cols_str[missing_cols_str != '']
+  if(length(missing_cols != 0)) {
+    stop(paste0('Could not find columns: ', paste(missing_cols, sep = ','),
+                '\nMake sure to set the relevant column names as they appear in the data object'))
+  }
+}

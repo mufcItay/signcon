@@ -22,6 +22,7 @@
 #' @seealso [weaknull::test_sign_consistency()] which uses this function to test the significance of the group-level sign consistency.
 #' @export
 get_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", summary_function = base::mean, nSplits = 500, max_resampling = 1000) {
+  validate_data(data, idv, dv,iv)
   params <- create_sign_consistency_params(nSplits, max_resampling, summary_function)
   res <- get_scores_per_participant(data, idv, dv, iv, params = params, f = calculate_sign_consistency)
   obs_stat <- base::mean(unlist(res$score))
@@ -91,6 +92,7 @@ test_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition",
 #' @seealso [e1071::svm()] the SVM classifier used in this function
 #' @export
 get_condition_classification <- function(data, idv = "id", dv = "rt", iv = "condition", K = NA, handleImbalance = NA) {
+  validate_data(data, idv, dv,iv)
   params <- create_classification_params(K, handleImbalance)
   res <- get_scores_per_participant(data, idv, dv, iv, params = params, f = classify_conditions)
   obs_stat <- mean(unlist(res$score))
