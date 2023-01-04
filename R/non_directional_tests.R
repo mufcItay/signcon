@@ -11,6 +11,8 @@
 #' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable ('dv') is expected to differ.
 #' @param summary_function The summary function to apply to the dependent variables ('dv') under each level of the independent variable ('iv') for each participant ('idv').
 #' This function should map a matrix maintaining the original dataframe columns to a number: {matrix} -> numeric (e.g. function(mat) {mean(mat)}, which is the default summary function).
+#' The function should return NA if the summary statistic cannot be computed for the input given. In such case another split of the data will be sampled and used.
+#' @param max_resampling The maximal number consequent invalid summary function return values (see the documentation of the 'summary_function' argument) to use before ignoring the results of a split iteration.
 #' @param nSplits The number of splits to use when estimating sign consistency probability.
 #' @param max_invalid_reps - The maximal number repetitions in which invalid consistency was computed before returning NA result.
 #' @param ci_level - The confidence level (in percents, e.g. setting the argument to 50 generates a 50% CI)
@@ -59,6 +61,8 @@ get_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", 
 #' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable ('dv') is expected to differ .
 #' @param summary_function The summary function to apply to the dependent variables ('dv') under each level of the independent variable ('iv') for each participant ('idv').
 #' This function should map a matrix maintaining the original dataframe columns to a number: {matrix} -> numeric (e.g. function(mat) {mean(mat)}, which is the default summary function).
+#' The function should return NA if the summary statistic cannot be computed for the input given. In such case another split of the data will be sampled and used.
+#' @param max_resampling The maximal number consequent invalid summary function return values (see the documentation of the 'summary_function' argument) to use before ignoring the results of a split iteration.
 #' @param nSplits The number of splits to use when estimating sign consistency probability.
 #' @param perm_repetitions The number of label shuffling for each participant.
 #' @param max_invalid_reps - The maximal number repetitions in which invalid consistency was computed before returning NA result.
