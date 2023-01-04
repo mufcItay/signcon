@@ -135,6 +135,36 @@ get_shuffled_score <- function(data, idv, dv, iv, preprocessFs, preprocessArgs, 
   return(res$score)
 }
 
+
+#' Get Boot CI
+#' The function gets participant-level scores, and calculates a bootstrapped confidence
+#' interval (CI) on the group-level statistic
+#' @param scores participant-level scores
+#' @param ci_level - The confidence level (in percents, e.g. setting the argument to 50 generates a 50% CI)
+#' to use when computing the bootstrapped confidence interval on the group-level
+#' statistic (see the return value 'ci', and the argument 'ci_reps').
+#' The default value of this argument is 95, that would lead to computing the 95% confidence interval for
+#' the group-level statistic.
+#' @param ci_reps - The number repetitions to use when computing the bootstrapped confidence interval
+#' around the group-level statistic.
+#' The default value of this argument is zero, which would lead to not computing the confidence interval at all.
+#'
+#' @return a vector with the ci values (lower bound, upper bound) according to the given
+#' confidence level ('ci_level'). If 'ci_reps' is set to zero, the function returns NA.
+get_boot_ci <- function(scores, ci_level = 95, ci_reps = 0) {
+  if(ci_reps == 0) {
+    return (NA)
+  }
+  print('Calcualting a bootstrapped CI')
+  dist <- sapply(1:ci_reps,
+                 function(iter, data) mean(sample(data, length(data), replace = TRUE)),
+                 data = scores)
+  # convert from confidence level to alpa (and percent to ratio)
+  alpha <- 1-(ci_level / 100)
+  ci = quantile(dist,probs = c(alpha/2, 1-alpha/2))
+  return(ci)
+}
+
 #' Validate Data
 #' @description The function checks if the dataset is valid by performing different checks on it.
 #'
