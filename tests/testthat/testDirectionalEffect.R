@@ -1,14 +1,6 @@
-# "Tests for the directional effect functions"
-seed_test <- 1001
-nNullSamples <- 1000
-alpha <- .05
-nSubj = 20
-nTrials = 30
-chance <- 50 # percent accuracy (assuming two levels of the independent variable)
-
 test_that("TestDirectionalEffect.GetDirectionalEffect - Positive Effect", {
   # test get directional effect with a true positive effect
-  posEffectData <- create_sample_data(1,.1, wSEsd = 1, N = nSubj, trials_per_cnd = nTrials, seed = seed_test)
+  posEffectData <- get_test_data(pe_ds_lbl)
   res_pe <- get_directional_effect(posEffectData, idv = "id", dv = 'var', iv = 'condition')
   res_standatd <- posEffectData %>% dplyr::group_by(id,condition) %>% dplyr::summarise(mRT = mean(var)) %>% dplyr::summarise(effect = diff(mRT))
 
@@ -21,7 +13,7 @@ test_that("TestDirectionalEffect.GetDirectionalEffect - Positive Effect", {
 
 test_that("TestDirectionalEffect.GetDirectionalEffect - Strong null", {
   # test get directional effect with a strong null effect
-  snEffectData <- create_sample_data(0,0, wSEsd = 2, N = nSubj, trials_per_cnd = nTrials, seed = seed_test)
+  snEffectData <- get_test_data(sn_ds_lbl)
   res_sn <- get_directional_effect(snEffectData, idv = "id", dv = 'var', iv = 'condition')
 
   testthat::expect_type(res_sn$statistic, "double")
@@ -33,7 +25,7 @@ test_that("TestDirectionalEffect.GetDirectionalEffect - Strong null", {
 
 test_that("TestDirectionalEffect.GetDirectionalEffect - Weak null", {
   # test get directional effect with a weak null effect
-  weakNullEffectData <- create_sample_data(0,2, wSEsd = .1, N = nSubj, trials_per_cnd = nTrials, seed = seed_test)
+  weakNullEffectData <- get_test_data(wn_ds_lbl)
   res_wn <- get_directional_effect(weakNullEffectData, idv = "id", dv = 'var', iv = 'condition')
 
   testthat::expect_type(res_wn$statistic, "double")
@@ -45,7 +37,7 @@ test_that("TestDirectionalEffect.GetDirectionalEffect - Weak null", {
 
 test_that("TestDirectionalEffect.TestDirectionalEffect - Positive Effect", {
   # test 'test directional effect' with a true positive effect
-  posEffectData <- create_sample_data(1,.1, wSEsd = 1, N = nSubj, trials_per_cnd = nTrials, seed = seed_test)
+  posEffectData <- get_test_data(pe_ds_lbl)
   res_pe <- test_directional_effect(posEffectData, idv = "id", dv = 'var', iv = 'condition', null_dist_samples =  nNullSamples)
 
   testthat::expect_type(res_pe$statistic, "double")
@@ -66,7 +58,7 @@ test_that("TestDirectionalEffect.TestDirectionalEffect - Strong Null", {
 
 test_that("TestDirectionalEffect.TestDirectionalEffect - Weak Null", {
   # test get directional effect with a weak null effect
-  weakNullEffectData <- create_sample_data(0,2, wSEsd = .1, N = nSubj, trials_per_cnd = nTrials, seed = seed_test)
+  weakNullEffectData <- get_test_data(wn_ds_lbl)
   res_wn <- test_directional_effect(weakNullEffectData, idv = "id", dv = 'var', iv = 'condition', null_dist_samples = nNullSamples)
 
   testthat::expect_type(res_wn$statistic, "double")

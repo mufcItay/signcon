@@ -17,7 +17,7 @@
 #' @return the function returns the mean consistency of signs for the given data
 calculate_sign_consistency <- function(data, idv = "id", dv = "y", iv = "condition", params) {
   # get the dependent variable column
-  y <- as.matrix(data[, dv])
+  y <- as.matrix(data[, dv], nrow = nrow(data), ncol = length(dv))
   # get the independent variable column (items are labels describing the experimental conditions)
   label <- dplyr::pull(data,iv)
   # binarization of labels => True for the 1st label, False for the 2nd label
@@ -46,8 +46,10 @@ calculate_sign_consistency <- function(data, idv = "id", dv = "y", iv = "conditi
       # group0 = {all data points <= midpoint}, group1 {all data points > midpoint}
       group <- order_permuatation > midpoint
       # compute the sign of difference scores between groups, using the specified statistic
-      group0_sign <- sign(statistic(y[!group & label, dv]) - statistic(y[!group & !label, dv]))
-      group1_sign <- sign(statistic(y[group & label, dv]) - statistic(y[group & !label, dv]))
+      group0_sign <- sign(statistic(y[!group & label, dv, drop = FALSE]) -
+                            statistic(y[!group & !label, dv, drop = FALSE]))
+      group1_sign <- sign(statistic(y[group & label, dv, drop = FALSE]) -
+                            statistic(y[group & !label, dv, drop = FALSE]))
       # return the consistency of sign across groups
       is_consistent <- group0_sign == group1_sign
       # if we could not compute one of the groups the result is invalid

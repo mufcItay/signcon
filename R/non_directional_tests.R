@@ -36,6 +36,7 @@ get_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", 
                                  summary_function = base::mean, max_invalid_reps = 10^4,
                                  ci_level = 95, ci_reps = 0) {
   params <- create_sign_consistency_params(nSplits, summary_function, max_invalid_reps)
+  validate_data(data, idv, dv,iv)
   res <- get_scores_per_participant(data, idv, dv, iv, params = params, f = calculate_sign_consistency)
   participants_scores <- unlist(res$score)
   obs_stat <- base::mean(participants_scores)
@@ -129,6 +130,7 @@ test_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition",
 #' @seealso [e1071::svm()] the SVM classifier used in this function
 #' @export
 get_condition_classification <- function(data, idv = "id", dv = "rt", iv = "condition", K = NA, handleImbalance = NA) {
+  validate_data(data, idv, dv,iv)
   params <- create_classification_params(K, handleImbalance)
   res <- get_scores_per_participant(data, idv, dv, iv, params = params, f = classify_conditions)
   obs_stat <- mean(unlist(res$score))

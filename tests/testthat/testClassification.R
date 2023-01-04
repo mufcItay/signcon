@@ -1,15 +1,7 @@
-"Tests for the condition classification functions"
-seed_test <- 1001
-nNullSamples <- 1000
-alpha <- .05
-nSubj = 20
-nTrials = 30
-chance <- 50 # percent accuracy (assuming two levels of the independent variable)
-
 
 test_that("TestClassification.GetConditionClassification - Positive Effect", {
   # test get condition classification with a true positive effect
-  posEffectData <- create_sample_data(1,.1, wSEsd = .5, N = nSubj, trials_per_cnd = nTrials, seed = seed_test)
+  posEffectData <- get_test_data(pe_ds_lbl)
   res_pe <- get_condition_classification(posEffectData, idv = "id", dv = 'var', iv = 'condition')
 
   testthat::expect_type(res_pe$statistic, "double")
@@ -19,7 +11,7 @@ test_that("TestClassification.GetConditionClassification - Positive Effect", {
 
 test_that("TestClassification.TestConditionClassification - Positive Effect", {
   # test for significant condition classification with a true positive effect
-  posEffectData <- create_sample_data(1,.1, wSEsd = .5, N = nSubj, trials_per_cnd = nTrials, seed = seed_test)
+  posEffectData <- get_test_data(pe_ds_lbl)
   res_pe <- test_condition_classification(posEffectData, idv = "id", dv = 'var', iv = 'condition', null_dist_samples = 1000)
 
   testthat::expect_type(res_pe$p, "double")
@@ -29,7 +21,7 @@ test_that("TestClassification.TestConditionClassification - Positive Effect", {
 
 test_that("TestClassification.TestConditionClassification - Strong Null", {
   # test non significant results from test  condition classification with a strong null
-  strongNullEffectData <- create_sample_data(0,0, wSEsd = 2, N = nSubj, trials_per_cnd = nTrials, seed = seed_test)
+  strongNullEffectData <- get_test_data(sn_ds_lbl)
   res_sn <- test_condition_classification(strongNullEffectData, idv = "id", dv = 'var', iv = 'condition', null_dist_samples = 1000)
 
   testthat::expect_type(res_sn$p, "double")
@@ -39,7 +31,7 @@ test_that("TestClassification.TestConditionClassification - Strong Null", {
 
 test_that("TestClassification.TestConditionClassification - Weak Null", {
   # test significant results from test  condition classification with a weak null
-  weakNullEffectData <- create_sample_data(0,2, wSEsd = 2, N = nSubj, trials_per_cnd = nTrials, seed = seed_test)
+  weakNullEffectData <- get_test_data(wn_ds_lbl)
   res_wn <- test_condition_classification(weakNullEffectData, idv = "id", dv = 'var', iv = 'condition', null_dist_samples = 1000)
 
   testthat::expect_type(res_wn$p, "double")
@@ -48,9 +40,9 @@ test_that("TestClassification.TestConditionClassification - Weak Null", {
 })
 
 
-test_that("TestClassification.TestConditionClassification - Imbalance - Effect", {
-  # test significant results from test  condition classification with a weak null
-  imbEffectData <- create_sample_data(1,.1, wSEsd = .5, N = nSubj, trials_per_cnd = nTrials, seed = seed_test)
+test_that("TestClassification.TestConditionClassification - Imbalance - Positive Effect", {
+  # test significant results from test  condition classification with a positive effect
+  imbEffectData <- get_test_data(pe_ds_lbl)
   # create class imbalance
   imbEffectData <- imbEffectData |>
     dplyr::group_by('idv') |>
@@ -64,8 +56,8 @@ test_that("TestClassification.TestConditionClassification - Imbalance - Effect",
 
 
 test_that("TestClassification.TestConditionClassification - Imbalance - Null Effect", {
-  # test significant results from test  condition classification with a weak null
-  imbNullEffectData <- create_sample_data(0,0, wSEsd = 2, N = nSubj, trials_per_cnd = nTrials, seed = seed_test)
+  # test significant results from test  condition classification with no effect
+  imbNullEffectData <- get_test_data(sn_ds_lbl)
   # create class imbalance
   imbNullEffectData <- imbNullEffectData |>
     dplyr::group_by('idv') |>
@@ -78,8 +70,8 @@ test_that("TestClassification.TestConditionClassification - Imbalance - Null Eff
 })
 
 test_that("TestClassification.TestConditionClassification - Imbalance - Null Effect, No Adjustement", {
-  # test significant results from test  condition classification with a weak null
-  imbNullEffectData <- create_sample_data(0,0, wSEsd = 2, N = nSubj, trials_per_cnd = nTrials, seed = seed_test)
+  # test significant results from test  condition classification with a no effet
+  imbNullEffectData <- get_test_data(sn_ds_lbl)
   # create class imbalance
   imbNullEffectNoAdjData <- imbNullEffectData |>
     dplyr::group_by('idv') |>

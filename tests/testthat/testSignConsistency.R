@@ -1,14 +1,6 @@
-# "Tests for the sign consistency functions"
-seed_test <- 1001
-nNullSamples <- 1000
-alpha <- .05
-nSubj = 20
-nTrials = 30
-chance <- 50 # percent accuracy (assuming two levels of the independent variable)
-
 test_that("TestSignConsistency.GetSignConsistency - Positive Effect", {
   # test get sign consistency with a true positive effect
-  posEffectData <- create_sample_data(1,.1, wSEsd = 2, N = nSubj, trials_per_cnd = nTrials, seed = seed_test)
+  posEffectData <- get_test_data(pe_ds_lbl)
   res_pe <- get_sign_consistency(posEffectData, idv = "id", dv = 'var', iv = 'condition')
 
   testthat::expect_type(res_pe$statistic, "double")
@@ -18,7 +10,7 @@ test_that("TestSignConsistency.GetSignConsistency - Positive Effect", {
 
 test_that("TestSignConsistency.TestSignConsistency - Weak Null", {
   # test for significant results when we expect a weak null
-  weakNullData <- create_sample_data(0,2, wSEsd = 2, N = nSubj, trials_per_cnd = nTrials, seed = seed_test)
+  weakNullData <- get_test_data(wn_ds_lbl)
   res_wn <- test_sign_consistency(weakNullData, idv = "id", dv = 'var', iv = 'condition', null_dist_samples = nNullSamples)
 
   testthat::expect_type( res_wn$p, "double")
@@ -28,7 +20,7 @@ test_that("TestSignConsistency.TestSignConsistency - Weak Null", {
 
 test_that("TestSignConsistency.TestSignConsistency - Strong Null", {
   # test for false positives high noise
-  strongNullData <- create_sample_data(0,0, wSEsd = 2, N = nSubj, trials_per_cnd = nTrials, seed = seed_test)
+  strongNullData <- get_test_data(sn_ds_lbl)
   res_sn <- test_sign_consistency(strongNullData, idv = "id", dv = 'var', iv = 'condition', null_dist_samples = nNullSamples)
 
   testthat::expect_type(res_sn$p, "double")
@@ -38,7 +30,7 @@ test_that("TestSignConsistency.TestSignConsistency - Strong Null", {
 
 test_that("TestSignConsistency.TestSignConsistency - Positive Effect - Small IDs", {
   # test for positive effect with small individual differences
-  posEffectData_smallIds <- create_sample_data(1,.1, wSEsd = 2, N = nSubj, trials_per_cnd = nTrials, seed = seed_test)
+  posEffectData_smallIds <- get_test_data(pe_ds_lbl)
   res_pe_smallIds <- test_sign_consistency(posEffectData_smallIds, idv = "id", dv = 'var', iv = 'condition', null_dist_samples = nNullSamples)
 
   testthat::expect_type(res_pe_smallIds$p, "double")
