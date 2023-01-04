@@ -12,19 +12,36 @@
 #' @param summary_function The summary function to apply to the dependent variables ('dv') under each level of the independent variable ('iv') for each participant ('idv').
 #' This function should map a matrix maintaining the original dataframe columns to a number: {matrix} -> numeric (e.g. function(mat) {mean(mat)}, which is the default summary function).
 #' @param nSplits The number of splits to use when estimating sign consistency probability.
+#' @param max_invalid_reps - The maximal number repetitions in which invalid consistency was computed before returning NA result.
+#' @param ci_level - The confidence level (in percents, e.g. setting the argument to 50 generates a 50% CI)
+#' to use when computing the bootstrapped confidence interval on the group-level
+#' statistic (see the return value 'ci', and the argument 'ci_reps').
+#' The default value of this argument is 95, that would lead to computing the 95% confidence interval for
+#' the group-level statistic.
+#' @param ci_reps - The number repetitions to use when computing the bootstrapped confidence interval
+#' around the group-level statistic.
+#' The default value of this argument is zero, which would lead to not computing the confidence interval at all.
 #' @return A list including the results of the function
 #' \itemize{
 #'   \item statistic - The average sign consistency across all participants.
 #'   \item consistency_per_id - Sign consistency estimate for each participant.
+#'   \item ci (optional) - The confidence interval around the statistic (returned only if
+#'    the 'ci_reps' argument was set to a value different than 0).
 #' }
 #' @seealso [weaknull::test_sign_consistency()] which uses this function to test the significance of the group-level sign consistency.
 #' @export
-get_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", nSplits = 500, summary_function = base::mean) {
-  params <- create_sign_consistency_params(nSplits, summary_function)
+get_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", nSplits = 500,
+                                 summary_function = base::mean, max_invalid_reps = 10^4,
+                                 ci_level = 95, ci_reps = 0) {
+  params <- create_sign_consistency_params(nSplits, summary_function, max_invalid_reps)
   res <- get_scores_per_participant(data, idv, dv, iv, params = params, f = calculate_sign_consistency)
-  obs_stat <- base::mean(unlist(res$score))
+  participants_scores <- unlist(res$score)
+  obs_stat <- base::mean(participants_scores)
+  ci <- get_boot_ci(participants_scores)
+  if (is.na(ci)) {
+    ret <- list(statistic = obs_stat, consistency_per_id = res)
+  } else {ret <- list(statistic = obs_stat, consistency_per_id = res, ci = ci)}
 
-  ret <- list(statistic = obs_stat, consistency_per_id = res)
   return(ret)
 }
 
@@ -44,23 +61,44 @@ get_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", 
 #' This function should map a matrix maintaining the original dataframe columns to a number: {matrix} -> numeric (e.g. function(mat) {mean(mat)}, which is the default summary function).
 #' @param nSplits The number of splits to use when estimating sign consistency probability.
 #' @param perm_repetitions The number of label shuffling for each participant.
+#' @param max_invalid_reps - The maximal number repetitions in which invalid consistency was computed before returning NA result.
+#' @param ci_level - The confidence level (in percents, e.g. setting the argument to 50 generates a 50% CI)
+#' to use when computing the bootstrapped confidence interval on the group-level
+#' statistic (see the return value 'ci', and the argument 'ci_reps').
+#' The default value of this argument is 95, that would lead to computing the 95% confidence interval for
+#' the group-level statistic.
+#' @param ci_reps - The number repetitions to use when computing the bootstrapped confidence interval
+#' around the group-level statistic.
+#' The default value of this argument is zero, which would lead to not computing the confidence interval at all.
 #' @param null_dist_samples The number of samples taken from the null distribution.
 #' @return A list including the results of the function
 #' \itemize{
 #'   \item p - The p_value of the estimated sign consistency compared with the distribution of sign consistency probabilities under the bootstrapped null distribution.
 #'   \item statistic - The group-level statistic describing the average sign consistency across participants.
 #'   \item null_dist - A numerical vector of samples of sign consistency under the null hypothesis (no consistent difference in the dependent variable ('dv') between the levels of the independent variable ('iv')).
+#'   \item consistency_per_id - Sign consistency estimate for each participant.
+#'   \item ci (optional) - The confidence interval around the statistic (returned only if
+#'    the 'ci_reps' argument was set to a value different than 0).
 #' }
 #' @seealso [weaknull::get_sign_consistency()] returns the probability of a consistent sign of a difference score for a random split of the data
 #' @export
-test_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", nSplits = 500, summary_function = base::mean, perm_repetitions = 25, null_dist_samples = 10000) {
-  res <- get_sign_consistency(data, idv, dv, iv, nSplits, summary_function)
-  params <- create_sign_consistency_params(nSplits, summary_function)
+test_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition",
+                                  nSplits = 500, summary_function = base::mean,
+                                  perm_repetitions = 25, null_dist_samples = 10000,
+                                  max_invalid_reps = 10^4, ci_level = 95, ci_reps = 0) {
+  res <- get_sign_consistency(data, idv, dv, iv, nSplits, summary_function, max_invalid_reps,
+                              ci_level, ci_reps)
+  params <- create_sign_consistency_params(nSplits, summary_function, max_invalid_reps)
   null_dist <- get_null_distribution_perm(data, idv, dv, iv, params = params, f = calculate_sign_consistency, null_dist_samples = null_dist_samples, perm_repetitions = perm_repetitions)
   nullN <- length(null_dist)
   p_val <- sum(res$statistic <= null_dist) / nullN
-
-  ret <- list(p = p_val, statistic = res$statistic, null_dist = null_dist)
+  participants_scores <- unlist(res$consistency_per_id$score)
+  ci <- get_boot_ci(participants_scores)
+  if (is.na(ci)) {
+    ret <- list(p = p_val, statistic = res$statistic, null_dist = null_dist,
+                consistency_per_id = res$consistency_per_id)
+  } else {ret <- list(p = p_val, statistic = res$statistic, null_dist = null_dist,
+                      consistency_per_id = res$consistency_per_id, ci = ci)}
   return(ret)
 }
 

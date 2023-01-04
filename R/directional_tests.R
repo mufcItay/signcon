@@ -11,19 +11,34 @@
 #' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable ('dv') is expected to differ.
 #' @param summary_function The summary function to apply to the dependent variables ('dv') under each level of the independent variable ('iv') for each participant ('idv').
 #' This function should map a matrix maintaining the original dataframe columns to a number: {matrix} -> numeric (e.g. function(mat) {mean(mat)}, which is the default summary function).
+#' @param ci_level - The confidence level (in percents, e.g. setting the argument to 50 generates a 50% CI)
+#' to use when computing the bootstrapped confidence interval on the group-level
+#' statistic (see the return value 'ci', and the argument 'ci_reps').
+#' The default value of this argument is 95, that would lead to computing the 95% confidence interval for
+#' the group-level statistic.
+#' @param ci_reps - The number repetitions to use when computing the bootstrapped confidence interval
+#' around the group-level statistic.
+#' The default value of this argument is zero, which would lead to not computing the confidence interval at all.
 #' @return A list including the results of the function
 #' \itemize{
 #'   \item statistic - The average effect across all participants.
 #'   \item effect_per_id - An effect score for each participant.
+#'   \item ci (optional) - The confidence interval around the statistic (returned only if
+#'    the 'ci_reps' argument was set to a value different than 0).
 #' }
 #' @seealso [weaknull::test_directional_effect()] which uses this function to test the significance of the group-level effect.
 #' @export
-get_directional_effect <- function(data, idv = "id", dv = "rt", iv = "condition", summary_function = base::mean) {
+get_directional_effect <- function(data, idv = "id", dv = "rt", iv = "condition",
+                                   summary_function = base::mean, ci_level = 95, ci_reps = 0) {
   params <- create_directional_effect_params(summary_function)
   res <- get_scores_per_participant(data, idv, dv, iv, params = params, f = calculate_directional_effect)
-  obs_stat <- base::mean(unlist(res$score))
+  participants_scores <- unlist(res$score)
+  obs_stat <- base::mean(participants_scores)
+  ci <- get_boot_ci(participants_scores)
+  if (is.na(ci)) {
+    ret <- list(statistic = obs_stat, effect_per_id = res)
+  } else {ret <- list(statistic = obs_stat, effect_per_id = res, ci = ci)}
 
-  ret <- list(statistic = obs_stat, effect_per_id = res)
   return(ret)
 }
 
@@ -44,21 +59,40 @@ get_directional_effect <- function(data, idv = "id", dv = "rt", iv = "condition"
 #' @param summary_function The summary function to apply to the dependent variables ('dv') under each level of the independent variable ('iv') for each participant ('idv').
 #' This function should map a matrix maintaining the original dataframe columns to a number: {matrix} -> numeric (e.g. function(mat) {mean(mat)}, which is the default summary function).
 #' @param null_dist_samples The number of samples taken from the null distribution.
+#' @param ci_level - The confidence level (in percents, e.g. setting the argument to 50 generates a 50% CI)
+#' to use when computing the bootstrapped confidence interval on the group-level
+#' statistic (see the return value 'ci', and the argument 'ci_reps').
+#' The default value of this argument is 95, that would lead to computing the 95% confidence interval for
+#' the group-level statistic.
+#' @param ci_reps - The number repetitions to use when computing the bootstrapped confidence interval
+#' around the group-level statistic.
+#' The default value of this argument is zero, which would lead to not computing the confidence interval at all.
 #' @return A list including the results of the function
 #' \itemize{
 #'   \item p - The p_value of the estimated effect compared with the distribution of effects under the bootstrapped null distribution.
 #'   \item statistic - The group-level statistic describing the average effect across participants.
 #'   \item null_dist - A numerical vector of samples of effects under the null hypothesis (where the effect of each participant is assigned a random sign).
+#'   \item effect_per_id - An effect score for each participant.
+#'   \item ci (optional) - The confidence interval around the statistic (returned only if
+#'    the 'ci_reps' argument was set to a value different than 0).
 #' }
 #' @seealso [weaknull::get_directional effect()] returns the directional effect of each participant.
 #' @export
-test_directional_effect <- function(data, idv = "id", dv = "rt", iv = "condition", summary_function = base::mean, null_dist_samples = 10000) {
+test_directional_effect <- function(data, idv = "id", dv = "rt", iv = "condition",
+                                    summary_function = base::mean, null_dist_samples = 10000,
+                                    ci_level = 95, ci_reps = 0) {
   res <- get_directional_effect(data, idv, dv, iv, summary_function)
   params <- create_directional_effect_params(summary_function)
   null_dist <- get_null_distribution_sign_flip(data, idv, dv, iv, params = params, f = calculate_directional_effect, null_dist_samples = null_dist_samples)
   nullN <- length(null_dist)
   p_val <- sum(res$statistic <= null_dist) / nullN
+  participants_scores <- unlist(res$effect_per_id$score)
+  ci <- get_boot_ci(participants_scores)
+  if (is.na(ci)) {
+    ret <- list(p = p_val, statistic = res$statistic, null_dist = null_dist,
+                effect_per_id = res$effect_per_id)
+  } else {ret <- list(p = p_val, statistic = res$statistic, null_dist = null_dist,
+                      effect_per_id = res$effect_per_id, ci = ci)}
 
-  ret <- list(p = p_val, statistic = res$statistic, null_dist = null_dist)
   return(ret)
 }
