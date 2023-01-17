@@ -4,14 +4,14 @@
 \alias{create_sign_consistency_params}
 \title{Create Parameters For Sign Consistency}
 \usage{
-create_sign_consistency_params(nSplits, max_resampling, summary_function)
+create_sign_consistency_params(n_splits, summary_function, max_invalid_reps)
 }
 \arguments{
-\item{nSplits}{- The number of random splits to analyze for the estimation of sign consistency.}
-
-\item{max_resampling}{The maximal number consequent invalid summary function return values (see the documentation of the 'summary_function' argument) to use before ignoring the results of a split iteration.}
+\item{n_splits}{- The number of random splits to analyze for the estimation of sign consistency.}
 
 \item{summary_function}{The summary function applied to the dependent variable(s), 'dv' under each split of the data.}
+
+\item{max_invalid_reps}{- The maximal number repetitions in which invalid consistency was computed before returning NA result.}
 }
 \value{
 a list of parameters that includes both arguments.

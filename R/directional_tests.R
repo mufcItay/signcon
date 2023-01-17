@@ -23,7 +23,9 @@
 #' \itemize{
 #'   \item statistic - The average effect across all participants.
 #'   \item effect_per_id - An effect score for each participant.
-#'   \item ci (optional) - The confidence interval around the statistic (returned only if
+#'   \item ci_low (optional) - The lower bound of a confidence interval around the statistic (returned only if
+#'    the 'ci_reps' argument was set to a value different than 0).
+#'   \item ci_high (optional) - The higher bound of a confidence interval around the statistic (returned only if
 #'    the 'ci_reps' argument was set to a value different than 0).
 #' }
 #' @seealso [weaknull::test_directional_effect()] which uses this function to test the significance of the group-level effect.
@@ -35,10 +37,10 @@ get_directional_effect <- function(data, idv = "id", dv = "rt", iv = "condition"
   res <- get_scores_per_participant(data, idv, dv, iv, params = params, f = calculate_directional_effect)
   participants_scores <- unlist(res$score)
   obs_stat <- base::mean(participants_scores)
-  ci <- get_boot_ci(participants_scores)
-  if (is.na(ci)) {
+  ci <- get_boot_ci(participants_scores, ci_level, ci_reps)
+  if (ci_reps == 0) {
     ret <- list(statistic = obs_stat, effect_per_id = res)
-  } else {ret <- list(statistic = obs_stat, effect_per_id = res, ci = ci)}
+  } else {ret <- list(statistic = obs_stat, effect_per_id = res, ci_low = ci[1], ci_high = ci[2])}
 
   return(ret)
 }
@@ -74,7 +76,9 @@ get_directional_effect <- function(data, idv = "id", dv = "rt", iv = "condition"
 #'   \item statistic - The group-level statistic describing the average effect across participants.
 #'   \item null_dist - A numerical vector of samples of effects under the null hypothesis (where the effect of each participant is assigned a random sign).
 #'   \item effect_per_id - An effect score for each participant.
-#'   \item ci (optional) - The confidence interval around the statistic (returned only if
+#'   \item ci_low (optional) - The lower bound of a confidence interval around the statistic (returned only if
+#'    the 'ci_reps' argument was set to a value different than 0).
+#'   \item ci_high (optional) - The higher bound of a confidence interval around the statistic (returned only if
 #'    the 'ci_reps' argument was set to a value different than 0).
 #' }
 #' @seealso [weaknull::get_directional effect()] returns the directional effect of each participant.
@@ -82,18 +86,18 @@ get_directional_effect <- function(data, idv = "id", dv = "rt", iv = "condition"
 test_directional_effect <- function(data, idv = "id", dv = "rt", iv = "condition",
                                     summary_function = base::mean, null_dist_samples = 10000,
                                     ci_level = 95, ci_reps = 0) {
-  res <- get_directional_effect(data, idv, dv, iv, summary_function)
+  res <- get_directional_effect(data, idv, dv, iv, summary_function,
+                                ci_level = ci_level, ci_reps = ci_reps)
   params <- create_directional_effect_params(summary_function)
   null_dist <- get_null_distribution_sign_flip(data, idv, dv, iv, params = params, f = calculate_directional_effect, null_dist_samples = null_dist_samples)
   nullN <- length(null_dist)
   p_val <- sum(res$statistic <= null_dist) / nullN
-  participants_scores <- unlist(res$effect_per_id$score)
-  ci <- get_boot_ci(participants_scores)
-  if (is.na(ci)) {
+  if (ci_reps == 0) {
     ret <- list(p = p_val, statistic = res$statistic, null_dist = null_dist,
                 effect_per_id = res$effect_per_id)
-  } else {ret <- list(p = p_val, statistic = res$statistic, null_dist = null_dist,
-                      effect_per_id = res$effect_per_id, ci = ci)}
+  } else {
+    ret <- list(p = p_val, statistic = res$statistic, null_dist = null_dist,
+                      effect_per_id = res$effect_per_id, ci_low = res$ci_low, ci_high = res$ci_high)}
 
   return(ret)
 }

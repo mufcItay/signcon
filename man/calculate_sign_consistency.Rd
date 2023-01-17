@@ -23,9 +23,10 @@ calculate_sign_consistency(
 
 \item{params}{A list of parameters used by the function to calculate sign consistency. Includes:
 \itemize{
-  \item nSplits - The number of random splits to analyze for the estimation of sign consistency.
+  \item n_splits - The number of random splits to analyze for the estimation of sign consistency.
   \item summary_function - The summary function applied to the dependent variable(s), 'dv', under each split of the data.
-  \item null_dist_f - A function that calculates sign consistency score for the individual under the null hypothesis
+  \item null_dist_f - A function that calculates sign consistency score for the individual under the null hypothesis.
+  \item max_invalid_reps - The maximal number repetitions in which invalid consistency was computed before returning NA result.
 }}
 }
 \value{
