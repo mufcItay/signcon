@@ -67,8 +67,7 @@ test_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition",
                                   nSplits = 500, summary_function = base::mean,
                                   perm_repetitions = 25, null_dist_samples = 10000,
                                   max_invalid_reps = 10^4) {
-  res <- get_sign_consistency(data, idv, dv, iv, nSplits, summary_function, max_invalid_reps,
-                              ci_level, ci_reps)
+  res <- get_sign_consistency(data, idv, dv, iv, nSplits, summary_function, max_invalid_reps)
   params <- create_sign_consistency_params(nSplits, summary_function, max_invalid_reps)
   null_dist <- get_null_distribution_perm(data, idv, dv, iv, params = params, f = calculate_sign_consistency, null_dist_samples = null_dist_samples, perm_repetitions = perm_repetitions)
   nullN <- length(null_dist)

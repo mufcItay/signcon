@@ -10,7 +10,9 @@ test_directional_effect(
   dv = "rt",
   iv = "condition",
   summary_function = base::mean,
-  null_dist_samples = 10000
+  null_dist_samples = 10000,
+  ci_level = 95,
+  ci_reps = 0
 )
 }
 \arguments{
@@ -26,6 +28,16 @@ test_directional_effect(
 This function should map a matrix maintaining the original dataframe columns to a number: {matrix} -> numeric (e.g. function(mat) {mean(mat)}, which is the default summary function).}
 
 \item{null_dist_samples}{The number of samples taken from the null distribution.}
+
+\item{ci_level}{- The confidence level (in percents, e.g. setting the argument to 50 generates a 50% CI)
+to use when computing the bootstrapped confidence interval on the group-level
+statistic (see the return value 'ci', and the argument 'ci_reps').
+The default value of this argument is 95, that would lead to computing the 95% confidence interval for
+the group-level statistic.}
+
+\item{ci_reps}{- The number repetitions to use when computing the bootstrapped confidence interval
+around the group-level statistic.
+The default value of this argument is zero, which would lead to not computing the confidence interval at all.}
 }
 \value{
 A list including the results of the function
@@ -33,6 +45,9 @@ A list including the results of the function
   \item p - The p_value of the estimated effect compared with the distribution of effects under the bootstrapped null distribution.
   \item statistic - The group-level statistic describing the average effect across participants.
   \item null_dist - A numerical vector of samples of effects under the null hypothesis (where the effect of each participant is assigned a random sign).
+  \item effect_per_id - An effect score for each participant.
+  \item ci (optional) - The confidence interval around the statistic (returned only if
+   the 'ci_reps' argument was set to a value different than 0).
 }
 }
 \description{

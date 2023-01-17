@@ -9,11 +9,13 @@ test_sign_consistency(
   idv = "id",
   dv = "rt",
   iv = "condition",
-  summary_function = base::mean,
   nSplits = 500,
-  max_resampling = 1000,
+  summary_function = base::mean,
   perm_repetitions = 25,
-  null_dist_samples = 10000
+  null_dist_samples = 10000,
+  max_invalid_reps = 10^4,
+  ci_level = 95,
+  ci_reps = 0
 )
 }
 \arguments{
@@ -25,17 +27,29 @@ test_sign_consistency(
 
 \item{iv}{Labels of an independent variable, indicating the different levels under which the dependent variable ('dv') is expected to differ .}
 
+\item{nSplits}{The number of splits to use when estimating sign consistency probability.}
+
 \item{summary_function}{The summary function to apply to the dependent variables ('dv') under each level of the independent variable ('iv') for each participant ('idv').
 This function should map a matrix maintaining the original dataframe columns to a number: {matrix} -> numeric (e.g. function(mat) {mean(mat)}, which is the default summary function).
 The function should return NA if the summary statistic cannot be computed for the input given. In such case another split of the data will be sampled and used.}
 
-\item{nSplits}{The number of splits to use when estimating sign consistency probability.}
-
-\item{max_resampling}{The maximal number consequent invalid summary function return values (see the documentation of the 'summary_function' argument) to use before ignoring the results of a split iteration.}
-
 \item{perm_repetitions}{The number of label shuffling for each participant.}
 
 \item{null_dist_samples}{The number of samples taken from the null distribution.}
+
+\item{max_invalid_reps}{- The maximal number repetitions in which invalid consistency was computed before returning NA result.}
+
+\item{ci_level}{- The confidence level (in percents, e.g. setting the argument to 50 generates a 50% CI)
+to use when computing the bootstrapped confidence interval on the group-level
+statistic (see the return value 'ci', and the argument 'ci_reps').
+The default value of this argument is 95, that would lead to computing the 95% confidence interval for
+the group-level statistic.}
+
+\item{ci_reps}{- The number repetitions to use when computing the bootstrapped confidence interval
+around the group-level statistic.
+The default value of this argument is zero, which would lead to not computing the confidence interval at all.}
+
+\item{max_resampling}{The maximal number consequent invalid summary function return values (see the documentation of the 'summary_function' argument) to use before ignoring the results of a split iteration.}
 }
 \value{
 A list including the results of the function
@@ -43,6 +57,9 @@ A list including the results of the function
   \item p - The p_value of the estimated sign consistency compared with the distribution of sign consistency probabilities under the bootstrapped null distribution.
   \item statistic - The group-level statistic describing the average sign consistency across participants.
   \item null_dist - A numerical vector of samples of sign consistency under the null hypothesis (no consistent difference in the dependent variable ('dv') between the levels of the independent variable ('iv')).
+  \item consistency_per_id - Sign consistency estimate for each participant.
+  \item ci (optional) - The confidence interval around the statistic (returned only if
+   the 'ci_reps' argument was set to a value different than 0).
 }
 }
 \description{
