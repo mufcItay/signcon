@@ -11,9 +11,7 @@ get_sign_consistency(
   iv = "condition",
   nSplits = 500,
   summary_function = base::mean,
-  max_invalid_reps = 10^4,
-  ci_level = 95,
-  ci_reps = 0
+  max_invalid_reps = 10^4
 )
 }
 \arguments{
@@ -32,26 +30,12 @@ This function should map a matrix maintaining the original dataframe columns to 
 The function should return NA if the summary statistic cannot be computed for the input given. In such case another split of the data will be sampled and used.}
 
 \item{max_invalid_reps}{- The maximal number repetitions in which invalid consistency was computed before returning NA result.}
-
-\item{ci_level}{- The confidence level (in percents, e.g. setting the argument to 50 generates a 50% CI)
-to use when computing the bootstrapped confidence interval on the group-level
-statistic (see the return value 'ci', and the argument 'ci_reps').
-The default value of this argument is 95, that would lead to computing the 95% confidence interval for
-the group-level statistic.}
-
-\item{ci_reps}{- The number repetitions to use when computing the bootstrapped confidence interval
-around the group-level statistic.
-The default value of this argument is zero, which would lead to not computing the confidence interval at all.}
-
-\item{max_resampling}{The maximal number consequent invalid summary function return values (see the documentation of the 'summary_function' argument) to use before ignoring the results of a split iteration.}
 }
 \value{
 A list including the results of the function
 \itemize{
   \item statistic - The average sign consistency across all participants.
   \item consistency_per_id - Sign consistency estimate for each participant.
-  \item ci (optional) - The confidence interval around the statistic (returned only if
-   the 'ci_reps' argument was set to a value different than 0).
 }
 }
 \description{

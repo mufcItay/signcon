@@ -57,9 +57,6 @@ calculate_sign_consistency <- function(data, idv = "id", dv = "y", iv = "conditi
       is_valid_result <- ! is.na(is_consistent)
       invalid_counter <- invalid_counter + 1
     }
-    if (invalid_counter == params$max_invalid_reps) {
-      warning(paste0("Reached max invalid resampling steps (=",params$max_invalid_reps,"). Check if your data includes enough trials under all levels of the independent variable for each subject"))
-    }
     return (ifelse(is_valid_result, is_consistent, NA))
   }
   # apply the function above for each split

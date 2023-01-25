@@ -41,7 +41,9 @@ A list including the results of the function
 \itemize{
   \item statistic - The average effect across all participants.
   \item effect_per_id - An effect score for each participant.
-  \item ci (optional) - The confidence interval around the statistic (returned only if
+  \item ci_low (optional) - The lower bound of a confidence interval around the statistic (returned only if
+   the 'ci_reps' argument was set to a value different than 0).
+  \item ci_high (optional) - The higher bound of a confidence interval around the statistic (returned only if
    the 'ci_reps' argument was set to a value different than 0).
 }
 }

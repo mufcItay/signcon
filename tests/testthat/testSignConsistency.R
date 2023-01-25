@@ -182,8 +182,16 @@ test_that("TestSignConsistency.GetSignConsistency - Multivariate, Positive Effec
 test_that("TestSignConsistency.GetSignConsistency - Max Resampling", {
   smallData <- create_sample_data(1,.1, wSEsd = 2, N = 2, trials_per_cnd = 2, seed = seed_test)
   NAFunc <- function(mat) {ifelse(runif(1) > .5, NA, runif(1))}
-  testthat::expect_warning(get_sign_consistency(smallData, idv = "id", dv = 'var', iv = 'condition', summary_function = NAFunc, max_resampling = 1), 'Reached max re*')
+  testthat::expect_warning(get_sign_consistency(smallData, idv = "id", dv = 'var', iv = 'condition', summary_function = NAFunc, max_invalid_reps = 1))
 
   missingData <- smallData[-c(1,2),]
-  testthat::expect_warning(get_sign_consistency(missingData, idv = "id", dv = 'var', iv = 'condition', summary_function = NAFunc, max_resampling = 1))
+  testthat::expect_warning(get_sign_consistency(missingData, idv = "id", dv = 'var', iv = 'condition', summary_function = NAFunc, max_invalid_reps = 1))
+})
+
+test_that("TestSignConsistency.TestSignConsistency - Max Resampling", {
+  missingData <- create_sample_data(1,.1, wSEsd = 2, N = 2, trials_per_cnd = 100, seed = seed_test)
+  NAFunc <- function(mat) {ifelse(runif(1) < .75, NA, runif(1))}
+  testthat::expect_warning(test_sign_consistency(missingData, idv = "id", dv = 'var', iv = 'condition',
+                        summary_function = NAFunc,
+                        max_invalid_reps = 1), "the null distribution includes invalid")
 })

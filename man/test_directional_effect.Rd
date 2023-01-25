@@ -46,7 +46,9 @@ A list including the results of the function
   \item statistic - The group-level statistic describing the average effect across participants.
   \item null_dist - A numerical vector of samples of effects under the null hypothesis (where the effect of each participant is assigned a random sign).
   \item effect_per_id - An effect score for each participant.
-  \item ci (optional) - The confidence interval around the statistic (returned only if
+  \item ci_low (optional) - The lower bound of a confidence interval around the statistic (returned only if
+   the 'ci_reps' argument was set to a value different than 0).
+  \item ci_high (optional) - The higher bound of a confidence interval around the statistic (returned only if
    the 'ci_reps' argument was set to a value different than 0).
 }
 }

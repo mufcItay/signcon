@@ -12,7 +12,6 @@
 #' @param summary_function The summary function to apply to the dependent variables ('dv') under each level of the independent variable ('iv') for each participant ('idv').
 #' This function should map a matrix maintaining the original dataframe columns to a number: {matrix} -> numeric (e.g. function(mat) {mean(mat)}, which is the default summary function).
 #' The function should return NA if the summary statistic cannot be computed for the input given. In such case another split of the data will be sampled and used.
-#' @param max_resampling The maximal number consequent invalid summary function return values (see the documentation of the 'summary_function' argument) to use before ignoring the results of a split iteration.
 #' @param nSplits The number of splits to use when estimating sign consistency probability.
 #' @param max_invalid_reps - The maximal number repetitions in which invalid consistency was computed before returning NA result.
 #' @return A list including the results of the function
@@ -49,7 +48,6 @@ get_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", 
 #' @param summary_function The summary function to apply to the dependent variables ('dv') under each level of the independent variable ('iv') for each participant ('idv').
 #' This function should map a matrix maintaining the original dataframe columns to a number: {matrix} -> numeric (e.g. function(mat) {mean(mat)}, which is the default summary function).
 #' The function should return NA if the summary statistic cannot be computed for the input given. In such case another split of the data will be sampled and used.
-#' @param max_resampling The maximal number consequent invalid summary function return values (see the documentation of the 'summary_function' argument) to use before ignoring the results of a split iteration.
 #' @param nSplits The number of splits to use when estimating sign consistency probability.
 #' @param perm_repetitions The number of label shuffling for each participant.
 #' @param max_invalid_reps - The maximal number repetitions in which invalid consistency was computed before returning NA result.
@@ -70,8 +68,12 @@ test_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition",
   res <- get_sign_consistency(data, idv, dv, iv, nSplits, summary_function, max_invalid_reps)
   params <- create_sign_consistency_params(nSplits, summary_function, max_invalid_reps)
   null_dist <- get_null_distribution_perm(data, idv, dv, iv, params = params, f = calculate_sign_consistency, null_dist_samples = null_dist_samples, perm_repetitions = perm_repetitions)
-  nullN <- length(null_dist)
-  p_val <- sum(res$statistic <= null_dist) / nullN
+  p_val <- mean(res$statistic <= null_dist,na.rm = TRUE)
+  if(any(is.na(null_dist))) {
+    prop_na <- sum(is.na(null_dist)) / length(null_dist)
+    warning(paste('the null distribution includes invalid (NA) samples which were removed
+                  before calculating the p-value (', prop_na * 100, '(%) of samples were removed) '))
+  }
   ret <- list(p = p_val, statistic = res$statistic, null_dist = null_dist,
               consistency_per_id = res$consistency_per_id)
   return(ret)
@@ -138,9 +140,12 @@ test_condition_classification <- function(data, idv = "id", dv = "rt", iv = "con
   params <- create_classification_params(K, handleImbalance)
   res <- get_condition_classification(data, idv, dv, iv, K, handleImbalance)
   null_dist <- get_null_distribution_perm(data, idv, dv, iv, params = params, f = classify_conditions, null_dist_samples = null_dist_samples, perm_repetitions = perm_repetitions)
-  nullN <- length(null_dist)
-  p_val <- sum(res$statistic <= null_dist) / nullN
-
+  p_val <- mean(res$statistic <= null_dist,na.rm = TRUE)
+  if(any(is.na(null_dist))) {
+    prop_na <- sum(is.na(null_dist)) / length(null_dist)
+    warning(paste('the null distribution includes invalid (NA) samples which were removed
+                  before calculating the p-value (', prop_na * 100, '(%) of samples were removed) '))
+  }
   ret <- list(p = p_val, statistic = res$statistic, null_dist = null_dist)
   return(ret)
 }

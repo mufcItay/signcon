@@ -90,8 +90,12 @@ test_directional_effect <- function(data, idv = "id", dv = "rt", iv = "condition
                                 ci_level = ci_level, ci_reps = ci_reps)
   params <- create_directional_effect_params(summary_function)
   null_dist <- get_null_distribution_sign_flip(data, idv, dv, iv, params = params, f = calculate_directional_effect, null_dist_samples = null_dist_samples)
-  nullN <- length(null_dist)
-  p_val <- sum(res$statistic <= null_dist) / nullN
+  p_val <- mean(res$statistic <= null_dist,na.rm = TRUE)
+  if(any(is.na(null_dist))) {
+    prop_na <- sum(is.na(null_dist)) / length(null_dist)
+    warning(paste('the null distribution includes invalid (NA) samples which were removed
+                  before calculating the p-value (', prop_na * 100, '(%) of samples were removed) '))
+  }
   if (ci_reps == 0) {
     ret <- list(p = p_val, statistic = res$statistic, null_dist = null_dist,
                 effect_per_id = res$effect_per_id)
