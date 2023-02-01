@@ -49,6 +49,8 @@ test_that("TestSignConsistency.TestSignConsistency - Positive Effect - Small IDs
 })
 
 
+
+
 ####################################################
 ################ MULTIVARIATE TESTS ################
 ####################################################
@@ -194,4 +196,23 @@ test_that("TestSignConsistency.TestSignConsistency - Max Resampling", {
   testthat::expect_warning(test_sign_consistency(missingData, idv = "id", dv = 'var', iv = 'condition',
                         summary_function = NAFunc,
                         max_invalid_reps = 1), "the null distribution includes invalid")
+})
+
+## Test ties
+test_that("TestSignConsistency.GetSignConsistency - Ties (accuracy constnat value)", {
+  accNullEffectData <- create_sample_data(p_mean = 0,0, wSEsd = 0, N = 5,
+                                          trials_per_cnd = 10, seed = seed_test)
+  accNullEffectData$var <- accNullEffectData$var + 1
+  testthat::expect_warning(get_sign_consistency(accNullEffectData, idv = "id", dv = 'var', iv = 'condition',
+                                                 max_invalid_reps = 5),
+                           "could not compute consistency scores")
+})
+
+test_that("TestSignConsistency.GetSignConsistency - Ties (accuracy 50% per subj)", {
+  accNullEffectData <- create_sample_data(p_mean = 0,0, wSEsd = 0, N = 5,
+                                          trials_per_cnd = 2, seed = seed_test)
+  accNullEffectData$var[seq(1,nrow(accNullEffectData),2)] <- 1
+  testthat::expect_warning(get_sign_consistency(accNullEffectData, idv = "id", dv = 'var', iv = 'condition',
+                                                max_invalid_reps = 5),
+                           "could not compute consistency scores")
 })
