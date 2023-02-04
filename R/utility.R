@@ -161,7 +161,7 @@ get_boot_ci <- function(scores, ci_level = 95, ci_reps = 0) {
                  data = scores)
   # convert from confidence level to alpa (and percent to ratio)
   alpha <- 1-(ci_level / 100)
-  ci = stats::quantile(dist,probs = c(alpha/2, 1-alpha/2))
+  ci = stats::quantile(dist,probs = c(alpha/2, 1-alpha/2),  na.rm = TRUE)
   return(ci)
 }
 
