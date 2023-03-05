@@ -10,8 +10,8 @@ test_that("TestSignConsistency.GetSignConsistency - Positive Effect", {
 
 test_that("TestSignConsistency.TestSignConsistency - Weak Null", {
   # test for significant results when we expect a weak null
-  weakNullData <- get_test_data(wn_ds_lbl)
-  res_wn <- test_sign_consistency(weakNullData, idv = "id", dv = 'var', iv = 'condition', null_dist_samples = nNullSamples)
+  signconData <- get_test_data(wn_ds_lbl)
+  res_wn <- test_sign_consistency(signconData, idv = "id", dv = 'var', iv = 'condition', null_dist_samples = nNullSamples)
 
   testthat::expect_type( res_wn$p, "double")
   testthat::expect_length(res_wn$null_dist, nNullSamples)

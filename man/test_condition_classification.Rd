@@ -48,7 +48,7 @@ Then, the average classification accuracy across participants is tested against 
 All levels of the independent variable must be included under each identifier.
 }
 \seealso{
-[weaknull::get_condition_classification()] returns the condition classification accuracy of each participant in the dataset.
+[signcon::get_condition_classification()] returns the condition classification accuracy of each participant in the dataset.
 
 [e1071::svm()] the SVM classifier used in this function
 }

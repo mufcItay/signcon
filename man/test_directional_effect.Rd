@@ -61,5 +61,5 @@ Then, the average effect across participants is tested against a bootstrapped nu
 All levels of the independent variable must be included under each identifier.
 }
 \seealso{
-[weaknull::get_directional effect()] returns the directional effect of each participant.
+[signcon::get_directional effect()] returns the directional effect of each participant.
 }

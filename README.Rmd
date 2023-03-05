@@ -13,27 +13,27 @@ knitr::opts_chunk$set(
 )
 ```
 
-# weaknull
+# signcon
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of weaknull is to provide a frequentist statistical framework to test weak, nondirectional null hypotheses. Weak null hypotheses may be rejected in cases where individual subjects show reliable effects, even if these effects have opposite signs and cancel out at the group level in a standard t-test. 
+The goal of signcon is to provide a frequentist statistical framework to test weak, nondirectional null hypotheses. Weak null hypotheses may be rejected in cases where individual subjects show reliable effects, even if these effects have opposite signs and cancel out at the group level in a standard t-test. 
 
 ## Installation
 
-You can install the development version of weaknull like so:
+You can install the development version of signcon like so:
 
 ``` r
-remotes::install_github('mufcItay/weaknull')
+remotes::install_github('mufcItay/signcon')
 ```
 
 ## Example
 
-To demonstrate the use of weaknull, we use confidence rating data from an experiment where participants reported the orientation of visual gratings, and then rated their confidence on a 1-6 scale. We ask whether confidence levels were similar for the two responses, first using a standard t-test, and then using non-directional sign-consistency and classification tests:
+To demonstrate the use of signcon, we use confidence rating data from an experiment where participants reported the orientation of visual gratings, and then rated their confidence on a 1-6 scale. We ask whether confidence levels were similar for the two responses, first using a standard t-test, and then using non-directional sign-consistency and classification tests:
 
 ```{r example}
-library(weaknull)
+library(signcon)
 library(magrittr)
 
 # compare the mean confidence for the two responses, 
@@ -49,20 +49,20 @@ t_test_result <- visual_metacognition %>%
 # compare the mean confidence for the two responses, 
 # using a non-parametric directional effect test: 
 directional_effect_result <- visual_metacognition %>% 
-  weaknull::test_directional_effect(idv="Subj_idx", 
+  signcon::test_directional_effect(idv="Subj_idx", 
                                           dv='Confidence', 
                                           iv='Response')
 
 # compare the mean confidence for the two responses, 
 # using a non-directional sign-consistency test:
 sign_consistency_result <- visual_metacognition %>% 
-  weaknull::test_sign_consistency(idv="Subj_idx", dv='Confidence', iv='Response')
+  signcon::test_sign_consistency(idv="Subj_idx", dv='Confidence', iv='Response')
 
 # compare the mean confidence for the two responses, 
 # using a non-directional classification test 
 # (this may take a couple of minutes to run on a standard PC):
 classification_result <- visual_metacognition %>% 
-  weaknull::test_condition_classification(idv="Subj_idx", 
+  signcon::test_condition_classification(idv="Subj_idx", 
                                           dv='Confidence', 
                                           iv='Response')
 

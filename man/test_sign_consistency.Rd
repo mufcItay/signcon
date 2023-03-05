@@ -54,5 +54,5 @@ Then, the average sign consistency across participants is tested against a boots
 All levels of the independent variable must be included under each identifier.
 }
 \seealso{
-[weaknull::get_sign_consistency()] returns the probability of a consistent sign of a difference score for a random split of the data
+[signcon::get_sign_consistency()] returns the probability of a consistent sign of a difference score for a random split of the data
 }

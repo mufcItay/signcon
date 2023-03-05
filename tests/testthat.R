@@ -1,4 +1,4 @@
 library(testthat)
-library(weaknull)
+library(signcon)
 
-test_check("weaknull")
+test_check("signcon")

@@ -28,7 +28,7 @@
 #'   \item ci_high (optional) - The higher bound of a confidence interval around the statistic (returned only if
 #'    the 'ci_reps' argument was set to a value different than 0).
 #' }
-#' @seealso [weaknull::test_directional_effect()] which uses this function to test the significance of the group-level effect.
+#' @seealso [signcon::test_directional_effect()] which uses this function to test the significance of the group-level effect.
 #' @export
 get_directional_effect <- function(data, idv = "id", dv = "rt", iv = "condition",
                                    summary_function = base::mean, ci_level = 95, ci_reps = 0) {
@@ -81,7 +81,7 @@ get_directional_effect <- function(data, idv = "id", dv = "rt", iv = "condition"
 #'   \item ci_high (optional) - The higher bound of a confidence interval around the statistic (returned only if
 #'    the 'ci_reps' argument was set to a value different than 0).
 #' }
-#' @seealso [weaknull::get_directional effect()] returns the directional effect of each participant.
+#' @seealso [signcon::get_directional effect()] returns the directional effect of each participant.
 #' @export
 test_directional_effect <- function(data, idv = "id", dv = "rt", iv = "condition",
                                     summary_function = base::mean, null_dist_samples = 10000,

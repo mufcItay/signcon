@@ -41,7 +41,7 @@ Then, it returns the average accuracy of individual participants' classifiers.
 All levels of the independent variable must be included under each identifier.
 }
 \seealso{
-[weaknull::test_condition_classification()] which uses this function to test for the significance of condition classification accuracy.
+[signcon::test_condition_classification()] which uses this function to test for the significance of condition classification accuracy.
 
 [e1071::svm()] the SVM classifier used in this function
 }

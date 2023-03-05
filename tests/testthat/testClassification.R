@@ -31,8 +31,8 @@ test_that("TestClassification.TestConditionClassification - Strong Null", {
 
 test_that("TestClassification.TestConditionClassification - Weak Null", {
   # test significant results from test  condition classification with a weak null
-  weakNullEffectData <- get_test_data(wn_ds_lbl)
-  res_wn <- test_condition_classification(weakNullEffectData, idv = "id", dv = 'var', iv = 'condition', null_dist_samples = 1000)
+  signconEffectData <- get_test_data(wn_ds_lbl)
+  res_wn <- test_condition_classification(signconEffectData, idv = "id", dv = 'var', iv = 'condition', null_dist_samples = 1000)
 
   testthat::expect_type(res_wn$p, "double")
   testthat::expect_length(res_wn$null_dist, nNullSamples)

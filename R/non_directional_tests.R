@@ -19,7 +19,7 @@
 #'   \item statistic - The average sign consistency across all participants.
 #'   \item consistency_per_id - Sign consistency estimate for each participant.
 #' }
-#' @seealso [weaknull::test_sign_consistency()] which uses this function to test the significance of the group-level sign consistency.
+#' @seealso [signcon::test_sign_consistency()] which uses this function to test the significance of the group-level sign consistency.
 #' @export
 get_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", nSplits = 500,
                                  summary_function = base::mean, max_invalid_reps = 10^4) {
@@ -59,7 +59,7 @@ get_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", 
 #'   \item null_dist - A numerical vector of samples of sign consistency under the null hypothesis (no consistent difference in the dependent variable ('dv') between the levels of the independent variable ('iv')).
 #'   \item consistency_per_id - Sign consistency estimate for each participant.
 #' }
-#' @seealso [weaknull::get_sign_consistency()] returns the probability of a consistent sign of a difference score for a random split of the data
+#' @seealso [signcon::get_sign_consistency()] returns the probability of a consistent sign of a difference score for a random split of the data
 #' @export
 test_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition",
                                   nSplits = 500, summary_function = base::mean,
@@ -98,7 +98,7 @@ test_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition",
 #'   \item statistic - The average classification accuracy across participants and folds.
 #'   \item accuracy_per_id - The classification accuracy across folds, for each participant.
 #' }
-#' @seealso [weaknull::test_condition_classification()] which uses this function to test for the significance of condition classification accuracy.
+#' @seealso [signcon::test_condition_classification()] which uses this function to test for the significance of condition classification accuracy.
 #' @seealso [e1071::svm()] the SVM classifier used in this function
 #' @export
 get_condition_classification <- function(data, idv = "id", dv = "rt", iv = "condition", K = NA, handleImbalance = NA) {
@@ -133,7 +133,7 @@ get_condition_classification <- function(data, idv = "id", dv = "rt", iv = "cond
 #'   \item statistic - The group-level statistic describing the average classification accuracy across participants.
 #'   \item null_dist - A numerical vector of samples of the classifier accuracies under the bootstrapped null distribution.
 #' }
-#' @seealso [weaknull::get_condition_classification()] returns the condition classification accuracy of each participant in the dataset.
+#' @seealso [signcon::get_condition_classification()] returns the condition classification accuracy of each participant in the dataset.
 #' @seealso [e1071::svm()] the SVM classifier used in this function
 #' @export
 test_condition_classification <- function(data, idv = "id", dv = "rt", iv = "condition", K = NA, handleImbalance = NA,perm_repetitions = 25, null_dist_samples = 10000) {

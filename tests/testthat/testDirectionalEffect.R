@@ -25,8 +25,8 @@ test_that("TestDirectionalEffect.GetDirectionalEffect - Strong null", {
 
 test_that("TestDirectionalEffect.GetDirectionalEffect - Weak null", {
   # test get directional effect with a weak null effect
-  weakNullEffectData <- get_test_data(wn_ds_lbl)
-  res_wn <- get_directional_effect(weakNullEffectData, idv = "id", dv = 'var', iv = 'condition')
+  signconEffectData <- get_test_data(wn_ds_lbl)
+  res_wn <- get_directional_effect(signconEffectData, idv = "id", dv = 'var', iv = 'condition')
 
   testthat::expect_type(res_wn$statistic, "double")
   testthat::expect_length(res_wn$effect_per_id$score, nSubj)
@@ -58,8 +58,8 @@ test_that("TestDirectionalEffect.TestDirectionalEffect - Strong Null", {
 
 test_that("TestDirectionalEffect.TestDirectionalEffect - Weak Null", {
   # test get directional effect with a weak null effect
-  weakNullEffectData <- get_test_data(wn_ds_lbl)
-  res_wn <- test_directional_effect(weakNullEffectData, idv = "id", dv = 'var', iv = 'condition', null_dist_samples = nNullSamples)
+  signconEffectData <- get_test_data(wn_ds_lbl)
+  res_wn <- test_directional_effect(signconEffectData, idv = "id", dv = 'var', iv = 'condition', null_dist_samples = nNullSamples)
 
   testthat::expect_type(res_wn$statistic, "double")
   testthat::expect_length(res_wn$null_dist, nNullSamples)

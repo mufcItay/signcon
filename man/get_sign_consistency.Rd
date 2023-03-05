@@ -46,5 +46,5 @@ Then, the average sign consistency probability across participants is calculated
 All levels of the independent variable must be included under each identifier.
 }
 \seealso{
-[weaknull::test_sign_consistency()] which uses this function to test the significance of the group-level sign consistency.
+[signcon::test_sign_consistency()] which uses this function to test the significance of the group-level sign consistency.
 }

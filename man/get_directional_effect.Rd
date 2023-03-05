@@ -55,5 +55,5 @@ The difference score is calculated by subtracting the result of applying the sum
 All levels of the independent variable must be included under each identifier.
 }
 \seealso{
-[weaknull::test_directional_effect()] which uses this function to test the significance of the group-level effect.
+[signcon::test_directional_effect()] which uses this function to test the significance of the group-level effect.
 }
