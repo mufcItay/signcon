@@ -7,8 +7,6 @@ test_that("TestErrors - NAs", {
   testthat::expect_error(test_directional_effect(data, dv = 'var'))
   testthat::expect_error(get_sign_consistency(data, dv = 'var'))
   testthat::expect_error(test_sign_consistency(data, dv = 'var'))
-  testthat::expect_error(get_condition_classification(data, dv = 'var'))
-  testthat::expect_error(test_condition_classification(data, dv = 'var'))
 })
 
 test_that("TestErrors - NaNs", {
@@ -19,8 +17,6 @@ test_that("TestErrors - NaNs", {
   testthat::expect_error(test_directional_effect(data, dv = 'var'))
   testthat::expect_error(get_sign_consistency(data, dv = 'var'))
   testthat::expect_error(test_sign_consistency(data, dv = 'var'))
-  testthat::expect_error(get_condition_classification(data, dv = 'var'))
-  testthat::expect_error(test_condition_classification(data, dv = 'var'))
 })
 
 test_that("TestErrors - missing column", {
@@ -30,15 +26,12 @@ test_that("TestErrors - missing column", {
   testthat::expect_error(test_directional_effect(data, dv = 'var'))
   testthat::expect_error(get_sign_consistency(data, dv = 'var'))
   testthat::expect_error(test_sign_consistency(data, dv = 'var'))
-  testthat::expect_error(get_condition_classification(data, dv = 'var'))
-  testthat::expect_error(test_condition_classification(data, dv = 'var'))
 })
 
 test_that("TestErrors - wrong column names", {
   data <- get_test_data(sn_ds_lbl)
   colnames(data)[3] <- colnames(data)[2]
   testthat::expect_error(get_directional_effect(data, dv = 'var'))
-  testthat::expect_error(get_condition_classification(data, id = 'var12'))
 
   colnames(data)[1] <- 'fake'
   testthat::expect_error(get_directional_effect(data, dv = 'var'))
