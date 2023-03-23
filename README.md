@@ -58,7 +58,7 @@ sign_consistency_result <- visual_metacognition %>%
   signcon::test_sign_consistency(idv="Subj_idx", dv='Confidence', iv='Response')
 #> [1] "Generating null distribution"
 #> ================================================================================
-
+```
 
 We find that at the group level, the mean difference in confidence
 between the two responses is 0.02 on a 1-6 scale, and not significantly
