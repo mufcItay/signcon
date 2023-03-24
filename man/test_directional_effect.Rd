@@ -42,7 +42,7 @@ The default value of this argument is zero, which would lead to not computing th
 \value{
 A list including the results of the function
 \itemize{
-  \item p - The p_value of the estimated effect compared with the distribution of effects under the bootstrapped null distribution.
+  \item p - The two-sided p_value of the estimated effect compared with the distribution of effects under the bootstrapped null distribution.
   \item statistic - The group-level statistic describing the average effect across participants.
   \item null_dist - A numerical vector of samples of effects under the null hypothesis (where the effect of each participant is assigned a random sign).
   \item effect_per_id - An effect score for each participant.

@@ -73,6 +73,7 @@ get_directional_effect <- function(data, idv = "id", dv = "rt", iv = "condition"
 #' @return A list including the results of the function
 #' \itemize{
 #'   \item p - The two-sided p_value of the estimated effect compared with the distribution of effects under the bootstrapped null distribution.
+#'   the p-value is adjusted according to (B + 1) / (M + 1), see Phipson & Smyth, 2010.
 #'   \item statistic - The group-level statistic describing the average effect across participants.
 #'   \item null_dist - A numerical vector of samples of effects under the null hypothesis (where the effect of each participant is assigned a random sign).
 #'   \item effect_per_id - An effect score for each participant.
@@ -90,7 +91,8 @@ test_directional_effect <- function(data, idv = "id", dv = "rt", iv = "condition
                                 ci_level = ci_level, ci_reps = ci_reps)
   params <- create_directional_effect_params(summary_function)
   null_dist <- get_null_distribution_sign_flip(data, idv, dv, iv, params = params, f = calculate_directional_effect, null_dist_samples = null_dist_samples)
-  p_val <- mean(res$statistic <= null_dist,na.rm = TRUE)
+  # adjust p-value (according to (B + 1) / (M + 1), see Phipson & Smyth, 2010)
+  p_val <- 1 - (1 + sum(res$statistic > null_dist,na.rm = TRUE)) / (1 + length(null_dist))
   p_val <- 2*min(p_val, 1-p_val)
   if(any(is.na(null_dist))) {
     prop_na <- sum(is.na(null_dist)) / length(null_dist)

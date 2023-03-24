@@ -55,6 +55,7 @@ get_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", 
 #' @return A list including the results of the function
 #' \itemize{
 #'   \item p - The p_value of the estimated sign consistency compared with the distribution of sign consistency probabilities under the bootstrapped null distribution.
+#'   the p-value is adjusted according to (B + 1) / (M + 1), see Phipson & Smyth, 2010.
 #'   \item statistic - The group-level statistic describing the average sign consistency across participants.
 #'   \item null_dist - A numerical vector of samples of sign consistency under the null hypothesis (no consistent difference in the dependent variable ('dv') between the levels of the independent variable ('iv')).
 #'   \item consistency_per_id - Sign consistency estimate for each participant.
@@ -68,7 +69,8 @@ test_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition",
   res <- get_sign_consistency(data, idv, dv, iv, nSplits, summary_function, max_invalid_reps)
   params <- create_sign_consistency_params(nSplits, summary_function, max_invalid_reps)
   null_dist <- get_null_distribution_perm(data, idv, dv, iv, params = params, f = calculate_sign_consistency, null_dist_samples = null_dist_samples, perm_repetitions = perm_repetitions)
-  p_val <- mean(res$statistic <= null_dist,na.rm = TRUE)
+  # adjust p-value (according to (B + 1) / (M + 1), see Phipson & Smyth, 2010)
+  p_val <- 1 - (1 + sum(res$statistic > null_dist,na.rm = TRUE)) / (1 + length(null_dist))
   if(any(is.na(null_dist))) {
     prop_na <- sum(is.na(null_dist)) / length(null_dist)
     warning(paste('the null distribution includes invalid (NA) samples which were removed
