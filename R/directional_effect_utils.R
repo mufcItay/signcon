@@ -16,7 +16,7 @@
 #' @return the function returns the mean consistency of signs for the given data
 calculate_directional_effect <- function(data, idv = "id", dv = "y", iv = "condition", params) {
   # get the independent variable column (items are labels describing the experimental conditions)
-  label <- dplyr::pull(data,iv)
+  label <- dplyr::pull(data,!!dplyr::sym(iv))
   # get the last condition label ( we assume that the dataset was sorted according to the independent variable)
   last_label <- dplyr::last(label)
   y = as.matrix(data[,dv])

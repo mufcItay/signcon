@@ -19,7 +19,7 @@ calculate_sign_consistency <- function(data, idv = "id", dv = "y", iv = "conditi
   # get the dependent variable column
   y <- as.matrix(data[, dv], nrow = nrow(data), ncol = length(dv))
   # get the independent variable column (items are labels describing the experimental conditions)
-  label <- dplyr::pull(data,iv)
+  label <- dplyr::pull(data,!!dplyr::sym(iv))
   # binarization of labels => True for the 1st label, False for the 2nd label
   label <- label == dplyr::first(label)
   # get the parameters for the calculation of sign consistency

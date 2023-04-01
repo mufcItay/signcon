@@ -41,6 +41,7 @@ The function should return NA if the summary statistic cannot be computed for th
 A list including the results of the function
 \itemize{
   \item p - The p_value of the estimated sign consistency compared with the distribution of sign consistency probabilities under the bootstrapped null distribution.
+  the p-value is adjusted according to (B + 1) / (M + 1), see Phipson & Smyth, 2010.
   \item statistic - The group-level statistic describing the average sign consistency across participants.
   \item null_dist - A numerical vector of samples of sign consistency under the null hypothesis (no consistent difference in the dependent variable ('dv') between the levels of the independent variable ('iv')).
   \item consistency_per_id - Sign consistency estimate for each participant.

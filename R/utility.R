@@ -121,7 +121,7 @@ get_shuffled_score <- function(data, idv, dv, iv, preprocessFs, preprocessArgs, 
   # define a preprocessing function that shuffles the independent variable column for each participant
   preprocessFs <- append(preprocessFs, function(data,args) {
     # randomly shuffle the labels under 'args' column
-    data[args] <- sample(dplyr::pull(data,args))
+    data[args] <- sample(dplyr::pull(data,dplyr::sym(args)))
     return(data)
   })
   # specify that we shuffle the independent variable column ('iv')

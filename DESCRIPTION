@@ -1,11 +1,11 @@
 Package: signcon
 Type: Package
-Title: A Frequentist Statistical Framework to Test Weak, Nondirectional Null Hypotheses
+Title: A Frequentist Statistical Framework to Test Nondirectional Null Hypotheses
 Version: 0.1.0
-Authors@R: c(person("M", "M", role = c("aut", "cre"), email = "XXX"),
-              person("Itay", "Yaron", role = "ctb", email = "mufc.itay@gmail.com"))
-Maintainer: MM and IY <XX@XX.net>
-Description: The goal of signcon is to provide a frequentist statistical framework to test a nondirectional null hypotheses. Nondirectional hypotheses may be rejected in cases where individual subjects show reliable effects, even if these effects have opposite signs and cancel out at the group level in a standard t-test. 
+Authors@R: c(person("Matan", "Mazor", role = c("aut", "arc"), email = "mtnmzor@gmail.com"),
+              person("Itay", "Yaron", role = role = c("aut", "cre", "arc"), email = "mufc.itay@gmail.com"))
+Maintainer: Itay Yaron <mufc.itay@gmail.com>
+Description: The goal of signcon is to provide a frequentist statistical framework to test a nondirectional null hypotheses. Nondirectional hypotheses may be rejected in cases where individual subjects show reliable effects, even if these effects have opposite signs and cancel out at the group level in standard directional tests (e.g., t-tests or ANOVA). 
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
