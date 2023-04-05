@@ -2,9 +2,9 @@ Package: signcon
 Type: Package
 Title: A Nonparametric Frequentist Statistical Framework to Test Nondirectional Null Hypotheses
 Version: 0.1.0
-Authors@R: c(person("Itay", "Yaron", role = c("aut", "cre", "arc"), email = "mufc.itay@gmail.com"), 
-             person("Matan", "Mazor", role = c("aut", "arc"), email = "mtnmzor@gmail.com"))
-Maintainer: Itay Yaron <mufc.itay@gmail.com> and Matan Mazor <mtnmzor@gmail.com>
+Authors@R: c(person("Itay", "Yaron",  role = c("aut", "cre", "arc"), email = "mufc.itay@gmail.com"), 
+             person("Matan", "Mazor",  role = c("aut", "arc"), email = "mtnmzor@gmail.com"))
+Maintainer: Itay Yaron <mufc.itay@gmail.com>, and Matan Mazor <mtnmzor@gmail.com>
 Description: The goal of signcon is to provide a nonparametric frequentist statistical framework to test a nondirectional null hypotheses. Nondirectional hypotheses may be rejected in cases where individual subjects show reliable effects, even if these effects have opposite signs and cancel out at the group level in standard directional tests (e.g., t-tests or ANOVA). 
 License: GPL-3
 Encoding: UTF-8
