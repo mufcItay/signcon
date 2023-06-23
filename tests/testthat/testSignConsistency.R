@@ -190,7 +190,7 @@ test_that("TestSignConsistency.GetSignConsistency - Max Resampling", {
   testthat::expect_warning(get_sign_consistency(missingData, idv = "id", dv = 'var', iv = 'condition', summary_function = NAFunc, max_invalid_reps = 1))
 })
 
-test_that("TestSignConsistency.TestSignConsistency - Max Resampling", {
+test_that("TestSignConsistency.TestSignConsistency - Max Invalids", {
   missingData <- create_sample_data(1,.1, wSEsd = 2, N = 2, trials_per_cnd = 100, seed = seed_test)
   NAFunc <- function(mat) {ifelse(runif(1) < .75, NA, runif(1))}
   testthat::expect_warning(test_sign_consistency(missingData, idv = "id", dv = 'var', iv = 'condition',
@@ -203,9 +203,8 @@ test_that("TestSignConsistency.GetSignConsistency - Ties (accuracy constnat valu
   accNullEffectData <- create_sample_data(p_mean = 0,0, wSEsd = 0, N = 5,
                                           trials_per_cnd = 10, seed = seed_test)
   accNullEffectData$var <- accNullEffectData$var + 1
-  testthat::expect_warning(get_sign_consistency(accNullEffectData, idv = "id", dv = 'var', iv = 'condition',
-                                                 max_invalid_reps = 5),
-                           "could not compute consistency scores")
+  testthat::expect_error(get_sign_consistency(accNullEffectData, idv = "id", dv = 'var', iv = 'condition',
+                                              max_invalid_reps = 5))
 })
 
 test_that("TestSignConsistency.GetSignConsistency - Ties (accuracy 50% per subj)", {
@@ -215,4 +214,24 @@ test_that("TestSignConsistency.GetSignConsistency - Ties (accuracy 50% per subj)
   testthat::expect_warning(get_sign_consistency(accNullEffectData, idv = "id", dv = 'var', iv = 'condition',
                                                 max_invalid_reps = 5),
                            "could not compute consistency scores")
+})
+
+test_that("TestSignConsistency.GetSignConsistency - Ties (1 subj)", {
+  wnEffectData <- create_sample_data(p_mean = 0,10, wSEsd = 5, N = 5,
+                                          trials_per_cnd = 50, seed = seed_test)
+
+  wnEffectData[wnEffectData$id == 1,]$var <- 1
+  testthat::expect_warning(get_sign_consistency(wnEffectData, idv = "id", dv = 'var', iv = 'condition', max_invalid_reps = 5),
+                           'calculating group-level sign consistency for 4 participants')
+})
+
+test_that("TestSignConsistency.TestSignConsistency - Ties (1 subj)", {
+  wnEffectData <- create_sample_data(p_mean = 0,10, wSEsd = 5, N = 5,
+                                     trials_per_cnd = 50, seed = seed_test)
+
+  wnEffectData[wnEffectData$id == 1,]$var <- 1
+  testthat::expect_warning(res <- test_sign_consistency(wnEffectData, idv = "id", dv = 'var', iv = 'condition', max_invalid_reps = 5),
+                           'calculating group-level sign consistency for 4 participants. Invalid participant identifiers: 1')
+  testthat::expect_length(res$consistency_per_id$id, length(unique(wnEffectData$id)) - 1)
+  testthat::expect_lt(res$p, .05)
 })
