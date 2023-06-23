@@ -26,9 +26,16 @@ get_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", 
   params <- create_sign_consistency_params(nSplits, summary_function, max_invalid_reps)
   validate_data(data, idv, dv,iv)
   res <- get_scores_per_participant(data, idv, dv, iv, params = params, f = calculate_sign_consistency)
-  participants_scores <- unlist(res$score)
-  obs_stat <- base::mean(participants_scores)
-  ret <- list(statistic = obs_stat, consistency_per_id = res)
+  valid_res <- res[!is.nan(res$score),]
+  participants_scores <- unlist(valid_res$score)
+  if(any(is.nan(res$score))) {
+    n_valid <- nrow(res[!is.nan(res$score),])
+    nan_particiapnts <- res[is.nan(res$score), idv]
+    warning(paste('calculating group-level sign consistency for', n_valid, 'participants.',
+                  "Invalid participant identifiers:", paste(nan_particiapnts, sep = ',')))
+  }
+  obs_stat <- base::mean(participants_scores, na.rm = TRUE)
+  ret <- list(statistic = obs_stat, consistency_per_id = valid_res)
 
   return(ret)
 }
@@ -67,6 +74,8 @@ test_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition",
                                   perm_repetitions = 25, null_dist_samples = 10000,
                                   max_invalid_reps = 10^4) {
   res <- get_sign_consistency(data, idv, dv, iv, nSplits, summary_function, max_invalid_reps)
+  valid_participants <- res$consistency_per_id %>% dplyr::pull(!!dplyr::sym(idv))
+  data <- data %>% dplyr::filter(!!dplyr::sym(idv) %in% valid_participants)
   params <- create_sign_consistency_params(nSplits, summary_function, max_invalid_reps)
   null_dist <- get_null_distribution_perm(data, idv, dv, iv, params = params, f = calculate_sign_consistency, null_dist_samples = null_dist_samples, perm_repetitions = perm_repetitions)
   # adjust p-value (according to (B + 1) / (M + 1), see Phipson & Smyth, 2010)

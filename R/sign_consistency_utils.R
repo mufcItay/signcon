@@ -53,10 +53,10 @@ calculate_sign_consistency <- function(data, idv = "id", dv = "y", iv = "conditi
       # return the consistency of sign across groups
       is_consistent <- group0_sign == group1_sign
       # check if we got a tie where the effect was exactly zero for both groups
-      is_tied <- group0_sign | group1_sign
+      is_sign_diff <- group0_sign | group1_sign
       # if we could not compute the result for one of the groups
       # invalid results may reflect missing values under a group and or label
-      is_valid_result <- ! is.na(is_consistent) & is_tied
+      is_valid_result <- ! is.na(is_consistent) & is_sign_diff
       invalid_counter <- invalid_counter + 1
     }
     return (ifelse(is_valid_result, is_consistent, NA))
