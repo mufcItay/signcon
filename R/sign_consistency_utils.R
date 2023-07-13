@@ -41,7 +41,7 @@ calculate_sign_consistency <- function(data, idv = "id", dv = "y", iv = "conditi
     invalid_counter <- 0
     while(invalid_counter < params$max_invalid_reps && !is_valid_result) {
       # sample a random permutation of the data
-      order_permuatation = sample(nTrials)
+      order_permutation = sample(nTrials)
       # define groups according to the permutation:
       # group0 = {all data points <= midpoint}, group1 {all data points > midpoint}
       group <- order_permuatation > midpoint
