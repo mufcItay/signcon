@@ -44,7 +44,7 @@ calculate_sign_consistency <- function(data, idv = "id", dv = "y", iv = "conditi
       order_permutation = sample(nTrials)
       # define groups according to the permutation:
       # group0 = {all data points <= midpoint}, group1 {all data points > midpoint}
-      group <- order_permuatation > midpoint
+      group <- order_permutation > midpoint
       # compute the sign of difference scores between groups, using the specified statistic
       group0_sign <- sign(statistic(y[!group & label, dv, drop = FALSE]) -
                             statistic(y[!group & !label, dv, drop = FALSE]))
