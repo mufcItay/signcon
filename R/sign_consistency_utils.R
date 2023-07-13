@@ -32,11 +32,11 @@ calculate_sign_consistency <- function(data, idv = "id", dv = "y", iv = "conditi
   # set the number of trials and midpoint, to compute random splits of the data
   nTrials <- nrow(y)
   midpoint <- round(nTrials/2)
-  # define an innner function to compute sign consistency in each repetition.
+  # define an inner function to compute sign consistency in each repetition.
   # the function returns true if difference score signs are consistency across splits,
   # and false otherwise.
   inner_calculate_sign_consistency <- function(iteration) {
-    # we run this function until we get a valdi result
+    # we run this function until we get a valid result
     is_valid_result = FALSE
     invalid_counter <- 0
     while(invalid_counter < params$max_invalid_reps && !is_valid_result) {
