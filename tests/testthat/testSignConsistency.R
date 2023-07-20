@@ -235,3 +235,20 @@ test_that("TestSignConsistency.TestSignConsistency - Ties (1 subj)", {
   testthat::expect_length(res$consistency_per_id$id, length(unique(wnEffectData$id)) - 1)
   testthat::expect_lt(res$p, .05)
 })
+
+test_that("TestSignConsistency.CountData", {
+  n_per_cnd <- 500
+  sn_normData <- create_sample_data(p_mean = 0, p_sd = 0, wSEsd = .5, N = 4,
+                                     trials_per_cnd = n_per_cnd, seed = seed_test)
+  sn_normData[sn_normData$id == 1,]$var <- rep(c(0,1), n_per_cnd)
+  sn_normData[sn_normData$id == 2,]$var <- rep(c(0,1), n_per_cnd)
+  sn_normData[sn_normData$id == 3,]$var <- rep(c(0,1), n_per_cnd)
+  sn_normData[sn_normData$id == 4,]$var <- rep(c(0,1), n_per_cnd)
+  sn_res <- test_sign_consistency(sn_normData, idv = "id", dv = 'var', iv = 'condition', max_invalid_reps = 5)
+  pe_normData <- create_sample_data(p_mean = 2, .5, wSEsd = 2, N = 4,
+                                    trials_per_cnd = n_per_cnd, seed = seed_test)
+  pe_normData$id <- pe_normData$id + max(sn_normData$id)
+  normData <- rbind(pe_normData, sn_normData)
+  get_sign_consistency(normData, idv = "id", dv = 'var', iv = 'condition', max_invalid_reps = 5)
+  res <- test_sign_consistency(normData, idv = "id", dv = 'var', iv = 'condition', max_invalid_reps = 5)
+})
