@@ -47,7 +47,7 @@ get_null_distribution_perm <- function(data, idv = "id", dv = "rt", iv = "condit
   print('Generating null distribution')
   pb <- utils::txtProgressBar(0,perm_repetitions,0)
   # get scores from the null distribution for each permutation sampled within each subject.
-  # we calcualte the scores based on the 'null_dist_f' argument in 'params'.
+  # we calculate the scores based on the 'null_dist_f' argument in 'params'.
   null_scores <- sapply(1:perm_repetitions, function(idx, data, idv, dv, iv, preprocessFs, preprocessArgs, params, f, pb) {
     utils::setTxtProgressBar(pb, idx)
     get_shuffled_score(data = data, idv = idv, dv = dv, iv = iv,
@@ -61,7 +61,7 @@ get_null_distribution_perm <- function(data, idv = "id", dv = "rt", iv = "condit
     # randomly sample one permutation per participant
     rndShuff <- sample(perm_repetitions,size = nrow(null_scores), replace = TRUE)
     # get the sampled permutation scores
-    sampled <- unlist(null_scores[rndShuff + (seq(0,length(rndShuff) - 1)) * perm_repetitions])
+    sampled <- sapply(1:length(rndShuff), function(i) null_scores[i,rndShuff[i]])
     # return the mean score of all sampled permutations
     return(mean(sampled))
   }
@@ -87,7 +87,7 @@ get_null_distribution_perm <- function(data, idv = "id", dv = "rt", iv = "condit
 get_scores_per_participant <- function(data, idv = "id", dv = "rt", iv = "condition", preprocessFs = c(), preprocessArgs = c(), params, f) {
   # define a preprocessing function that arranges data uniformly according to the values of the independent variable
   preprocessFs <- append(preprocessFs, function(data,args) {
-    # randomly shuffle the labels under 'args' column
+    # rearrange the labels under 'args' column
     data <- data |> dplyr::arrange(!!dplyr::sym(args))
     return(data)
   })
