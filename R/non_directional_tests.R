@@ -76,7 +76,7 @@ get_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", 
 #' @export
 test_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition",
                                   nSplits = 500, summary_function = base::mean,
-                                  perm_repetitions = 25, null_dist_samples = 10000,
+                                  perm_repetitions = 100, null_dist_samples = 10^4,
                                   max_invalid_reps = 10^3) {
   res <- get_sign_consistency(data, idv, dv, iv, nSplits, summary_function, max_invalid_reps)
   valid_participants <- res$consistency_per_id |> dplyr::pull(!!dplyr::sym(idv))
@@ -84,7 +84,8 @@ test_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition",
   params <- create_sign_consistency_params(nSplits, summary_function, max_invalid_reps)
   null_dist <- get_null_distribution_perm(data, idv, dv, iv, params = params, f = calculate_sign_consistency, null_dist_samples = null_dist_samples, perm_repetitions = perm_repetitions)
   # adjust p-value (according to (B + 1) / (M + 1), see Phipson & Smyth, 2010)
-  p_val <- (1 + sum(res$statistic <= null_dist,na.rm = TRUE)) / (1 + sum(!is.na(null_dist)))
+  p_val <- get_corrected_pval(res$statistic, null_dist)
+
   if(any(is.na(null_dist))) {
     prop_na <- sum(is.na(null_dist)) / length(null_dist)
     warning(paste('the null distribution includes invalid (NA) samples which were removed

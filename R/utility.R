@@ -63,7 +63,7 @@ get_null_distribution_perm <- function(data, idv = "id", dv = "rt", iv = "condit
     # get the sampled permutation scores
     sampled <- sapply(1:length(rndShuff), function(i) null_scores[i,rndShuff[i]])
     # return the mean score of all sampled permutations
-    return(mean(sampled))
+    return(base::mean(sampled))
   }
   # use the 'get_null_sample' to compute the group level mean score in each sample to build the distribution
   null_dist <- sapply(1:null_dist_samples, get_null_sample)
@@ -169,7 +169,7 @@ get_boot_ci <- function(scores, ci_level = 95, ci_reps = 0) {
 #' @description The function checks if the dataset is valid by performing different checks on it.
 #'
 #' @param data the data of a specific participant, arranged according to the independent variable ('iv')
-#' @param idv The name of the participant identifier column.
+#' @param idv the name of the participant identifier column.
 #' @param dv the names of the dependent variable(s) to apply the summary function (summary_function) to. For multiple dependent variables use a string list with the names of each dependent variable (e.g., c('dv1','dv2')),
 #' @param iv labels of an independent variable, indicating the different levels under which the dependent variable (dv) is expected to differ.
 validate_data <- function(data, idv, dv, iv) {
@@ -189,4 +189,20 @@ validate_data <- function(data, idv, dv, iv) {
     stop(paste0('Could not find columns: ', paste(missing_cols, sep = ','),
                 '\nMake sure to set the relevant column names as they appear in the data object'))
   }
+}
+
+#' Get Corrected P Value
+#' @description The function applies a p-value correction (see Phipson & Smyth, 2010)
+#' for an empirical p-value obtained in the permutation procedures used in the package.
+#'
+#' @param statistic the statistic obtained from observed scores
+#' @param null_dist the null distribution to compare the statistic against
+#'
+#' @return The (one-sided) corrected p-vale
+get_corrected_pval <- function(statistic, null_dist) {
+  # adjust p-value (according to (B + 1) / (M + 1), see Phipson & Smyth, 2010)
+  B <- sum(statistic <= null_dist,na.rm = TRUE)
+  M <- sum(!is.na(null_dist))
+  corrected_p_val <- (B + 1) / (M + 1)
+  return (corrected_p_val)
 }

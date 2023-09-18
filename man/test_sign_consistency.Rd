@@ -11,9 +11,9 @@ test_sign_consistency(
   iv = "condition",
   nSplits = 500,
   summary_function = base::mean,
-  perm_repetitions = 25,
+  perm_repetitions = 100,
   null_dist_samples = 10000,
-  max_invalid_reps = 10^4
+  max_invalid_reps = 10^3
 )
 }
 \arguments{

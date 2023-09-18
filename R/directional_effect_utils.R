@@ -60,7 +60,7 @@ get_null_distribution_sign_flip <- function(data, idv = "id", dv = "rt", iv = "c
     # get the sampled permutation scores
     sampled <- rndSigns * observed_scores$score
     # return the mean score of all sampled permutations
-    return(mean(sampled))
+    return(base::mean(sampled))
   }
   # use the 'get_null_sample' to compute the group level mean score in each sample to build the distribution
   null_dist <- sapply(1:null_dist_samples, get_null_sample, observed_scores = observed_scores, pb = pb)

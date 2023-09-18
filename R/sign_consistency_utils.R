@@ -69,7 +69,7 @@ calculate_sign_consistency <- function(data, idv = "id", dv = "y", iv = "conditi
                   '(%) of the splits\n check if there are enough observations in each cell) '))
   }
   # calculate the mean consistency across splits
-  retVal <- mean(consistency, na.rm=TRUE)
+  retVal <- base::mean(consistency, na.rm=TRUE)
   return (retVal)
 }
 

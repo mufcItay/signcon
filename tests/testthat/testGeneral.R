@@ -32,3 +32,27 @@ test_that("TestGeneral.Test - Weak Null Effect", {
   testthat::expect_equal(decisions[1], TRUE)
   testthat::expect_equal(decisions[2], FALSE)
 })
+
+test_that("TestGeneral.Test - P Value Correction (p=0)", {
+  # test 'test' functions for each directional / no directional test function exposed in the package
+  posEffectData <- create_sample_data(2,0, 0, N = 4,
+                                      trials_per_cnd = 5, seed = seed_test)
+
+  res_pe_sc <-test_sign_consistency(posEffectData, idv = "id", dv = 'var', iv = 'condition')
+
+  testthat::expect_lt(res_pe_sc$p, .05)
+  testthat::expect_lt(0, res_pe_sc$p)
+})
+
+test_that("TestGeneral.Test - P Value Correction (sanity)", {
+  mock_statistic <- 1
+  mock_null_dist <- c(0,0.5,2)
+  uncorrected_p <- sum(mock_statistic <= mock_null_dist) / length(mock_null_dist)
+  corrected_p <- get_corrected_pval(mock_statistic, mock_null_dist)
+
+  testthat::expect_lt(uncorrected_p, corrected_p)
+
+  B <- sum(mock_statistic <= mock_null_dist, na.rm = TRUE)
+  M <- sum(!is.na(mock_null_dist))
+  testthat::expect_equal(corrected_p, (B+1)/(M+1) )
+})
