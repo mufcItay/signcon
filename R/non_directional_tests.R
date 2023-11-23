@@ -14,6 +14,9 @@
 #' The function should return NA if the summary statistic cannot be computed for the input given. In such case another split of the data will be sampled and used.
 #' @param nSplits The number of splits to use when estimating sign consistency probability.
 #' @param max_invalid_reps - The maximal number repetitions in which invalid consistency was computed before returning NA result.
+#' @param split_type - A string from {"noverlap" / "random"}, indicating if data should be split to non-overlapping halves (the
+#' default option, "noverlap" option), or to two random halves ("random").
+
 #' @return A list including the results of the function
 #' \itemize{
 #'   \item statistic - The average sign consistency across all participants.
@@ -22,8 +25,10 @@
 #' @seealso [signcon::test_sign_consistency()] which uses this function to test the significance of the group-level sign consistency.
 #' @export
 get_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", nSplits = 500,
-                                 summary_function = base::mean, max_invalid_reps = 10^3) {
-  params <- create_sign_consistency_params(nSplits, summary_function, max_invalid_reps)
+                                 summary_function = base::mean, max_invalid_reps = 10^3,
+                                 split_type = c("noverlap", "random")) {
+  split_type <- match.arg(split_type)
+  params <- create_sign_consistency_params(nSplits, summary_function, max_invalid_reps, split_type)
   validate_data(data, idv, dv,iv)
   res <- get_scores_per_participant(data, idv, dv, iv, params = params, f = calculate_sign_consistency)
   valid_res <- res[!is.nan(res$score),]
@@ -63,6 +68,8 @@ get_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", 
 #' @param nSplits The number of splits to use when estimating sign consistency probability.
 #' @param perm_repetitions The number of label shuffling for each participant.
 #' @param max_invalid_reps - The maximal number repetitions in which invalid consistency was computed before returning NA result.
+#' @param split_type - A string from {"noverlap" / "random"}, indicating if data should be split to non-overlapping halves (the
+#' default option, "noverlap" option), or to two random halves ("random").
 #' @param null_dist_samples The number of samples taken from the null distribution.
 #' @return A list including the results of the function
 #' \itemize{
@@ -77,12 +84,17 @@ get_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition", 
 test_sign_consistency <- function(data, idv = "id", dv = "rt", iv = "condition",
                                   nSplits = 500, summary_function = base::mean,
                                   perm_repetitions = 100, null_dist_samples = 10^4,
-                                  max_invalid_reps = 10^3) {
-  res <- get_sign_consistency(data, idv, dv, iv, nSplits, summary_function, max_invalid_reps)
+                                  max_invalid_reps = 10^3, split_type = c("noverlap", "random")) {
+  split_type <- match.arg(split_type)
+  res <- get_sign_consistency(data, idv, dv, iv, nSplits, summary_function, max_invalid_reps, split_type)
   valid_participants <- res$consistency_per_id |> dplyr::pull(!!dplyr::sym(idv))
   data <- data |> dplyr::filter(!!dplyr::sym(idv) %in% valid_participants)
-  params <- create_sign_consistency_params(nSplits, summary_function, max_invalid_reps)
-  null_dist <- get_null_distribution_perm(data, idv, dv, iv, params = params, f = calculate_sign_consistency, null_dist_samples = null_dist_samples, perm_repetitions = perm_repetitions)
+  params <- create_sign_consistency_params(nSplits, summary_function, max_invalid_reps, split_type)
+  null_dist <-
+    get_null_distribution_perm(data, idv, dv, iv, params = params,
+                               f = calculate_sign_consistency,
+                               null_dist_samples = null_dist_samples,
+                               perm_repetitions = perm_repetitions)
   # adjust p-value (according to (B + 1) / (M + 1), see Phipson & Smyth, 2010)
   p_val <- get_corrected_pval(res$statistic, null_dist)
 
