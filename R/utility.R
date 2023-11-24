@@ -46,7 +46,8 @@
   get_null_distribution_perm <- function(data, idv = "id", dv = "rt", iv = "condition", params, f, perm_repetitions = 25, null_dist_samples = 10000, preprocessFs = c(), preprocessArgs = c()) {
     print('Generating null distribution')
     # get the number of participants, to set the size of null_scores structure rows
-    N_p <- length(unique(data[,idv]))
+
+    N_idv <- data |> dplyr::pull(!!dplyr::sym(idv)) |> unique() |> length()
     pb <- utils::txtProgressBar(0,perm_repetitions,0)
     # get scores from the null distribution for each permutation sampled within each subject.
     # we calculate the scores based on the 'null_dist_f' argument in 'params'.
@@ -55,7 +56,7 @@
       get_shuffled_score(data = data, idv = idv, dv = dv, iv = iv,
                          preprocessFs = preprocessFs, preprocessArgs = preprocessArgs, params = params, f = f)
       }, data = data, idv = idv, dv = dv, iv = iv,
-      preprocessFs = preprocessFs, preprocessArgs = preprocessArgs, params = params, f = f, pb = pb, FUN.VALUE = numeric(N_p))
+      preprocessFs = preprocessFs, preprocessArgs = preprocessArgs, params = params, f = f, pb = pb, FUN.VALUE = numeric(N_idv))
     close(pb)
     # define a function that computes a sample of the null distribution from the data of all participants,
     # randomly sample a specific permutation for each participant, and return the mean score of the group
