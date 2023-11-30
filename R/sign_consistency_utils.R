@@ -1,19 +1,3 @@
-non_overlapping_halves_split <- function(trial_selection) {
-  # sample a random permutation of the data
-  order_permutation = sample(trial_selection)
-  # define groups according to the permutation:
-  # group0 = {all data points <= midpoint}, group1 {all data points > midpoint}
-  split <- list(grp0 = !order_permutation, grp1 = order_permutation)
-  return(split)
-}
-
-random_halves_split <- function(trial_selection) {
-  group0 <- sample(trial_selection)
-  group1 <- sample(trial_selection)
-  split <- list(grp0 = group0, grp1 = group1)
-  return(split)
-}
-
 
 #' @title Calculate Sign Consistency
 #' @description The function applies the sign consistency analysis to the dataset of a specific participant.
@@ -89,6 +73,56 @@ calculate_sign_consistency <- function(data, idv = "id", dv = "y", iv = "conditi
   retVal <- base::mean(consistency, na.rm=TRUE)
   return (retVal)
 }
+
+#' @title Non overlapping halves split
+#' @description The function returns a split of trials into two
+#' distinct (non-overlapping) halves randomly.
+#'
+#' @param trial_selection indicator vector of the same length as
+#' the number of trials in the relevant condition, with equal
+#' number of trials. The vector contains indicators for whether
+#' each trial is selected for group 0 (FALSE),
+#' or group 1 (TRUE).
+#'
+#' @return a list with two items:
+#' \itemize{
+#'   \item grp0 - a vector of indicators for whether each trial
+#'   belongs to to the first split.
+#'   \item grp1 - the complementary indicators vector to 'grp0'.
+#' }
+non_overlapping_halves_split <- function(trial_selection) {
+  # sample a random permutation of the data
+  order_permutation = sample(trial_selection)
+  # define groups according to the permutation:
+  # group0 = {all data points <= midpoint}, group1 {all data points > midpoint}
+  split <- list(grp0 = !order_permutation, grp1 = order_permutation)
+  return(split)
+}
+
+#' @title Random halves split
+#' @description The function returns two random (potentially overalpping)
+#' halves of the trials.
+#'
+#' @param trial_selection indicator vector of the same length as
+#' the number of trials in the relevant condition, with equal
+#' number of trials. The vector contains indicators for whether
+#' each trial is selected for group 0 (FALSE),
+#' or group 1 (TRUE).
+#'
+#' @return a list with two items:
+#' \itemize{
+#'   \item grp0 - a vector of indicators for whether each trial
+#'   belongs to to the first split.
+#'   \item grp1 - the complementary indicators vector to 'grp0'.
+#' }
+random_halves_split <- function(trial_selection) {
+  group0 <- sample(trial_selection)
+  group1 <- sample(trial_selection)
+  split <- list(grp0 = group0, grp1 = group1)
+  return(split)
+}
+
+
 
 #' @title Create Parameters For Sign Consistency
 #' @description The function creates a list of parameters to be later passed to the sign consistency function.
