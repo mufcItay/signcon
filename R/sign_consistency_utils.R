@@ -18,7 +18,7 @@
 #' @return the function returns the mean consistency of signs for the given data
 calculate_sign_consistency <- function(data, idv = "id", dv = "y", iv = "condition", params) {
   # get the dependent variable column
-  y <- data |> dplyr::select(all_of(dv))
+  y <- data |> dplyr::select(tidyr::all_of(dv))
   # get the independent variable column (items are labels describing the experimental conditions)
   label <- dplyr::pull(data,!!dplyr::sym(iv))
   # binarization of labels => True for the 1st label, False for the 2nd label
