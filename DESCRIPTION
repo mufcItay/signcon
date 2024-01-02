@@ -13,7 +13,8 @@ RoxygenNote: 7.2.3
 URL: https://github.com/mufcItay/signcon
 BugReports: https://github.com/mufcItay/signcon/issues
 Imports: 
-    dplyr
+    dplyr,
+    tidyr
 Suggests: 
     stats,
     testthat (>= 3.0.0),

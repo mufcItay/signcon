@@ -4,7 +4,6 @@ nNullSamples <- 1000
 alpha <- .05
 nSubj = 20
 nTrials = 30
-chance <- 50 # percent accuracy (assuming two levels of the independent variable)
 
 # a helper function to apply to results of different analyses
 null_rejected <- function(res, alpha) {res$p < alpha}
@@ -14,7 +13,7 @@ wn_ds_lbl <- 'wn'
 sn_ds_lbl <- 'sn'
 pe_ds_lbl <- 'pe'
 wn_eff <- 2
-wn_err <- .1
+wn_err <- 2
 sn_err <- 2
 pe_eff <- 2
 pe_errw <- 1

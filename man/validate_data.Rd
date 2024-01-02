@@ -9,7 +9,7 @@ validate_data(data, idv, dv, iv)
 \arguments{
 \item{data}{the data of a specific participant, arranged according to the independent variable ('iv')}
 
-\item{idv}{The name of the participant identifier column.}
+\item{idv}{the name of the participant identifier column.}
 
 \item{dv}{the names of the dependent variable(s) to apply the summary function (summary_function) to. For multiple dependent variables use a string list with the names of each dependent variable (e.g., c('dv1','dv2')),}
 

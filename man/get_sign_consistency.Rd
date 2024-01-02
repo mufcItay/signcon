@@ -11,7 +11,8 @@ get_sign_consistency(
   iv = "condition",
   nSplits = 500,
   summary_function = base::mean,
-  max_invalid_reps = 10^4
+  max_invalid_reps = 10^3,
+  split_type = c("noverlap", "random")
 )
 }
 \arguments{
@@ -30,6 +31,9 @@ This function should map a matrix maintaining the original dataframe columns to 
 The function should return NA if the summary statistic cannot be computed for the input given. In such case another split of the data will be sampled and used.}
 
 \item{max_invalid_reps}{- The maximal number repetitions in which invalid consistency was computed before returning NA result.}
+
+\item{split_type}{- A string from {"noverlap" / "random"}, indicating if data should be split to non-overlapping halves (the
+default option, "noverlap" option), or to two random halves ("random").}
 }
 \value{
 A list including the results of the function

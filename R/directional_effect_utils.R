@@ -19,7 +19,8 @@ calculate_directional_effect <- function(data, idv = "id", dv = "y", iv = "condi
   label <- dplyr::pull(data,!!dplyr::sym(iv))
   # get the last condition label ( we assume that the dataset was sorted according to the independent variable)
   last_label <- dplyr::last(label)
-  y = as.matrix(data[,dv])
+  y <- data |> dplyr::select(tidyr::all_of(dv))
+
   # we  calculate the direction of the effect as summary_function(last label)-summary_function(first label)
   statistic <- params$summary_function
   # calculate the effect
@@ -60,7 +61,7 @@ get_null_distribution_sign_flip <- function(data, idv = "id", dv = "rt", iv = "c
     # get the sampled permutation scores
     sampled <- rndSigns * observed_scores$score
     # return the mean score of all sampled permutations
-    return(mean(sampled))
+    return(base::mean(sampled))
   }
   # use the 'get_null_sample' to compute the group level mean score in each sample to build the distribution
   null_dist <- sapply(1:null_dist_samples, get_null_sample, observed_scores = observed_scores, pb = pb)

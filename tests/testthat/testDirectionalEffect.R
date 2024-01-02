@@ -73,7 +73,7 @@ test_that("TestDirectionalEffect.TestDirectionalEffect - Weak Null", {
 
 test_that("TestDirectionalEffect.GetDirectionalEffect - Multivariate, Strong Null", {
   # test get directional effect with a strong null effect, and 3 dependent variables
-  median_func_mv <- function(mat) {stats::median(c(mat[,'var'], mat[,'var2'], mat[,'var3']))}
+  median_func_mv <- function(mat) {stats::median(c(mat$var, mat$var2, mat$var3))}
   snEffectData <- create_sample_data(0,0, wSEsd = 2, N = nSubj, trials_per_cnd = nTrials, seed = seed_test)
   otherSnEffectData <- create_sample_data(0,0, wSEsd = 2, N = nSubj, trials_per_cnd = nTrials, seed = seed_test + 1)
   anotherSnEffectData <- create_sample_data(0,0, wSEsd = 2, N = nSubj, trials_per_cnd = nTrials, seed = seed_test + 2)
@@ -89,7 +89,7 @@ test_that("TestDirectionalEffect.GetDirectionalEffect - Multivariate, Strong Nul
 
 test_that("TestDirectionalEffect.TestDirectionalEffect - Multivariate, Strong Null", {
   # test 'test directional effect' with a strong null effect
-  median_func_mv <- function(mat) {stats::median(c(mat[,'var'], mat[,'var2'], mat[,'var3']))}
+  median_func_mv <- function(mat) {stats::median(c(mat$var, mat$var2, mat$var3))}
   snEffectData <- create_sample_data(0,0, wSEsd = 2, N = nSubj, trials_per_cnd = nTrials, seed = seed_test)
   otherSnEffectData <- create_sample_data(0,0, wSEsd = 2, N = nSubj, trials_per_cnd = nTrials, seed = seed_test + 1)
   anotherSnEffectData <- create_sample_data(0,0, wSEsd = 2, N = nSubj, trials_per_cnd = nTrials, seed = seed_test + 2)
@@ -104,11 +104,12 @@ test_that("TestDirectionalEffect.TestDirectionalEffect - Multivariate, Strong Nu
 
 
 test_that("TestDirectionalEffect.GetDirectionalEffect - Multivariate, Positive Effect, 2nd null", {
+  sum_f <- function(mat) {mean(c(mat$var, mat$var2))}
   # test get directional effect with a positive effect for one dependent variable, and a 2nd uninformative dependent variable.
   posEffectData <- create_sample_data(1,.1, wSEsd = 2.5, N = nSubj, trials_per_cnd = nTrials, seed = seed_test)
   posEffectData$var2 <- rnorm(nrow(posEffectData), 0, 2)
   res_pe_one_var <- get_directional_effect(posEffectData, idv = "id", dv = 'var', iv = 'condition')
-  res_pe <- get_directional_effect(posEffectData, idv = "id", dv = c('var','var2'), iv = 'condition')
+  res_pe <- get_directional_effect(posEffectData, idv = "id", dv = c('var','var2'), iv = 'condition', summary_function = sum_f)
 
   testthat::expect_type(res_pe$statistic, "double")
   testthat::expect_length(res_pe$effect_per_id$score, nSubj)
@@ -121,12 +122,14 @@ test_that("TestDirectionalEffect.GetDirectionalEffect - Multivariate, Positive E
 
 
 test_that("TestDirectionalEffect.TestDirectionalEffect - Multivariate, Positive Effect", {
+  sum_f <- function(mat) {mean(c(mat$var, mat$var2))}
   # test 'test directional effect' with a positive effect, and 3 informative variables
   posEffectData <- create_sample_data(1,.1, wSEsd = 2.5, N = nSubj, trials_per_cnd = nTrials, seed = seed_test)
   otherPosEffectData <- create_sample_data(2,.1, wSEsd = 2.5, N = nSubj, trials_per_cnd = nTrials, seed = seed_test + 1)
   posEffectData$var2 <- otherPosEffectData$var
   res_pe_one_var <- test_directional_effect(posEffectData, idv = "id", dv = 'var', iv = 'condition', null_dist_samples = nNullSamples)
-  res_pe <- test_directional_effect(posEffectData, idv = "id", dv = c('var','var2'), iv = 'condition', null_dist_samples = nNullSamples)
+  res_pe <- test_directional_effect(posEffectData, idv = "id", dv = c('var','var2'), iv = 'condition', null_dist_samples = nNullSamples,
+                                    summary_function = sum_f)
 
   testthat::expect_type(res_pe$statistic, "double")
   testthat::expect_length(res_pe$null_dist, nNullSamples)
