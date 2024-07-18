@@ -59,6 +59,9 @@ sign_consistency_result <- visual_metacognition %>%
   signcon::test_sign_consistency(idv="Subj_idx", dv='Confidence', iv='Response')
 
 # compare the mean confidence for the two responses, 
+# using a non-directional absolute effect size test:
+absolute_es_result <- visual_metacognition %>% 
+  signcon::test_absolute_es(idv="Subj_idx", dv='Confidence', iv='Response')
 
 ```
 
