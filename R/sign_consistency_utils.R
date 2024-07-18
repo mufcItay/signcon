@@ -1,7 +1,7 @@
 
 #' @title Calculate Sign Consistency
 #' @description The function applies the sign consistency analysis to the dataset of a specific participant.
-#' Called from 'get_true_score'
+#' Called from 'test_sign_consistency'
 #'
 #' @param data The dataset of a specific participant, arranged according to the independent variable ('iv')
 #' @param idv The name of the participant identifier column.
