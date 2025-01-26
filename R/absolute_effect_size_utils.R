@@ -27,9 +27,8 @@ calculate_absolute_es <- function(data, idv = "id", dv = "y", iv = "condition", 
   if (nrow(y) != length(label)) {
     stop('inconsistent lengths for vectors the dependent and independent variables')
   }
-
- # calculate the absolute effect size
- absVal <- abs(statistic_f(y[label, dv],y[!label, dv]))
+  # calculate the absolute effect size
+  absVal <- abs(statistic_f(y[label, dv],y[!label, dv]))
   return (absVal)
 }
 

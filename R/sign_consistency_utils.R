@@ -130,16 +130,13 @@ random_halves_split <- function(trial_selection) {
 #' @param n_splits - The number of random splits to analyze for the estimation of sign consistency.
 #' @param summary_function The summary function applied to the dependent variable(s), 'dv' under each split of the data.
 #' @param max_invalid_reps - The maximal number repetitions in which invalid consistency was computed before returning NA result.
-#' @param split_type - A string from {"noverlap" / "random"}, indicating if data should be split to non-overlapping halves (the
-#' default option, "noverlap" option), or to two random halves ("random").
 #'
 #' @return a list of parameters that includes both arguments.
-create_sign_consistency_params <- function(n_splits, summary_function, max_invalid_reps, split_type) {
+create_sign_consistency_params <- function(n_splits, summary_function, max_invalid_reps) {
   params <- list()
   params$n_splits <- n_splits
   params$summary_function <- summary_function
   params$max_invalid_reps = max_invalid_reps
-  params$split_f <- ifelse(split_type == 'random', random_halves_split,
-                           non_overlapping_halves_split)
+  params$split_f <- non_overlapping_halves_split
   return (params)
 }
