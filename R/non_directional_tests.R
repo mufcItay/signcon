@@ -157,6 +157,7 @@ get_absolute_es <- function(data, idv = "id", dv = "rt", iv = "condition",
 #' @param dv The dependent variable to apply the summary function (summary_function) to.  For multiple dependent variables use a string list with the names of each dependent variable (e.g., c('dv1','dv2')),
 #' @param iv Labels of an independent variable, indicating the different levels under which the dependent variable ('dv') is expected to differ .
 #' @param summary_function The summary function to apply to the dependent variables ('dv') as a function of the independent variable ('iv') for each participant ('idv').
+#' @param perm_repetitions The number of label shuffling for each participant.
 #' @param null_dist_samples The number of samples taken from the null distribution.
 #' @return A list including the results of the function
 #' \itemize{

@@ -4,12 +4,7 @@
 \alias{create_sign_consistency_params}
 \title{Create Parameters For Sign Consistency}
 \usage{
-create_sign_consistency_params(
-  n_splits,
-  summary_function,
-  max_invalid_reps,
-  split_type
-)
+create_sign_consistency_params(n_splits, summary_function, max_invalid_reps)
 }
 \arguments{
 \item{n_splits}{- The number of random splits to analyze for the estimation of sign consistency.}
@@ -17,9 +12,6 @@ create_sign_consistency_params(
 \item{summary_function}{The summary function applied to the dependent variable(s), 'dv' under each split of the data.}
 
 \item{max_invalid_reps}{- The maximal number repetitions in which invalid consistency was computed before returning NA result.}
-
-\item{split_type}{- A string from {"noverlap" / "random"}, indicating if data should be split to non-overlapping halves (the
-default option, "noverlap" option), or to two random halves ("random").}
 }
 \value{
 a list of parameters that includes both arguments.
